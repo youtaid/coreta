@@ -1,0 +1,12 @@
+node_modules/
+.next/
+.turbo/
+out/
+build/
+dist/
+coverage/
+pnpm-lock.yaml
+
+tip CORETA.md
+apps/web/AGENTS.md
+apps/web/CLAUDE.md
