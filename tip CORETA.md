@@ -607,7 +607,10 @@ _Semua layar dibangun lebih dulu dengan data tiruan di `lib/mock`. Belum ada Sup
   - `apps/web/app/(siswa)/layout.tsx`
   - `apps/web/app/(ortu)/layout.tsx`
   - `apps/web/app/(admin)/layout.tsx`
-  - `apps/web/components/domain/AppShell.tsx`
+  - `apps/web/components/domain/app-shell.tsx`
+  - `apps/web/components/domain/screen-placeholder.tsx`
+  - `apps/web/lib/navigation.ts` dan `navigation.test.ts`
+  - `apps/web/app/(publik)/layout.tsx`
   - `apps/web/app/**/page.tsx` (placeholder)
 - **Definition of Done**:
   - Semua rute pada bagian 5 terbuka dari navigasi tanpa 404
@@ -1900,6 +1903,11 @@ Keputusan yang sudah diambil sebelum coding dimulai (menyimpang atau melengkapi 
 | 6 | ESLint melarang `components/**` mengimpor `@/lib/mock`, `@/lib/supabase/*`, dan `next/headers` | Menjaga DoD "komponen hanya menerima props"; data dimuat di halaman |
 | 6 | Tombol berbasis tautan memakai `<Button nativeButton={false} render={<Link href=… />}>` | Pola Base UI untuk merender `<a>` dengan gaya Button |
 | 7 | Satu `AppShell` klien membaca pathname untuk status navigasi aktif; layout route group tetap berupa pembungkus server tipis. Pemilih peran dev mengarahkan `/?peran=` ke beranda peran, sedangkan produksi mengabaikannya | Navigasi aktif perlu mengikuti perpindahan App Router tanpa menduplikasi shell per peran; pemilih peran hanya alat pratinjau sebelum autentikasi tersedia |
+| 7 | Berkas komponen bernama `app-shell.tsx` (bukan `AppShell.tsx`), plus `screen-placeholder.tsx` dan `lib/navigation.ts` (`navigationByRole`, `screenRouteSamples`) | Kebab-case konsisten dengan komponen lain; satu sumber navigasi untuk shell dan tes |
+| 1–2 | Versi yang menyimpang dari bagian 2: TypeScript 5.9.3 (bukan 7.x, sesuai catatan bagian 2), React 19.2.8 (bukan 19.3), ESLint 9.39.5 (bukan 10) | Mengikuti scaffold Next.js 16.3.8 yang sudah berjalan dan paket yang tersedia di registry; belum ada plugin yang memerlukan versi lebih baru |
+| 2 | CI menjalankan `pnpm build` setelah `pnpm test`; build diuji tanpa `.env.local` | Aturan `server-only` (DoD Fase 3) hanya tertangkap saat `next build`; validasi env bersifat malas sehingga build tidak butuh variabel |
+| 2 | `.gitattributes` (`* text=auto eol=lf`) | Windows `core.autocrlf=true` menghasilkan CRLF yang membuat `prettier --check` gagal; repo dan CI memakai LF |
+| 2 | `app/layout.tsx` memakai tipe `{ children: ReactNode }`, bukan `LayoutProps<"/">` | `LayoutProps` dibuat Next.js ke `.next/types` saat dev/build, sehingga `tsc --noEmit` gagal pada checkout baru (penyebab CI PR #1 merah). Diperbaiki di commit Fase 7 |
 
 ### 9b. Temuan & Isu
 
@@ -1912,6 +1920,15 @@ Catat bug, blocker, atau hal yang perlu dievaluasi. Jangan langsung dieksekusi �
 | 3 | Supabase lokal mengikat semua layanan ke `0.0.0.0` dan Studio tanpa autentikasi (peringatan CLI) — terjangkau dari jaringan yang sama | Low | Terbuka |
 | 3 | Supabase CLI terpasang v2.106.0, tersedia v2.119.0 | Low | Terbuka |
 | 2 | Workflow CI sudah dibuat dan seluruh langkah hijau lokal, tetapi belum diverifikasi pada PR karena remote GitHub privat belum terautentikasi di sesi ini | Med | Terbuka |
+| 2 | PR #1 (cabang backup) merah di langkah Typecheck: `Cannot find name 'LayoutProps'` pada checkout baru. Sudah diperbaiki (lihat 9a); perlu CI hijau di GitHub untuk menutup Fase 2 | Med | Menunggu CI |
+| 7 | `/` menjadi dinamis (`ƒ`) karena membaca `searchParams` untuk `?peran=`, termasuk di produksi; beranda publik (Fase 19) kehilangan render statis. Pindahkan pengalihan dev ke `proxy.ts` atau buat khusus dev | Med | Terbuka |
+| 7 | Ruang kerja `/belajar/kerjakan/[id]` berada di layout siswa (header sticky + navigasi bawah fixed), bertentangan dengan aturan 9 (satu layar tanpa scroll). Pindahkan ke route group sendiri tanpa shell sebelum/di Fase 10 | Med | Terbuka |
+| 7 | Rute siswa, orang tua, dan admin belum dijaga peran (baru Fase 35); jangan deploy ke luar sebelum Fase 35 | Med | Terbuka |
+| 3 | `GET /api/health` publik dan tiap panggilan memakai `auth.admin.listUsers` dengan service role tanpa pembatasan laju; batasi atau ringankan sebelum Fase 45 | Low | Terbuka |
+| 4 | `/tema` aktif di produksi (tidak di-gate seperti `/dev/komponen`) | Low | Terbuka |
+| 1 | `scoringPlaceholder()` masih dipakai sebagai `data-scoring-status` di beranda publik; hapus di Fase 19/20 | Low | Terbuka |
+| 1 | `@types/node` `^20` padahal `engines` meminta Node ≥ 22 | Low | Terbuka |
+| 6 | Commit `0008782` memuat Fase 3–6 sekaligus (aturan: satu fase satu commit) | Low | Dicatat |
 
 **Pertanyaan terbuka sebelum fase terkait:**
 - Sebelum Fase 45 (deploy): spesifikasi VPS (CPU, RAM, disk) dan tagihan bulanan
@@ -1926,7 +1943,7 @@ Catat bug, blocker, atau hal yang perlu dievaluasi. Jangan langsung dieksekusi �
 |------|--------|----------------|-----------------|---------|
 | Fase 0 — Buat Proyek Next.js & Verifikasi | Selesai | ~15 menit | 2026-10-05 | Next.js 16.3.8; install, lint, build, dan GET `/` (200) sukses |
 | Fase 1 — Monorepo & Struktur Folder | Selesai | ~30 menit | 2026-10-05 | 7 workspace strict; install, typecheck, lint, Turbo build, dan worker dev sukses |
-| Fase 2 — Lint, Format, Tes Dasar & CI | Sedang | ~30 menit | — | Implementasi lokal hijau; menunggu verifikasi workflow pada PR GitHub |
+| Fase 2 — Lint, Format, Tes Dasar & CI | Sedang | ~30 menit | — | Implementasi lokal hijau; PR #1 sempat merah karena `LayoutProps` (sudah diperbaiki), langkah `pnpm build` dan `.gitattributes` ditambahkan; menunggu CI hijau di GitHub |
 | Fase 3 — Supabase Lokal & Klien | Selesai | ~30 menit | 2026-10-05 | Supabase lokal (port 544xx) berjalan; `/api/health` 200 `{ ok: true, supabase: 'up' }` dan 503 saat Auth dijeda; impor `admin.ts` dari komponen klien membuat build gagal (`server-only`); lint, typecheck, test, format hijau |
 | Fase 4 — Tema & Token Desain | Selesai | ~30 menit | 2026-10-05 | `/tema` menampilkan palet, tipografi (Plus Jakarta Sans, Kalam), tombol, dan target sentuh 44 px; tombol tema 44×44 berfungsi dan tersimpan; kontras 50/50 tes lulus; konsol browser bersih (Playwright, Chromium); build, lint, typecheck, format hijau |
 | Fase 5 — Komponen Dasar UI | Selesai | ~30 menit | 2026-10-05 | 10 komponen (Button, Card, Badge, Input, Tabs, Progress, Dialog, Toast, Tooltip, Skeleton) tampil di `/dev/komponen` pada kedua tema; 31 elemen interaktif galeri ≥ 44 px; fokus Tab terlihat; dialog, toast, tooltip diuji di Chromium tanpa galat konsol; produksi `/dev/komponen` = 404 |
