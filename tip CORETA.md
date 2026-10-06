@@ -612,7 +612,7 @@ _Semua layar dibangun lebih dulu dengan data tiruan di `lib/mock`. Belum ada Sup
 - **Definition of Done**:
   - Semua rute pada bagian 5 terbuka dari navigasi tanpa 404
   - Tampilan rapi di tablet mendatar, tablet tegak, dan ponsel
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 8 — UI Jalur Belajar
 
@@ -1899,6 +1899,7 @@ Keputusan yang sudah diambil sebelum coding dimulai (menyimpang atau melengkapi 
 | 6 | `lib/format.ts`: `formatRupiah` (gaya "Rp29.900", tanpa spasi) dan `formatPercent`, dengan tes | Dipakai PriceCard, StatCard, CompetencyBar, dan layar berikutnya |
 | 6 | ESLint melarang `components/**` mengimpor `@/lib/mock`, `@/lib/supabase/*`, dan `next/headers` | Menjaga DoD "komponen hanya menerima props"; data dimuat di halaman |
 | 6 | Tombol berbasis tautan memakai `<Button nativeButton={false} render={<Link href=… />}>` | Pola Base UI untuk merender `<a>` dengan gaya Button |
+| 7 | Satu `AppShell` klien membaca pathname untuk status navigasi aktif; layout route group tetap berupa pembungkus server tipis. Pemilih peran dev mengarahkan `/?peran=` ke beranda peran, sedangkan produksi mengabaikannya | Navigasi aktif perlu mengikuti perpindahan App Router tanpa menduplikasi shell per peran; pemilih peran hanya alat pratinjau sebelum autentikasi tersedia |
 
 ### 9b. Temuan & Isu
 
@@ -1930,7 +1931,7 @@ Catat bug, blocker, atau hal yang perlu dievaluasi. Jangan langsung dieksekusi �
 | Fase 4 — Tema & Token Desain | Selesai | ~30 menit | 2026-10-05 | `/tema` menampilkan palet, tipografi (Plus Jakarta Sans, Kalam), tombol, dan target sentuh 44 px; tombol tema 44×44 berfungsi dan tersimpan; kontras 50/50 tes lulus; konsol browser bersih (Playwright, Chromium); build, lint, typecheck, format hijau |
 | Fase 5 — Komponen Dasar UI | Selesai | ~30 menit | 2026-10-05 | 10 komponen (Button, Card, Badge, Input, Tabs, Progress, Dialog, Toast, Tooltip, Skeleton) tampil di `/dev/komponen` pada kedua tema; 31 elemen interaktif galeri ≥ 44 px; fokus Tab terlihat; dialog, toast, tooltip diuji di Chromium tanpa galat konsol; produksi `/dev/komponen` = 404 |
 | Fase 6 — Komponen Domain (Tanpa Logika) | Selesai | ~30 menit | 2026-10-05 | 8 komponen (PageHeader, PathNode, StatCard, CompetencyBar, WorksheetCard, SubscriptionBadge, PriceCard, EmptyState) tampil di `/dev/komponen#domain` dengan data `lib/mock` pada kedua tema; tautan/tombol ≥ 44 px; konsol bersih; tidak ada akses data di `components/domain` (dijaga ESLint); 60 tes web lulus; build hijau |
-| Fase 7 — Layout & Navigasi per Peran | — | ~30 menit | — | — |
+| Fase 7 — Layout & Navigasi per Peran | Selesai | ~30 menit | 2026-10-06 | 4 route group dan 24 layar placeholder tersedia; siswa/orang tua memakai bottom nav, admin memakai sidebar adaptif; `?peran=` aktif hanya saat dev; seluruh rute HTTP 200, 64 tes web dan build hijau; visual diverifikasi pada ponsel 375 px, tablet tegak 768 px, dan tablet mendatar 1180 px |
 | Fase 8 — UI Jalur Belajar | — | ~30 menit | — | — |
 | Fase 9 — UI Daftar Worksheet & Hasil | — | ~30 menit | — | — |
 | Fase 10 — UI Ruang Kerja: Tata Letak Satu Layar | — | ~30 menit | — | — |

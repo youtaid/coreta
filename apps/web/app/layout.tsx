@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Kalam, Plus_Jakarta_Sans } from "next/font/google";
+import type { ReactNode } from "react";
 
 import { Toaster } from "@/components/ui/toast";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
   description: "Worksheet matematika TKA/UTBK yang dikerjakan dengan mencoret langsung di layar.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     // The init script adds the "dark" class before hydration, so the attribute differs by design.
     <html
