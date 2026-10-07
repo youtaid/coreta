@@ -24,10 +24,19 @@ export const mockScoringKeys: Record<string, Item> = {
     key: "opt-1-a",
     options: [
       { id: "opt-1-a" },
-      { id: "opt-1-b", hint: "Perhatikan tanda pertidaksamaan: -8k > -24 menghasilkan k < 3, bukan k > 3." },
+      {
+        id: "opt-1-b",
+        hint: "Perhatikan tanda pertidaksamaan: -8k > -24 menghasilkan k < 3, bukan k > 3.",
+      },
       { id: "opt-1-c", hint: "Periksa kembali pembagian dengan bilangan negatif." },
-      { id: "opt-1-d", hint: "Syarat grafik memotong sumbu-X di dua titik berbeda adalah D > 0 (bukan ≥ 0)." },
-      { id: "opt-1-e", hint: "Determinan harus bernilai positif murni agar terdapat dua akar real berlainan." },
+      {
+        id: "opt-1-d",
+        hint: "Syarat grafik memotong sumbu-X di dua titik berbeda adalah D > 0 (bukan ≥ 0).",
+      },
+      {
+        id: "opt-1-e",
+        hint: "Determinan harus bernilai positif murni agar terdapat dua akar real berlainan.",
+      },
     ],
   } satisfies PgItem,
 
@@ -39,7 +48,10 @@ export const mockScoringKeys: Record<string, Item> = {
       { id: "opt-2-a" },
       { id: "opt-2-b", hint: "Konstanta c harus positif karena memotong sumbu-Y di titik (0, 3)." },
       { id: "opt-2-c", hint: "Nilai a = 1 karena titik puncak minimum bernilai -1 saat x = 2." },
-      { id: "opt-2-d", hint: "Sumbu simetri berada pada x = -b/(2a) = 2, sehingga koefisien b harus negatif (-4)." },
+      {
+        id: "opt-2-d",
+        hint: "Sumbu simetri berada pada x = -b/(2a) = 2, sehingga koefisien b harus negatif (-4).",
+      },
       { id: "opt-2-e", hint: "Bentuk puncak adalah f(x) = (x - 2)² - 1, bukan + 1." },
     ],
   } satisfies PgItem,
@@ -50,10 +62,19 @@ export const mockScoringKeys: Record<string, Item> = {
     key: "opt-3-a",
     options: [
       { id: "opt-3-a" },
-      { id: "opt-3-b", hint: "Perhatikan bahwa Selendang (x) membutuhkan 3 liter pewarna, bukan 5 liter." },
+      {
+        id: "opt-3-b",
+        hint: "Perhatikan bahwa Selendang (x) membutuhkan 3 liter pewarna, bukan 5 liter.",
+      },
       { id: "opt-3-c", hint: "Batasan kuota maksimal menggunakan tanda ≤, bukan ≥." },
-      { id: "opt-3-d", hint: "Pastikan koefisien x dan y sesuai dengan sumber daya masing-masing produk." },
-      { id: "opt-3-e", hint: "Kapasitas pewarna maksimal adalah 150 liter, dan waktu mesin maksimal 100 jam." },
+      {
+        id: "opt-3-d",
+        hint: "Pastikan koefisien x dan y sesuai dengan sumber daya masing-masing produk.",
+      },
+      {
+        id: "opt-3-e",
+        hint: "Kapasitas pewarna maksimal adalah 150 liter, dan waktu mesin maksimal 100 jam.",
+      },
     ],
   } satisfies PgItem,
 
@@ -74,9 +95,17 @@ export const mockScoringKeys: Record<string, Item> = {
     type: "bs",
     rows: [
       { id: "row-5-1", key: true },
-      { id: "row-5-2", key: false, hint: "Determinan matriks diagonal adalah perkalian elemen diagonal utamanya." },
+      {
+        id: "row-5-2",
+        key: false,
+        hint: "Determinan matriks diagonal adalah perkalian elemen diagonal utamanya.",
+      },
       { id: "row-5-3", key: true },
-      { id: "row-5-4", key: false, hint: "Matriks singular memiliki determinan sama dengan nol, bukan satu." },
+      {
+        id: "row-5-4",
+        key: false,
+        hint: "Matriks singular memiliki determinan sama dengan nol, bukan satu.",
+      },
     ],
   } satisfies BsItem,
 
@@ -105,7 +134,10 @@ export const mockScoringKeys: Record<string, Item> = {
     type: "pgk",
     keys: ["opt-8-b", "opt-8-d"],
     options: [
-      { id: "opt-8-a", hint: "Rata-rata data bertambah jika semua nilai ditambah konstanta yang sama." },
+      {
+        id: "opt-8-a",
+        hint: "Rata-rata data bertambah jika semua nilai ditambah konstanta yang sama.",
+      },
       { id: "opt-8-b" },
       { id: "opt-8-c", hint: "Standar deviasi tidak berubah saat seluruh data digeser/ditambah." },
       { id: "opt-8-d" },

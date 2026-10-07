@@ -1,5 +1,15 @@
-import { ScreenPlaceholder } from "@/components/domain/screen-placeholder";
+import { MockChat } from "@/app/_chat/mock-chat";
+import { PageHeader } from "@/components/domain/page-header";
 
 export default function ParentHelpPage() {
-  return <ScreenPlaceholder eyebrow="Orang tua" title="Bantuan" />;
+  return (
+    <section className="space-y-8">
+      <PageHeader
+        eyebrow="Orang tua"
+        title="Bantuan"
+        description="Pertanyaan soal laporan, langganan, atau akun anak? Tanya asisten Coreta."
+      />
+      <MockChat audience="ortu" />
+    </section>
+  );
 }

@@ -136,7 +136,11 @@ export function QuestionPanel({
               </div>
               <Badge
                 variant={
-                  scoreResult.correct ? "default" : scoreResult.score > 0 ? "secondary" : "destructive"
+                  scoreResult.correct
+                    ? "default"
+                    : scoreResult.score > 0
+                      ? "secondary"
+                      : "destructive"
                 }
                 className="text-xs font-bold"
               >
@@ -229,8 +233,7 @@ export function QuestionPanel({
             </div>
             <div className="space-y-2">
               {question.options.map((option) => {
-                const currentChoices =
-                  currentAnswer?.type === "pgk" ? currentAnswer.choices : [];
+                const currentChoices = currentAnswer?.type === "pgk" ? currentAnswer.choices : [];
                 const isChecked = currentChoices.includes(option.id);
 
                 return (
@@ -256,8 +259,7 @@ export function QuestionPanel({
               </legend>
               <div className="space-y-2.5">
                 {question.statements.map((stmt) => {
-                  const currentRows =
-                    currentAnswer?.type === "bs" ? currentAnswer.rows : {};
+                  const currentRows = currentAnswer?.type === "bs" ? currentAnswer.rows : {};
                   const isTrue = currentRows[stmt.id] === true;
                   const isFalse = currentRows[stmt.id] === false;
 
@@ -313,14 +315,15 @@ export function QuestionPanel({
             </label>
             <textarea
               id={`isian-${question.id}`}
-              value={currentAnswer?.type === "isian" ? currentAnswer.text ?? "" : ""}
+              value={currentAnswer?.type === "isian" ? (currentAnswer.text ?? "") : ""}
               onChange={(e) => handleIsianChange(e.target.value)}
               rows={3}
               placeholder={question.placeholder ?? "Contoh: 60.000 atau Rp60.000"}
               className="min-h-24 w-full resize-none rounded-xl border border-input bg-background px-4 py-3 font-mono text-base sm:text-lg leading-relaxed text-foreground shadow-xs outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring"
             />
             <p className="text-xs text-muted-foreground">
-              Sistem otomatis menormalkan penulisan titik ribuan, desimal koma, persen, pecahan, dan satuan mata uang.
+              Sistem otomatis menormalkan penulisan titik ribuan, desimal koma, persen, pecahan, dan
+              satuan mata uang.
             </p>
           </div>
         )}

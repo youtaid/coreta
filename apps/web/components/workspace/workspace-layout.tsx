@@ -475,7 +475,9 @@ export function WorkspaceLayout({
               onClick={() => setIsSubmitConfirmOpen(true)}
               className="flex min-h-touch items-center gap-1.5 px-4 text-xs font-bold bg-primary text-primary-foreground shadow-xs"
             >
-              <span>{isSubmitting || submissionStatus === "submitting" ? "Menilai..." : "Kirim"}</span>
+              <span>
+                {isSubmitting || submissionStatus === "submitting" ? "Menilai..." : "Kirim"}
+              </span>
               <Send className="size-3.5" />
             </Button>
           ) : (

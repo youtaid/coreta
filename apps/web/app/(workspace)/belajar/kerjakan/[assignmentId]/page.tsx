@@ -55,7 +55,7 @@ export default function WorkspacePage({ params }: WorkspacePageProps) {
   const currentAnswer = currentQuestion ? answers[currentQuestion.id] : undefined;
   const currentOptionId = currentAnswer?.type === "pg" ? currentAnswer.choice : null;
   const currentScoreResult = currentQuestion ? scoreResults[currentQuestion.id] : undefined;
-  const currentStrokes = currentQuestion ? strokesByQuestion[currentQuestion.id] ?? [] : [];
+  const currentStrokes = currentQuestion ? (strokesByQuestion[currentQuestion.id] ?? []) : [];
 
   const handleSelectOption = (optionId: string) => {
     if (!currentQuestion) return;

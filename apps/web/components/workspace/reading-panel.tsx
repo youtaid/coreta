@@ -1,6 +1,7 @@
 import { BookOpen, FileText, Info } from "lucide-react";
 
 import type { WorkspaceStimulus } from "@/lib/domain";
+import { countWords } from "@/lib/workspace-fit";
 import { cn } from "@/lib/utils";
 
 export interface ReadingPanelProps {
@@ -18,6 +19,7 @@ export function ReadingPanel({ stimulus, className }: ReadingPanelProps) {
     .split("\n\n")
     .map((p) => p.trim())
     .filter(Boolean);
+  const wordCount = countWords(stimulus.bodyText);
 
   return (
     <section
@@ -35,7 +37,7 @@ export function ReadingPanel({ stimulus, className }: ReadingPanelProps) {
               <BookOpen className="size-3.5" />
               Stimulus Bacaan
             </span>
-            <span className="text-xs text-muted-foreground">Panjang (~450 kata)</span>
+            <span className="text-xs text-muted-foreground">{wordCount} kata</span>
           </div>
           <h2 className="font-heading truncate text-base font-bold text-foreground">
             {stimulus.title}
@@ -49,14 +51,15 @@ export function ReadingPanel({ stimulus, className }: ReadingPanelProps) {
       {/* Internal scrollable content area — ONLY area in workspace that scrolls */}
       <div
         data-testid="reading-panel-scroll"
-        className="flex-1 min-h-0 space-y-3.5 overflow-y-auto p-4 pr-3.5 text-sm leading-relaxed text-foreground/90"
+        // Focusable so keyboard users can scroll it with the arrow keys.
+        tabIndex={0}
+        role="region"
+        aria-label={`Teks bacaan: ${stimulus.title}`}
+        className="min-h-0 flex-1 touch-pan-y space-y-3.5 overflow-y-auto overscroll-contain p-4 pr-3.5 text-sm leading-relaxed text-foreground/90 outline-none focus-visible:ring-3 focus-visible:ring-inset focus-visible:ring-ring"
       >
         <div className="flex items-start gap-2 rounded-lg border border-primary/20 bg-primary/5 p-3 text-xs text-primary dark:bg-primary/10">
           <Info className="mt-0.5 size-4 shrink-0" />
-          <p>
-            Bacalah teks narasi berikut dengan cermat untuk memahami kendala kapasitas dan variabel
-            pemodelan matematika yang ditanyakan.
-          </p>
+          <p>Baca teks berikut dengan cermat, lalu kerjakan soal di samping.</p>
         </div>
 
         {paragraphs.map((para, index) => {

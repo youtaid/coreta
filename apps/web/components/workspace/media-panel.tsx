@@ -1,8 +1,9 @@
 "use client";
 
-import { FileSpreadsheet, Headphones, ImageIcon, Video } from "lucide-react";
+import { ClipboardPaste, FileSpreadsheet, Headphones, ImageIcon, Video } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import type { WorkspaceMedia } from "@/lib/domain";
 import { cn } from "@/lib/utils";
 
@@ -14,6 +15,10 @@ import { VideoMedia } from "./media/video-media";
 export interface MediaPanelProps {
   media: WorkspaceMedia;
   className?: string;
+  /** Pastes this media onto the scratch area; the button shows only for pasteable media. */
+  onPaste?: () => void;
+  /** Number of copies already pasted, shown on the button. */
+  pastedCount?: number;
 }
 
 const mediaMeta: Record<
@@ -49,7 +54,7 @@ const mediaMeta: Record<
  *
  * Guarantees single-screen fit (Rule 9: never scrolls the outer workspace).
  */
-export function MediaPanel({ media, className }: MediaPanelProps) {
+export function MediaPanel({ media, className, onPaste, pastedCount = 0 }: MediaPanelProps) {
   const meta = mediaMeta[media.kind] || mediaMeta.image;
   const KindIcon = meta.icon;
 
@@ -71,6 +76,22 @@ export function MediaPanel({ media, className }: MediaPanelProps) {
         </div>
 
         <div className="flex items-center gap-1.5 shrink-0">
+          {media.pasteable && onPaste && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={onPaste}
+              aria-label={`Tempel ${media.title || "media"} ke area coretan`}
+              className="gap-1 px-2 text-xs"
+            >
+              <ClipboardPaste aria-hidden data-icon="inline-start" />
+              Tempel
+              {pastedCount > 0 && (
+                <span className="tabular-nums text-muted-foreground">({pastedCount})</span>
+              )}
+            </Button>
+          )}
           <Badge
             variant={meta.badgeVariant}
             className="h-5 px-1.5 text-[10px] font-semibold tracking-wide uppercase"

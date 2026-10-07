@@ -121,10 +121,26 @@ Pengrajin juga menyepakati bahwa jumlah produksi kedua jenis kain tidak mungkin 
     prompt:
       "Tentukan kebenaran dari masing-masing pernyataan terkait sifat dan operasi matriks persegi berikut ini!",
     statements: [
-      { id: "row-5-1", label: "1", text: "Jika matriks A berordo 2×2 memiliki invers, maka determinan A ≠ 0." },
-      { id: "row-5-2", label: "2", text: "Untuk setiap dua matriks persegi A dan B, selalu berlaku AB = BA." },
-      { id: "row-5-3", label: "3", text: "Determinan matriks transpos det(Aᵀ) sama dengan det(A)." },
-      { id: "row-5-4", label: "4", text: "Matriks singular adalah matriks yang memiliki nilai determinan bernilai satu." },
+      {
+        id: "row-5-1",
+        label: "1",
+        text: "Jika matriks A berordo 2×2 memiliki invers, maka determinan A ≠ 0.",
+      },
+      {
+        id: "row-5-2",
+        label: "2",
+        text: "Untuk setiap dua matriks persegi A dan B, selalu berlaku AB = BA.",
+      },
+      {
+        id: "row-5-3",
+        label: "3",
+        text: "Determinan matriks transpos det(Aᵀ) sama dengan det(A).",
+      },
+      {
+        id: "row-5-4",
+        label: "4",
+        text: "Matriks singular adalah matriks yang memiliki nilai determinan bernilai satu.",
+      },
     ],
   },
   {

@@ -102,10 +102,7 @@ export function InkCanvas({
     const current = engine.getStrokes();
     const incoming = strokes ?? [];
     if (current === incoming) return;
-    if (
-      current.length === incoming.length &&
-      current.every((s, i) => s.id === incoming[i]?.id)
-    ) {
+    if (current.length === incoming.length && current.every((s, i) => s.id === incoming[i]?.id)) {
       return;
     }
     isSyncingRef.current = true;
