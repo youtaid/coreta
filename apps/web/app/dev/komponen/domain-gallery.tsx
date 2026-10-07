@@ -2,6 +2,7 @@ import { BookOpenCheck } from "lucide-react";
 
 import { CompetencyBar } from "@/components/domain/competency-bar";
 import { EmptyState } from "@/components/domain/empty-state";
+import { Logo } from "@/components/domain/logo";
 import { PageHeader } from "@/components/domain/page-header";
 import { PathNode } from "@/components/domain/path-node";
 import { PriceCard } from "@/components/domain/price-card";
@@ -24,6 +25,55 @@ export function DomainGallery() {
       >
         Komponen domain · data tiruan dari <code>lib/mock</code>
       </p>
+
+      <Section id="logo" title="Logo Coreta (Brand)">
+        <div className="grid gap-6">
+          <div className="flex flex-col gap-3 rounded-xl border bg-card p-6">
+            <span className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+              Varian Horizontal (Bawaan Header)
+            </span>
+            <div className="flex flex-wrap items-center gap-6">
+              <Logo variant="horizontal" size="sm" />
+              <Logo variant="horizontal" size="md" />
+              <Logo variant="horizontal" size="lg" />
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3 rounded-xl border bg-card p-6">
+            <span className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+              Varian dengan Tagline
+            </span>
+            <div className="flex flex-wrap items-center gap-6">
+              <Logo variant="tagline" size="sm" />
+              <Logo variant="tagline" size="md" />
+              <Logo variant="tagline" size="lg" />
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3 rounded-xl border bg-card p-6">
+            <span className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+              Varian Ikon Aplikasi (Favicon / App Icon)
+            </span>
+            <div className="flex flex-wrap items-center gap-6">
+              <Logo variant="icon" size="sm" />
+              <Logo variant="icon" size="md" />
+              <Logo variant="icon" size="lg" />
+              <Logo variant="icon" size="xl" />
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3 rounded-xl border bg-card p-6">
+            <span className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+              Varian Bertumpuk (Stacked / Splash)
+            </span>
+            <div className="flex flex-wrap items-end gap-6">
+              <Logo variant="stacked" size="sm" />
+              <Logo variant="stacked" size="md" />
+              <Logo variant="stacked" size="lg" />
+            </div>
+          </div>
+        </div>
+      </Section>
 
       <Section id="page-header" title="PageHeader">
         <div className="rounded-xl border bg-card p-6">

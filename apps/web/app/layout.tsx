@@ -23,6 +23,10 @@ const kalam = Kalam({
 export const metadata: Metadata = {
   title: "Coreta",
   description: "Worksheet matematika TKA/UTBK yang dikerjakan dengan mencoret langsung di layar.",
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/images/coreta-ikon-aplikasi-centang-1024.png",
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

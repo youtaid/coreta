@@ -27,7 +27,11 @@ import {
 } from "@/components/ui/dialog";
 import type { WorkspaceLayoutMode, WorkspaceQuestion } from "@/lib/domain";
 import { cn } from "@/lib/utils";
+import { resolveLayout } from "@/lib/workspace-fit";
 
+import { Logo } from "@/components/domain/logo";
+
+import { FloatingWindow } from "./floating-window";
 import { MediaView } from "./media-view";
 import { QuestionPanel } from "./question-panel";
 import { ReadingPanel } from "./reading-panel";
@@ -85,7 +89,9 @@ export function WorkspaceLayout({
   const [reportReason, setReportReason] = useState<string>("petunjuk_tidak_jelas");
   const [isSubmitConfirmOpen, setIsSubmitConfirmOpen] = useState(false);
 
-  const modeBadge = modeBadges[question.layoutMode];
+  // The declared mode is a floor; content that does not fit escalates it (standar → media → bacaan).
+  const layout = resolveLayout(question);
+  const modeBadge = modeBadges[layout.mode];
   const ModeIcon = modeBadge.icon;
   const isLastQuestion = question.number >= totalQuestions;
   const isFirstQuestion = question.number <= 1;
@@ -113,6 +119,8 @@ export function WorkspaceLayout({
             <ArrowLeft className="size-4.5" />
           </Link>
 
+          <Logo variant="icon" size="sm" className="hidden sm:inline-flex shrink-0" />
+
           <div className="min-w-0">
             <h1 className="font-heading truncate text-xs sm:text-sm font-bold text-foreground">
               {worksheetTitle}
@@ -139,7 +147,7 @@ export function WorkspaceLayout({
                       ? "border-2 border-primary bg-primary text-primary-foreground shadow-xs scale-105"
                       : "border border-border/80 bg-muted/40 text-muted-foreground hover:border-primary/40 hover:bg-muted",
                   )}
-                  aria-label={`Buka soal nomor ${q.number} (${q.layoutMode})`}
+                  aria-label={`Buka soal nomor ${q.number} (${resolveLayout(q).mode})`}
                   aria-current={isCurrent ? "step" : undefined}
                 >
                   <span>{q.number}</span>
@@ -173,10 +181,10 @@ export function WorkspaceLayout({
       {/* 2. MAIN WORKSPACE CONTAINER — Adapts to 3 modes without scrolling */}
       <main
         role="main"
-        className="flex flex-1 min-h-0 w-full overflow-hidden p-2 sm:p-3 md:p-3.5 gap-2 sm:gap-3"
+        className="relative flex flex-1 min-h-0 w-full overflow-hidden p-2 sm:p-3 md:p-3.5 gap-2 sm:gap-3"
       >
         {/* MODE 1: STANDAR (Soal pendek, split 2 panel) */}
-        {question.layoutMode === "standar" && (
+        {layout.mode === "standar" && (
           <div className="flex h-full min-h-0 w-full flex-col md:flex-row gap-2 sm:gap-3">
             {/* Left/Top: Question Panel */}
             <div className="h-[46%] md:h-full md:w-[45%] lg:w-[42%] flex flex-col min-h-0 shrink-0">
@@ -195,7 +203,7 @@ export function WorkspaceLayout({
         )}
 
         {/* MODE 2: MEDIA (Soal dengan diagram / media grafis) */}
-        {question.layoutMode === "media" && (
+        {layout.mode === "media" && (
           <div className="flex h-full min-h-0 w-full flex-col md:flex-row gap-2 sm:gap-3">
             {/* Left/Top: Media + Question Panel */}
             <div className="h-[52%] md:h-full md:w-[50%] lg:w-[48%] flex flex-col gap-2 min-h-0 shrink-0">
@@ -228,7 +236,7 @@ export function WorkspaceLayout({
         )}
 
         {/* MODE 3: BACAAN (Stimulus teks panjang + area bacaan scroll internal) */}
-        {question.layoutMode === "bacaan" && (
+        {layout.mode === "bacaan" && (
           <div className="flex h-full min-h-0 w-full flex-col md:flex-row gap-2 sm:gap-3">
             {/* Left/Top: Reading Stimulus Panel (ONLY container that scrolls internally) */}
             <div className="h-[46%] md:h-full md:w-[48%] lg:w-[46%] flex flex-col min-h-0 shrink-0">
@@ -258,6 +266,13 @@ export function WorkspaceLayout({
               </div>
             </div>
           </div>
+        )}
+
+        {/* Media that does not fit beside a reading passage floats above the layout. */}
+        {layout.mediaPlacement === "floating" && question.media && (
+          <FloatingWindow key={question.id} title={question.media.title ?? "Media soal"}>
+            <MediaView media={question.media} className="rounded-none border-0 shadow-none" />
+          </FloatingWindow>
         )}
       </main>
 

@@ -13,7 +13,6 @@ import {
   ListChecks,
   LogIn,
   Menu,
-  PencilLine,
   RefreshCw,
   Rocket,
   Tag,
@@ -26,6 +25,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { type ReactNode, useEffect, useRef } from "react";
 
+import { Logo } from "@/components/domain/logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 import {
   appRoles,
@@ -64,17 +64,7 @@ const navigationIcons: Record<NavigationIcon, LucideIcon> = {
 };
 
 function Brand() {
-  return (
-    <Link
-      href="/"
-      className="inline-flex min-h-touch items-center gap-3 rounded-lg font-heading text-lg font-bold tracking-tight focus-visible:ring-3 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none"
-    >
-      <span className="grid size-9 place-items-center rounded-xl bg-primary text-primary-foreground">
-        <PencilLine className="size-5" aria-hidden />
-      </span>
-      Coreta
-    </Link>
-  );
+  return <Logo href="/" size="md" priority />;
 }
 
 function DevRoleSwitcher({ role, compact = false }: { role: AppRole; compact?: boolean }) {
