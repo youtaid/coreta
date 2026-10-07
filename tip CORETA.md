@@ -909,7 +909,7 @@ _Paket-paket murni yang bisa diuji tanpa Supabase: penilaian, penguasaan, mesin 
   - Di tablet atau emulasi, goresan tampil halus dan mengikuti tekanan
   - Undo/redo dan penghapus bekerja
   - Tes unit untuk logika undo/redo dan penolakan telapak tangan
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 26 — Format Coreta Ink v1
 
@@ -926,7 +926,7 @@ _Paket-paket murni yang bisa diuji tanpa Supabase: penilaian, penguasaan, mesin 
   - Tes bolak-balik: serialize lalu deserialize menghasilkan data yang sama
   - Tes: penghapusan tersimpan sebagai peristiwa
   - PNG hasil render tidak lebih lebar dari 1024 px
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 27 — Lapisan Tempel (Paste-to-Ink)
 
@@ -1967,8 +1967,8 @@ Catat bug, blocker, atau hal yang perlu dievaluasi. Jangan langsung dieksekusi �
 | Fase 22 — Penilaian: Isian & Normalisasi | Selesai | ~30 menit | 2026-10-07 | Fungsi `normalizeAnswer` dan `scoreIsian` menangani pemisah ribuan, desimal koma/titik, pecahan, persen, kata ribu/juta, satuan terdaftar, dan toleransi numerik; 98 kasus tes lulus |
 | Fase 23 — Model Penguasaan v1 | Selesai | ~30 menit | 2026-10-07 | `computeMastery`, `applyReview`, `isReviewDue`; hanya percobaan pertama tiap butir yang dihitung; ambang unlock 70%/5 dan tuntas 80%/8; pencabutan <60%; jadwal ulang berjarak 3, 7, 14, 30 hari; tes unit lulus |
 | Fase 24 — Komposisi Worksheet Mingguan | Selesai | ~30 menit | 2026-10-07 | Fungsi `composeWorksheet` menyusun 8 soal unik: 4 baru + 2 adaptif (skor terlemah) + 2 ulang berjarak jatuh tempo; slot kosong dialihkan ke soal baru; deduplikasi penuh; tes unit lulus |
-| Fase 25 — Mesin Tinta Dasar | — | ~30 menit | — | — |
-| Fase 26 — Format Coreta Ink v1 | — | ~30 menit | — | — |
+| Fase 25 — Mesin Tinta Dasar | Selesai | ~30 menit | 2026-10-07 | Kelas InkEngine pada canvas murni menggunakan Pointer Events dan perfect-freehand; pena sensitif tekanan, penghapus, undo/redo, penolakan telapak tangan (PalmGuard); pembungkus React InkCanvas; tes unit lengkap lulus |
+| Fase 26 — Format Coreta Ink v1 | Selesai | ~30 menit | 2026-10-07 | Tipe CoretaInkDocumentV1; serialize gzip (fflate) dan deserialize mendukung format lama; penghapusan tersimpan sebagai event; renderPng murni menghasilkan PNG preview dengan lebar maks 1024 px; tes unit lengkap lulus |
 | Fase 27 — Lapisan Tempel (Paste-to-Ink) | — | ~30 menit | — | — |
 | Fase 28 — State Ruang Kerja | — | ~30 menit | — | — |
 | Fase 29 — Validator Konten | — | ~30 menit | — | — |
