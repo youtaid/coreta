@@ -1,10 +1,11 @@
 "use client";
 
-import { use, useState } from "react";
+import { use, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
+import { useWorkspaceStore } from "@/components/workspace/store";
 import { WorkspaceLayout } from "@/components/workspace/workspace-layout";
-import { mockWorkspaceAssignment } from "@/lib/mock/workspace";
+import { getMockWorkspaceAssignment } from "@/lib/mock/workspace";
 
 interface WorkspacePageProps {
   params: Promise<{ assignmentId: string }>;
@@ -14,54 +15,89 @@ export default function WorkspacePage({ params }: WorkspacePageProps) {
   const router = useRouter();
   const { assignmentId } = use(params);
 
-  const assignment = mockWorkspaceAssignment;
-  const questions = assignment.questions;
+  const assignment = getMockWorkspaceAssignment(assignmentId);
+  const assignmentQuestions = assignment.questions;
 
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({});
+  const {
+    questions,
+    currentQuestionIndex,
+    answers,
+    strokesByQuestion,
+    submissionStatus,
+    scoreResults,
+    overallScore,
+    elapsedSeconds,
+    initialize,
+    goToQuestion,
+    nextQuestion,
+    previousQuestion,
+    setAnswer,
+    setPgAnswer,
+    setStrokes,
+    submit,
+  } = useWorkspaceStore();
 
-  const currentQuestion = questions[currentQuestionIndex] ?? questions[0];
-  const currentOptionId = currentQuestion ? selectedAnswers[currentQuestion.id] : null;
+  // Initialize store when assignment loads
+  useEffect(() => {
+    initialize(assignmentId, assignmentQuestions);
+  }, [assignmentId, assignmentQuestions, initialize]);
+
+  // Timer interval
+  useEffect(() => {
+    const timer = setInterval(() => {
+      useWorkspaceStore.getState().tickTimer();
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const activeQuestions = questions.length > 0 ? questions : assignmentQuestions;
+  const currentQuestion = activeQuestions[currentQuestionIndex] ?? activeQuestions[0];
+  const currentAnswer = currentQuestion ? answers[currentQuestion.id] : undefined;
+  const currentOptionId = currentAnswer?.type === "pg" ? currentAnswer.choice : null;
+  const currentScoreResult = currentQuestion ? scoreResults[currentQuestion.id] : undefined;
+  const currentStrokes = currentQuestion ? strokesByQuestion[currentQuestion.id] ?? [] : [];
 
   const handleSelectOption = (optionId: string) => {
     if (!currentQuestion) return;
-    setSelectedAnswers((prev) => ({
-      ...prev,
-      [currentQuestion.id]: optionId,
-    }));
+    setPgAnswer(currentQuestion.id, optionId);
   };
 
-  const handleNext = () => {
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex((prev) => prev + 1);
+  const handleSubmit = async () => {
+    if (submissionStatus === "graded") {
+      router.push(`/belajar/hasil/${assignmentId || assignment.id}`);
+      return;
     }
+    await submit();
   };
 
-  const handlePrevious = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex((prev) => prev - 1);
-    }
-  };
-
-  const handleSubmit = () => {
-    // Navigate to results page after completing the workspace
+  const handleViewResults = () => {
     router.push(`/belajar/hasil/${assignmentId || assignment.id}`);
   };
 
   return (
     <WorkspaceLayout
       question={currentQuestion}
-      questions={questions}
+      questions={activeQuestions}
       currentQuestionIndex={currentQuestionIndex}
-      totalQuestions={questions.length}
+      totalQuestions={activeQuestions.length}
       worksheetTitle={assignment.title}
       stageName={assignment.stageName}
       selectedOptionId={currentOptionId}
+      currentAnswer={currentAnswer}
+      onAnswerChange={(ans) => currentQuestion && setAnswer(currentQuestion.id, ans)}
+      scoreResult={currentScoreResult}
+      strokes={currentStrokes}
+      onStrokesChange={(strokes) => currentQuestion && setStrokes(currentQuestion.id, strokes)}
+      elapsedSeconds={elapsedSeconds}
+      submissionStatus={submissionStatus}
+      overallScore={overallScore}
+      isSubmitting={submissionStatus === "submitting"}
       onSelectOption={handleSelectOption}
-      onSelectQuestion={setCurrentQuestionIndex}
-      onPreviousQuestion={handlePrevious}
-      onNextQuestion={handleNext}
+      onSelectQuestion={goToQuestion}
+      onPreviousQuestion={previousQuestion}
+      onNextQuestion={nextQuestion}
       onSubmit={handleSubmit}
+      onViewResults={handleViewResults}
       onExitHref="/belajar/worksheet"
     />
   );

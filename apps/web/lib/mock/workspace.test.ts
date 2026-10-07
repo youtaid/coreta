@@ -7,10 +7,18 @@ import {
 } from "./workspace";
 
 describe("mockWorkspaceQuestions", () => {
-  it("provides exactly three mock questions matching the three DoD layout modes", () => {
-    expect(mockWorkspaceQuestions).toHaveLength(3);
-    const modes = mockWorkspaceQuestions.map((q) => q.layoutMode);
-    expect(modes).toEqual(["standar", "media", "bacaan"]);
+  it("provides 8 mock questions matching DoD layout modes and answer types", () => {
+    expect(mockWorkspaceQuestions).toHaveLength(8);
+    const modes = new Set(mockWorkspaceQuestions.map((q) => q.layoutMode));
+    expect(modes.has("standar")).toBe(true);
+    expect(modes.has("media")).toBe(true);
+    expect(modes.has("bacaan")).toBe(true);
+
+    const types = new Set(mockWorkspaceQuestions.map((q) => q.answerType));
+    expect(types.has("pg")).toBe(true);
+    expect(types.has("pgk")).toBe(true);
+    expect(types.has("bs")).toBe(true);
+    expect(types.has("isian")).toBe(true);
   });
 
   it("configures question 1 as standard mode with prompt and math formula", () => {
@@ -48,10 +56,10 @@ describe("mockWorkspaceQuestions", () => {
     expect(q3.options).toHaveLength(5);
   });
 
-  it("provides valid five options (A through E) for all questions", () => {
-    const expectedLabels = ["A", "B", "C", "D", "E"];
-    for (const q of mockWorkspaceQuestions) {
-      expect(q.options?.map((o) => o.label)).toEqual(expectedLabels);
+  it("provides valid options for PG questions", () => {
+    const pgQuestions = mockWorkspaceQuestions.filter((q) => q.answerType === "pg");
+    for (const q of pgQuestions) {
+      expect(q.options?.length).toBeGreaterThanOrEqual(4);
       for (const opt of q.options ?? []) {
         expect(opt.id).toBeTruthy();
         expect(opt.text.trim().length).toBeGreaterThan(0);
@@ -67,9 +75,9 @@ describe("mockWorkspaceQuestions", () => {
     expect(getMockWorkspaceQuestion(999)).toBeUndefined();
   });
 
-  it("exposes a complete mockWorkspaceAssignment", () => {
+  it("exposes a complete mockWorkspaceAssignment with 8 questions", () => {
     expect(mockWorkspaceAssignment.id).toBe("demo-assignment");
-    expect(mockWorkspaceAssignment.totalQuestions).toBe(3);
-    expect(mockWorkspaceAssignment.questions).toHaveLength(3);
+    expect(mockWorkspaceAssignment.totalQuestions).toBe(8);
+    expect(mockWorkspaceAssignment.questions).toHaveLength(8);
   });
 });

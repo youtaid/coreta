@@ -127,6 +127,8 @@ export interface WorkspaceMedia {
   title?: string;
   caption?: string;
   url?: string;
+  /** Whether the student may paste this media onto the scratch area to write on top of it. */
+  pasteable?: boolean;
   /** Structured table data when kind === "table" */
   tableData?: MediaTableData;
   /** Text transcript for audio playback */
@@ -163,6 +165,8 @@ export interface WorkspaceQuestion {
   prompt: string;
   formula?: string;
   options?: WorkspaceOption[];
+  statements?: WorkspaceOption[];
+  placeholder?: string;
   media?: WorkspaceMedia;
   stimulus?: WorkspaceStimulus;
 }

@@ -1,18 +1,21 @@
 "use client";
 
+import type { Stroke } from "@coreta/ink";
+import type { Answer, ScoreResult } from "@coreta/scoring";
 import {
   ArrowLeft,
   BookOpen,
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
+  Clock,
   Flag,
   ImageIcon,
   Layout,
   Send,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Badge } from "@/components/ui/badge";
@@ -25,7 +28,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import type { WorkspaceLayoutMode, WorkspaceQuestion } from "@/lib/domain";
+import type { WorkspaceLayoutMode, WorkspaceMedia, WorkspaceQuestion } from "@/lib/domain";
 import { cn } from "@/lib/utils";
 import { resolveLayout } from "@/lib/workspace-fit";
 
@@ -33,6 +36,7 @@ import { Logo } from "@/components/domain/logo";
 
 import { FloatingWindow } from "./floating-window";
 import { MediaView } from "./media-view";
+import type { PastedMedia } from "./paste-layer";
 import { QuestionPanel } from "./question-panel";
 import { ReadingPanel } from "./reading-panel";
 import { ScratchArea } from "./scratch-area";
@@ -46,10 +50,20 @@ export interface WorkspaceLayoutProps {
   stageName?: string;
   selectedOptionId?: string | null;
   onSelectOption?: (optionId: string) => void;
+  currentAnswer?: Answer;
+  onAnswerChange?: (answer: Answer) => void;
+  scoreResult?: ScoreResult;
+  strokes?: Stroke[];
+  onStrokesChange?: (strokes: Stroke[]) => void;
+  elapsedSeconds?: number;
+  submissionStatus?: "draft" | "submitting" | "graded";
+  overallScore?: number | null;
+  isSubmitting?: boolean;
   onSelectQuestion?: (index: number) => void;
   onPreviousQuestion?: () => void;
   onNextQuestion?: () => void;
   onSubmit?: () => void;
+  onViewResults?: () => void;
   onReportHint?: () => void;
   onExitHref?: string;
   className?: string;
@@ -63,6 +77,12 @@ const modeBadges: Record<
   media: { label: "Mode Media", icon: ImageIcon, variant: "default" },
   bacaan: { label: "Mode Bacaan", icon: BookOpen, variant: "outline" },
 };
+
+function formatElapsedTime(seconds: number): string {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+}
 
 /**
  * WorkspaceLayout manages the single-screen (100dvh, overflow-hidden) workspace.
@@ -78,13 +98,48 @@ export function WorkspaceLayout({
   stageName = "Tahap 2 — Aljabar",
   selectedOptionId,
   onSelectOption,
+  currentAnswer,
+  onAnswerChange,
+  scoreResult,
+  strokes,
+  onStrokesChange,
+  elapsedSeconds,
+  submissionStatus = "draft",
+  overallScore,
+  isSubmitting = false,
   onSelectQuestion,
   onPreviousQuestion,
   onNextQuestion,
   onSubmit,
+  onViewResults,
   onExitHref = "/belajar/worksheet",
   className,
 }: WorkspaceLayoutProps) {
+  // Media pasted onto each question's scratch area. Kept here, not inside the scratch area, so a
+  // pasted table is still there when the student returns to the question.
+  const [pastedByQuestion, setPastedByQuestion] = useState<Record<string, PastedMedia[]>>({});
+  const pasteCounter = useRef(0);
+  const pastedHere = pastedByQuestion[question.id] ?? [];
+
+  function pasteMedia(media: WorkspaceMedia) {
+    const id = `paste-${(pasteCounter.current += 1)}`;
+    setPastedByQuestion((current) => {
+      const list = current[question.id] ?? [];
+      const slot = (list.at(-1)?.slot ?? -1) + 1;
+      return { ...current, [question.id]: [...list, { id, slot, media }] };
+    });
+  }
+
+  function removePasted(id: string) {
+    setPastedByQuestion((current) => ({
+      ...current,
+      [question.id]: (current[question.id] ?? []).filter((item) => item.id !== id),
+    }));
+  }
+
+  const pastedCountOf = (media: WorkspaceMedia) =>
+    pastedHere.filter((item) => item.media.id === media.id).length;
+
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [reportReason, setReportReason] = useState<string>("petunjuk_tidak_jelas");
   const [isSubmitConfirmOpen, setIsSubmitConfirmOpen] = useState(false);
@@ -164,8 +219,27 @@ export function WorkspaceLayout({
           )}
         </nav>
 
-        {/* Right: Mode Badge & Theme Toggle */}
+        {/* Right: Timer, Graded Badge, Mode Badge & Theme Toggle */}
         <div className="flex items-center gap-2">
+          {elapsedSeconds !== undefined && (
+            <div
+              className="flex items-center gap-1.5 rounded-md border border-border/70 bg-muted/40 px-2.5 py-1 text-xs font-mono font-medium text-muted-foreground"
+              aria-label={`Waktu pengerjaan: ${formatElapsedTime(elapsedSeconds)}`}
+            >
+              <Clock className="size-3.5 text-primary" />
+              <span>{formatElapsedTime(elapsedSeconds)}</span>
+            </div>
+          )}
+
+          {submissionStatus === "graded" && overallScore !== null && overallScore !== undefined && (
+            <Badge
+              variant={overallScore >= 70 ? "default" : "secondary"}
+              className="h-7 px-2.5 text-xs font-bold"
+            >
+              Skor: {Math.round(overallScore)}%
+            </Badge>
+          )}
+
           <Badge
             variant={modeBadge.variant}
             className="hidden sm:inline-flex items-center gap-1.5 h-7 px-2.5 text-xs font-semibold"
@@ -192,12 +266,22 @@ export function WorkspaceLayout({
                 question={question}
                 selectedOptionId={selectedOptionId}
                 onSelectOption={onSelectOption}
+                currentAnswer={currentAnswer}
+                onAnswerChange={onAnswerChange}
+                scoreResult={scoreResult}
               />
             </div>
 
             {/* Right/Bottom: Scratch Area */}
             <div className="h-[54%] md:h-full flex-1 flex flex-col min-h-0">
-              <ScratchArea label="Area Coretan — Mode Standar" />
+              <ScratchArea
+                key={question.id}
+                label="Area Coretan — Mode Standar"
+                pasted={pastedHere}
+                onRemovePasted={removePasted}
+                strokes={strokes}
+                onStrokesChange={onStrokesChange}
+              />
             </div>
           </div>
         )}
@@ -210,7 +294,11 @@ export function WorkspaceLayout({
               {/* Media diagram */}
               <div className="h-[48%] md:h-[45%] flex flex-col min-h-0 shrink-0">
                 {question.media ? (
-                  <MediaView media={question.media} />
+                  <MediaView
+                    media={question.media}
+                    onPaste={() => question.media && pasteMedia(question.media)}
+                    pastedCount={pastedCountOf(question.media)}
+                  />
                 ) : (
                   <div className="flex h-full items-center justify-center rounded-xl border border-dashed border-border bg-muted/20 text-xs text-muted-foreground">
                     Tidak ada media
@@ -224,13 +312,23 @@ export function WorkspaceLayout({
                   question={question}
                   selectedOptionId={selectedOptionId}
                   onSelectOption={onSelectOption}
+                  currentAnswer={currentAnswer}
+                  onAnswerChange={onAnswerChange}
+                  scoreResult={scoreResult}
                 />
               </div>
             </div>
 
             {/* Right/Bottom: Scratch Area */}
             <div className="h-[48%] md:h-full flex-1 flex flex-col min-h-0">
-              <ScratchArea label="Area Coretan — Mode Media" />
+              <ScratchArea
+                key={question.id}
+                label="Area Coretan — Mode Media"
+                pasted={pastedHere}
+                onRemovePasted={removePasted}
+                strokes={strokes}
+                onStrokesChange={onStrokesChange}
+              />
             </div>
           </div>
         )}
@@ -257,12 +355,22 @@ export function WorkspaceLayout({
                   question={question}
                   selectedOptionId={selectedOptionId}
                   onSelectOption={onSelectOption}
+                  currentAnswer={currentAnswer}
+                  onAnswerChange={onAnswerChange}
+                  scoreResult={scoreResult}
                 />
               </div>
 
               {/* Scratch Area */}
               <div className="h-[52%] md:h-[55%] flex flex-col min-h-0 flex-1">
-                <ScratchArea label="Area Coretan — Mode Bacaan" />
+                <ScratchArea
+                  key={question.id}
+                  label="Area Coretan — Mode Bacaan"
+                  pasted={pastedHere}
+                  onRemovePasted={removePasted}
+                  strokes={strokes}
+                  onStrokesChange={onStrokesChange}
+                />
               </div>
             </div>
           </div>
@@ -271,7 +379,12 @@ export function WorkspaceLayout({
         {/* Media that does not fit beside a reading passage floats above the layout. */}
         {layout.mediaPlacement === "floating" && question.media && (
           <FloatingWindow key={question.id} title={question.media.title ?? "Media soal"}>
-            <MediaView media={question.media} className="rounded-none border-0 shadow-none" />
+            <MediaView
+              media={question.media}
+              className="rounded-none border-0 shadow-none"
+              onPaste={() => question.media && pasteMedia(question.media)}
+              pastedCount={pastedCountOf(question.media)}
+            />
           </FloatingWindow>
         )}
       </main>
@@ -296,14 +409,26 @@ export function WorkspaceLayout({
           </Button>
         </div>
 
-        {/* Center: Offline/Save status indicator */}
+        {/* Center: Offline/Save status indicator or Graded Status */}
         <div className="flex items-center gap-1.5 text-[11px] font-medium text-muted-foreground">
-          <span className="size-2 rounded-full bg-success animate-pulse" />
-          <span className="hidden sm:inline">Tersimpan di perangkat</span>
-          <span className="sm:hidden">Tersimpan</span>
+          {submissionStatus === "graded" ? (
+            <>
+              <span className="size-2 rounded-full bg-primary" />
+              <span className="hidden sm:inline">
+                Worksheet dinilai (Skor: {Math.round(overallScore ?? 0)}%)
+              </span>
+              <span className="sm:hidden">Dinilai</span>
+            </>
+          ) : (
+            <>
+              <span className="size-2 rounded-full bg-success animate-pulse" />
+              <span className="hidden sm:inline">Tersimpan di perangkat</span>
+              <span className="sm:hidden">Tersimpan</span>
+            </>
+          )}
         </div>
 
-        {/* Right: Navigation (Sebelumnya & Selanjutnya / Kirim) */}
+        {/* Right: Navigation (Sebelumnya & Selanjutnya / Kirim / Lihat Hasil) */}
         <div className="flex items-center gap-2">
           <Button
             type="button"
@@ -317,15 +442,40 @@ export function WorkspaceLayout({
             <span className="hidden sm:inline">Sebelumnya</span>
           </Button>
 
-          {isLastQuestion ? (
+          {submissionStatus === "graded" && !isLastQuestion && (
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              onClick={onViewResults ?? onSubmit}
+              className="hidden sm:flex min-h-touch items-center gap-1.5 px-3 text-xs font-semibold"
+            >
+              <span>Lihat Hasil</span>
+              <CheckCircle2 className="size-3.5 text-primary" />
+            </Button>
+          )}
+
+          {submissionStatus === "graded" && isLastQuestion ? (
             <Button
               type="button"
               variant="default"
               size="sm"
+              onClick={onViewResults ?? onSubmit}
+              className="flex min-h-touch items-center gap-1.5 px-4 text-xs font-bold bg-primary text-primary-foreground shadow-xs"
+            >
+              <span>Lihat Hasil</span>
+              <CheckCircle2 className="size-3.5" />
+            </Button>
+          ) : isLastQuestion ? (
+            <Button
+              type="button"
+              variant="default"
+              size="sm"
+              disabled={isSubmitting || submissionStatus === "submitting"}
               onClick={() => setIsSubmitConfirmOpen(true)}
               className="flex min-h-touch items-center gap-1.5 px-4 text-xs font-bold bg-primary text-primary-foreground shadow-xs"
             >
-              <span>Kirim</span>
+              <span>{isSubmitting || submissionStatus === "submitting" ? "Menilai..." : "Kirim"}</span>
               <Send className="size-3.5" />
             </Button>
           ) : (

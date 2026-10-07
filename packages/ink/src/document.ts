@@ -35,6 +35,13 @@ export class InkDocument {
     return [...this.strokes];
   }
 
+  /** Loads strokes directly (e.g. restoring previous session), resetting undo/redo stacks. */
+  loadStrokes(strokes: readonly Stroke[]): void {
+    this.strokes = [...strokes];
+    this.undoStack = [];
+    this.redoStack = [];
+  }
+
   add(stroke: Stroke): void {
     this.strokes.push(stroke);
     this.record({ type: "add", stroke });

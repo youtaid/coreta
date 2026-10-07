@@ -1,18 +1,35 @@
-import { Grid3X3, PencilLine } from "lucide-react";
+import type { Stroke } from "@coreta/ink";
+import { PencilLine } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+
+import { InkCanvas } from "./ink-canvas";
+import { PasteLayerSurface, type PastedMedia } from "./paste-layer";
 
 export interface ScratchAreaProps {
   className?: string;
   label?: string;
+  /** Media pasted onto this area; shown beneath the ink. */
+  pasted?: readonly PastedMedia[];
+  onRemovePasted?: (id: string) => void;
+  /** Current strokes (for question persistence) */
+  strokes?: Stroke[];
+  /** Callback fired whenever strokes change */
+  onStrokesChange?: (strokes: Stroke[]) => void;
 }
 
 /**
- * Grid scratchpad area for the single-screen workspace.
- * In Phase 10, this provides the mathematical 24px grid paper layout.
- * Digital ink engine (Pointer Events & perfect-freehand) is added in Phase 25.
+ * Grid scratchpad area for the single-screen workspace: 24px grid paper with the digital ink
+ * canvas (pen, eraser, undo, redo, clear) drawn on top of it.
  */
-export function ScratchArea({ className, label = "Area Coretan" }: ScratchAreaProps) {
+export function ScratchArea({
+  className,
+  label = "Area Coretan",
+  pasted = [],
+  onRemovePasted,
+  strokes,
+  onStrokesChange,
+}: ScratchAreaProps) {
   return (
     <section
       aria-label={label}
@@ -41,34 +58,28 @@ export function ScratchArea({ className, label = "Area Coretan" }: ScratchAreaPr
         <rect width="100%" height="100%" fill="url(#workspace-grid-pattern)" />
       </svg>
 
-      {/* Top watermark / label badge */}
-      <div className="relative z-10 flex items-center justify-between border-b border-border/40 bg-background/70 px-3 py-1.5 text-xs text-muted-foreground backdrop-blur-xs">
-        <div className="flex items-center gap-1.5 font-medium">
-          <PencilLine className="size-3.5 text-primary" />
-          <span>{label}</span>
-          <span className="hidden text-[11px] text-muted-foreground/70 sm:inline">
-            (Kertas Berpetak 24px)
+      {/* Toolbar and drawing canvas, on top of the grid. */}
+      <InkCanvas
+        strokes={strokes}
+        onStrokesChange={onStrokesChange}
+        layerCount={pasted.length}
+        renderUnderlay={(interactive) => (
+          <PasteLayerSurface
+            pasted={pasted}
+            interactive={interactive}
+            onRemove={(id) => onRemovePasted?.(id)}
+          />
+        )}
+        header={
+          <span className="flex items-center gap-1.5 font-medium">
+            <PencilLine className="size-3.5 shrink-0 text-primary" />
+            <span className="truncate">{label}</span>
+            <span className="hidden text-[11px] text-muted-foreground/70 sm:inline">
+              (Kertas Berpetak 24px)
+            </span>
           </span>
-        </div>
-        <div className="flex items-center gap-1 text-[11px] text-muted-foreground/80">
-          <Grid3X3 className="size-3" />
-          <span>Satu Layar</span>
-        </div>
-      </div>
-
-      {/* Central informational placeholder */}
-      <div className="pointer-events-none relative z-0 flex flex-1 flex-col items-center justify-center p-4 text-center">
-        <div className="mb-2 flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary/60 dark:bg-primary/20 dark:text-primary/70">
-          <Grid3X3 className="size-5" />
-        </div>
-        <p className="max-w-xs text-xs font-semibold text-foreground/75">
-          Kotak berpetak siap untuk coretan dan pembuktian
-        </p>
-        <p className="mt-1 max-w-sm text-[11px] text-muted-foreground/70">
-          Mencoret langsung di layar tablet dengan pena/stylus. Mesin tinta digital terintegrasi di
-          Fase 25.
-        </p>
-      </div>
+        }
+      />
     </section>
   );
 }

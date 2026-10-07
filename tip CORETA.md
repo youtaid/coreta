@@ -940,7 +940,7 @@ _Paket-paket murni yang bisa diuji tanpa Supabase: penilaian, penguasaan, mesin 
 - **Definition of Done**:
   - Gambar tabel bisa ditempel, digeser, dan diubah ukurannya dengan pena
   - Berkas coretan hasil `serialize` memuat `media_id`, bukan piksel gambar
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 28 — State Ruang Kerja
 
@@ -957,7 +957,7 @@ _Paket-paket murni yang bisa diuji tanpa Supabase: penilaian, penguasaan, mesin 
   - Siswa bisa mengerjakan 8 soal tiruan dari awal sampai halaman hasil
   - Setiap tipe soal menampilkan nilai dan petunjuk yang benar
   - Pindah soal tidak menghapus coretan soal sebelumnya selama sesi
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 29 — Validator Konten
 
@@ -975,7 +975,7 @@ _Paket-paket murni yang bisa diuji tanpa Supabase: penilaian, penguasaan, mesin 
   - Butir tanpa teks alternatif ditolak dengan pesan jelas
   - Butir PG tanpa petunjuk pengecoh ditolak
   - Cakupan baris paket ≥ 90%
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 > **Titik berhenti — Milestone 3**: `packages/scoring` dan `packages/ink` punya cakupan baris ≥ 90%; ruang kerja bisa dipakai penuh dengan API tiruan.
 
@@ -1970,7 +1970,7 @@ Catat bug, blocker, atau hal yang perlu dievaluasi. Jangan langsung dieksekusi �
 | Fase 25 — Mesin Tinta Dasar | Selesai | ~30 menit | 2026-10-07 | Kelas InkEngine pada canvas murni menggunakan Pointer Events dan perfect-freehand; pena sensitif tekanan, penghapus, undo/redo, penolakan telapak tangan (PalmGuard); pembungkus React InkCanvas; tes unit lengkap lulus |
 | Fase 26 — Format Coreta Ink v1 | Selesai | ~30 menit | 2026-10-07 | Tipe CoretaInkDocumentV1; serialize gzip (fflate) dan deserialize mendukung format lama; penghapusan tersimpan sebagai event; renderPng murni menghasilkan PNG preview dengan lebar maks 1024 px; tes unit lengkap lulus |
 | Fase 27 — Lapisan Tempel (Paste-to-Ink) | — | ~30 menit | — | — |
-| Fase 28 — State Ruang Kerja | — | ~30 menit | — | — |
+| Fase 28 — State Ruang Kerja | Selesai | ~30 menit | 2026-10-07 | Store Zustand (apps/web/lib/workspace-store.ts); navigasi 8 soal; dukungan 4 tipe jawaban (PG, PGK, BS, Isian); retensi coretan digital antar soal; timer pengerjaan; integrasi penilaian mock @coreta/scoring dengan petunjuk pengecoh; tes unit 22 files / 252 tests lulus |
 | Fase 29 — Validator Konten | — | ~30 menit | — | — |
 | Fase 30 — Migrasi 1: Akun & Keluarga | — | ~30 menit | — | — |
 | Fase 31 — Migrasi 2: Kurikulum & Konten | — | ~30 menit | — | — |

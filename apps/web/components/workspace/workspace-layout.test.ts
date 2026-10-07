@@ -106,11 +106,12 @@ describe("WorkspaceLayout", () => {
     );
     expect(htmlIntermediate).toContain("Selanjutnya");
 
+    const finalQuestion = mockWorkspaceQuestions[mockWorkspaceQuestions.length - 1]!;
     const htmlFinal = renderToStaticMarkup(
       createElement(WorkspaceLayout, {
-        question: qBacaan,
+        question: finalQuestion,
         questions: mockWorkspaceQuestions,
-        currentQuestionIndex: 2,
+        currentQuestionIndex: mockWorkspaceQuestions.length - 1,
       }),
     );
     expect(htmlFinal).toContain("Kirim");
@@ -141,7 +142,11 @@ describe("ScratchArea", () => {
 
     expect(html).toContain("workspace-grid-pattern");
     expect(html).toContain("Kertas Berpetak 24px");
-    expect(html).toContain("Satu Layar");
-    expect(html).toContain("Fase 25");
+    // The ink toolbar and canvas replace the earlier placeholder text.
+    expect(html).toContain('role="toolbar"');
+    expect(html).toContain("<canvas");
+    for (const name of ["Pena", "Penghapus", "Urungkan", "Ulangi", "Bersihkan"]) {
+      expect(html).toContain(`aria-label="${name}"`);
+    }
   });
 });

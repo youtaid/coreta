@@ -17,6 +17,8 @@ export interface InkEngineOptions {
   now?: () => number;
   /** Makes stroke ids; defaults to a counter, so ids are unique per engine. */
   createId?: () => string;
+  /** Initial strokes to load into the document. */
+  initialStrokes?: Stroke[];
 }
 
 export interface InkState {
@@ -84,6 +86,9 @@ export class InkEngine {
     canvas.addEventListener("pointermove", this.handlePointerMove);
     canvas.addEventListener("pointerup", this.handlePointerEnd);
     canvas.addEventListener("pointercancel", this.handlePointerEnd);
+    if (options.initialStrokes && options.initialStrokes.length > 0) {
+      this.document.loadStrokes(options.initialStrokes);
+    }
     this.resize();
   }
 
@@ -111,6 +116,13 @@ export class InkEngine {
   /** The strokes on the page, in drawing order. */
   getStrokes(): Stroke[] {
     return this.document.getStrokes();
+  }
+
+  /** Loads strokes directly (e.g. restoring previous session), resetting undo/redo stacks, and redraws. */
+  loadStrokes(strokes: readonly Stroke[]): void {
+    this.cancelGesture();
+    this.document.loadStrokes(strokes);
+    this.changed();
   }
 
   /** Calls `listener` whenever the tool, the strokes, or the undo/redo availability change. */
