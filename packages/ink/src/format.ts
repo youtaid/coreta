@@ -30,8 +30,7 @@ export interface CoretaStrokeV1 {
 }
 
 export type CoretaEventV1 =
-  | { type: "erase"; strokeIds: string[]; t: number }
-  | { type: "clear"; t: number };
+  { type: "erase"; strokeIds: string[]; t: number } | { type: "clear"; t: number };
 
 export interface CoretaLayerV1 {
   media_id: string;
@@ -236,13 +235,9 @@ function migrateToV1(raw: Record<string, unknown>): CoretaInkDocumentV1 {
     strokes.push(strokeItem);
   }
 
-  const events: CoretaEventV1[] = Array.isArray(raw.events)
-    ? (raw.events as CoretaEventV1[])
-    : [];
+  const events: CoretaEventV1[] = Array.isArray(raw.events) ? (raw.events as CoretaEventV1[]) : [];
 
-  const layers: CoretaLayerV1[] = Array.isArray(raw.layers)
-    ? (raw.layers as CoretaLayerV1[])
-    : [];
+  const layers: CoretaLayerV1[] = Array.isArray(raw.layers) ? (raw.layers as CoretaLayerV1[]) : [];
 
   return {
     v: 1,

@@ -10,7 +10,8 @@
     "build": "tsc -p tsconfig.build.json",
     "lint": "eslint src",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run --config ../../vitest.workspace.ts packages/ink/"
+    "test": "vitest run --config ../../vitest.workspace.ts packages/ink/",
+    "coverage": "vitest run --config ../../vitest.workspace.ts packages/ink/ --coverage --coverage.provider=v8 --coverage.include=packages/ink/src/**/*.ts --coverage.exclude=**/*.test.ts --coverage.thresholds.lines=90"
   },
   "dependencies": {
     "fflate": "^0.8.3",

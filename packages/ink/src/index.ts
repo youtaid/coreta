@@ -23,6 +23,20 @@ export type {
 export { encodePng, getPngDimensions, renderPng } from "./png";
 export type { RenderPngOptions } from "./png";
 export {
+  bringToFront,
+  CASCADE_STEP,
+  fitRect,
+  fromDocumentLayers,
+  INITIAL_SHARE,
+  MIN_LAYER_SIZE,
+  moveLayer,
+  placeLayer,
+  resizeLayer,
+  scaleLayer,
+  toDocumentLayers,
+} from "./layers";
+export type { CanvasSize, Corner, LayerRect, PasteLayer } from "./layers";
+export {
   DEFAULT_PALM_GRACE_MS,
   distanceToSegment,
   PalmGuard,

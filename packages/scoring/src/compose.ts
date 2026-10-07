@@ -233,10 +233,7 @@ export function composeWorksheet<T = string>(
   const selectedIds = new Set<string>();
 
   // Helper to pick unique items from a candidate pool
-  const pickFromPool = (
-    candidates: readonly ItemEntry<T>[],
-    limit: number,
-  ): ItemEntry<T>[] => {
+  const pickFromPool = (candidates: readonly ItemEntry<T>[], limit: number): ItemEntry<T>[] => {
     const picked: ItemEntry<T>[] = [];
     for (const entry of candidates) {
       if (picked.length >= limit) break;

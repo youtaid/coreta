@@ -68,31 +68,32 @@ export function placeLayer(aspect: number, canvas: CanvasSize, index = 0): Layer
     h *= grow;
   }
   const offset = (index % CASCADE_COUNT) * CASCADE_STEP;
-  return fitRect(
-    { x: (canvas.w - w) / 2 + offset, y: (canvas.h - h) / 2 + offset, w, h },
-    canvas,
-  );
+  return fitRect({ x: (canvas.w - w) / 2 + offset, y: (canvas.h - h) / 2 + offset, w, h }, canvas);
 }
 
 /** Moves a layer by (dx, dy), stopping at the canvas edges so it can never be dragged away. */
-export function moveLayer(layer: PasteLayer, dx: number, dy: number, canvas: CanvasSize): PasteLayer {
+export function moveLayer(
+  layer: PasteLayer,
+  dx: number,
+  dy: number,
+  canvas: CanvasSize,
+): PasteLayer {
   const moved = fitRect({ x: layer.x + dx, y: layer.y + dy, w: layer.w, h: layer.h }, canvas);
   return { ...layer, x: moved.x, y: moved.y };
 }
 
 /**
- * Resizes a layer by dragging one corner by (dx, dy). The opposite corner stays where it is and
- * the layer keeps its shape. The width follows the horizontal drag; the size is limited to at
- * least MIN_LAYER_SIZE on the shorter side and to what fits on the canvas from the fixed corner.
+ * Resizes a layer by dragging one corner `dx` pixels to the right (negative: left). The opposite
+ * corner stays where it is and the layer keeps its shape, so only the horizontal drag matters. The
+ * size is limited to at least MIN_LAYER_SIZE on the shorter side and to what fits on the canvas
+ * from the fixed corner.
  */
 export function resizeLayer(
   layer: PasteLayer,
   corner: Corner,
   dx: number,
-  dy: number,
   canvas: CanvasSize,
 ): PasteLayer {
-  void dy; // The shape is locked, so the horizontal drag alone sets the size.
   const aspect = layer.w / layer.h;
   const east = corner.includes("e");
   const south = corner.includes("s");

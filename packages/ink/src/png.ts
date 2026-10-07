@@ -160,10 +160,7 @@ function parseColor(colorStr?: string): ColorRGBA {
  * - Width is scaled proportionally so it never exceeds 1024 px.
  * - Erased strokes are omitted.
  */
-export function renderPng(
-  doc: CoretaInkDocumentV1,
-  options?: RenderPngOptions,
-): Uint8Array {
+export function renderPng(doc: CoretaInkDocumentV1, options?: RenderPngOptions): Uint8Array {
   const origW = Math.max(1, doc.canvas.w);
   const origH = Math.max(1, doc.canvas.h);
 
@@ -178,7 +175,8 @@ export function renderPng(
   const pixels = new Uint8Array(pixelCount * 4);
 
   // Fill background
-  const bgColor = options?.background !== null ? parseColor(options?.background ?? "#ffffff") : null;
+  const bgColor =
+    options?.background !== null ? parseColor(options?.background ?? "#ffffff") : null;
   if (bgColor) {
     for (let i = 0; i < pixelCount; i += 1) {
       const offset = i * 4;

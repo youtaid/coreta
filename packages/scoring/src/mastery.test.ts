@@ -139,11 +139,7 @@ describe("mastery model v1 (Fase 23)", () => {
     };
 
     // Skor 0.5 (< 60%) mencabut mastery
-    const reviewRevoked = applyReview(
-      masteredState,
-      [0.5, 0.4],
-      now + 14 * DAY_MS,
-    );
+    const reviewRevoked = applyReview(masteredState, [0.5, 0.4], now + 14 * DAY_MS);
     expect(reviewRevoked.masteredAt).toBeNull();
     expect(reviewRevoked.revokedAt).toBe(now + 14 * DAY_MS);
     expect(reviewRevoked.reviewStep).toBe(0);
