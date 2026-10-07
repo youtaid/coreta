@@ -33,6 +33,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { DomainGallery } from "./domain-gallery";
 import { Section } from "./section";
 import { ToastDemo } from "./toast-demo";
+import { WorkspaceGallery } from "./workspace-gallery";
 
 export const metadata: Metadata = {
   title: "Galeri Komponen — Coreta",
@@ -50,16 +51,20 @@ export default function ComponentGalleryPage() {
           <p className="text-sm font-semibold tracking-wide text-primary uppercase">Dev</p>
           <h1 className="font-heading text-3xl font-bold tracking-tight">Galeri Komponen</h1>
           <p className="max-w-2xl text-muted-foreground">
-            Komponen dasar dari <code>components/ui</code> dan komponen domain dari{" "}
-            <code>components/domain</code> dengan data tiruan. Cek tiap komponen di tema terang dan
-            gelap, lalu tekan Tab untuk melihat fokus papan ketik.
+            Komponen dasar dari <code>components/ui</code>, komponen domain dari{" "}
+            <code>components/domain</code>, dan komponen ruang kerja dari{" "}
+            <code>components/workspace</code> dengan data tiruan. Cek tiap komponen di tema terang
+            dan gelap, lalu tekan Tab untuk melihat fokus papan ketik.
           </p>
-          <nav aria-label="Bagian galeri" className="flex gap-4 text-sm font-medium">
+          <nav aria-label="Bagian galeri" className="flex flex-wrap gap-4 text-sm font-medium">
             <a href="#dasar" className="text-primary underline-offset-4 hover:underline">
               Komponen dasar
             </a>
             <a href="#domain" className="text-primary underline-offset-4 hover:underline">
               Komponen domain
+            </a>
+            <a href="#workspace" className="text-primary underline-offset-4 hover:underline">
+              Komponen ruang kerja
             </a>
           </nav>
         </div>
@@ -245,6 +250,7 @@ export default function ComponentGalleryPage() {
         </div>
       </Section>
       <DomainGallery />
+      <WorkspaceGallery />
     </main>
   );
 }

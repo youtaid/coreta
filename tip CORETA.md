@@ -660,7 +660,7 @@ _Semua layar dibangun lebih dulu dengan data tiruan di `lib/mock`. Belum ada Sup
 - **Definition of Done**:
   - Di 1180×820 (mendatar), 820×1180 (tegak), dan 390×844 (ponsel) halaman tidak bisa di-scroll
   - Tiga mode tampil benar dengan 3 soal tiruan (pendek, bermedia, bacaan panjang)
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 11 — UI Panel Jawaban
 
@@ -675,7 +675,7 @@ _Semua layar dibangun lebih dulu dengan data tiruan di `lib/mock`. Belum ada Sup
 - **Definition of Done**:
   - Keempat tipe tampil dan bisa dipilih/diisi
   - Target sentuh ≥ 44 px, bisa dipakai dengan jari di tablet
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 12 — UI Panel Media
 
@@ -1904,6 +1904,7 @@ Keputusan yang sudah diambil sebelum coding dimulai (menyimpang atau melengkapi 
 | 6 | Tombol berbasis tautan memakai `<Button nativeButton={false} render={<Link href=… />}>` | Pola Base UI untuk merender `<a>` dengan gaya Button |
 | 7 | Satu `AppShell` klien membaca pathname untuk status navigasi aktif; layout route group tetap berupa pembungkus server tipis. Pemilih peran dev mengarahkan `/?peran=` ke beranda peran, sedangkan produksi mengabaikannya | Navigasi aktif perlu mengikuti perpindahan App Router tanpa menduplikasi shell per peran; pemilih peran hanya alat pratinjau sebelum autentikasi tersedia |
 | 7 | Berkas komponen bernama `app-shell.tsx` (bukan `AppShell.tsx`), plus `screen-placeholder.tsx` dan `lib/navigation.ts` (`navigationByRole`, `screenRouteSamples`) | Kebab-case konsisten dengan komponen lain; satu sumber navigasi untuk shell dan tes |
+| 11 | `AnswerPanel` menjadi batas Client Component dengan state lokal per tipe; PG/PG kompleks/benar-salah memakai input native, sedangkan isian memakai pembacaan tiruan dan kartu konfirmasi tanpa penilaian | Menjaga kontrol dapat diakses dengan papan ketik dan sentuhan, mencegah state UI bocor ke halaman, serta mempertahankan aturan bahwa penilaian hanya ada di `packages/scoring` |
 | 1–2 | Versi yang menyimpang dari bagian 2: TypeScript 5.9.3 (bukan 7.x, sesuai catatan bagian 2), React 19.2.8 (bukan 19.3), ESLint 9.39.5 (bukan 10) | Mengikuti scaffold Next.js 16.3.8 yang sudah berjalan dan paket yang tersedia di registry; belum ada plugin yang memerlukan versi lebih baru |
 | 2 | CI menjalankan `pnpm build` setelah `pnpm test`; build diuji tanpa `.env.local` | Aturan `server-only` (DoD Fase 3) hanya tertangkap saat `next build`; validasi env bersifat malas sehingga build tidak butuh variabel |
 | 2 | `.gitattributes` (`* text=auto eol=lf`) | Windows `core.autocrlf=true` menghasilkan CRLF yang membuat `prettier --check` gagal; repo dan CI memakai LF |
@@ -1922,7 +1923,7 @@ Catat bug, blocker, atau hal yang perlu dievaluasi. Jangan langsung dieksekusi �
 | 2 | Workflow CI sudah dibuat dan seluruh langkah hijau lokal, tetapi belum diverifikasi pada PR karena remote GitHub privat belum terautentikasi di sesi ini | Med | Terbuka |
 | 2 | PR #1 (cabang backup) merah di langkah Typecheck: `Cannot find name 'LayoutProps'` pada checkout baru. Sudah diperbaiki (lihat 9a); perlu CI hijau di GitHub untuk menutup Fase 2 | Med | Menunggu CI |
 | 7 | `/` menjadi dinamis (`ƒ`) karena membaca `searchParams` untuk `?peran=`, termasuk di produksi; beranda publik (Fase 19) kehilangan render statis. Pindahkan pengalihan dev ke `proxy.ts` atau buat khusus dev | Med | Terbuka |
-| 7 | Ruang kerja `/belajar/kerjakan/[id]` berada di layout siswa (header sticky + navigasi bawah fixed), bertentangan dengan aturan 9 (satu layar tanpa scroll). Pindahkan ke route group sendiri tanpa shell sebelum/di Fase 10 | Med | Terbuka |
+| 7 | Ruang kerja `/belajar/kerjakan/[id]` berada di layout siswa (header sticky + navigasi bawah fixed), bertentangan dengan aturan 9 (satu layar tanpa scroll). Dipindahkan ke route group `(workspace)` tanpa shell di Fase 10 | Med | Selesai di Fase 10 |
 | 7 | Rute siswa, orang tua, dan admin belum dijaga peran (baru Fase 35); jangan deploy ke luar sebelum Fase 35 | Med | Terbuka |
 | 3 | `GET /api/health` publik dan tiap panggilan memakai `auth.admin.listUsers` dengan service role tanpa pembatasan laju; batasi atau ringankan sebelum Fase 45 | Low | Terbuka |
 | 4 | `/tema` aktif di produksi (tidak di-gate seperti `/dev/komponen`) | Low | Terbuka |
@@ -1951,8 +1952,8 @@ Catat bug, blocker, atau hal yang perlu dievaluasi. Jangan langsung dieksekusi �
 | Fase 7 — Layout & Navigasi per Peran | Selesai | ~30 menit | 2026-10-06 | 4 route group dan 24 layar placeholder tersedia; siswa/orang tua memakai bottom nav, admin memakai sidebar adaptif; `?peran=` aktif hanya saat dev; seluruh rute HTTP 200, 64 tes web dan build hijau; visual diverifikasi pada ponsel 375 px, tablet tegak 768 px, dan tablet mendatar 1180 px |
 | Fase 8 — UI Jalur Belajar | — | ~30 menit | — | — |
 | Fase 9 — UI Daftar Worksheet & Hasil | — | ~30 menit | — | — |
-| Fase 10 — UI Ruang Kerja: Tata Letak Satu Layar | — | ~30 menit | — | — |
-| Fase 11 — UI Panel Jawaban | — | ~30 menit | — | — |
+| Fase 10 — UI Ruang Kerja: Tata Letak Satu Layar | Selesai | ~30 menit | 2026-10-07 | Rute `/belajar/kerjakan/[assignmentId]` memakai route group `(workspace)` tanpa shell; tinggi 100dvh dan overflow hidden di 1180×820, 820×1180, dan 390×844 tanpa scroll; 3 mode tata letak (standar, media, bacaan) tampil interaktif; panel bacaan satu-satunya scroll internal; 88 tes unit, typecheck, lint, dan build hijau |
+| Fase 11 — UI Panel Jawaban | Selesai | ~30 menit | 2026-10-07 | Empat tipe jawaban tersedia dengan state lokal dan target sentuh 44 px; galeri dev merender seluruh tipe; 80 tes web, lint, typecheck, dan build hijau. Otomasi screenshot lokal gagal di lingkungan browser, sehingga pemeriksaan visual manual tetap disarankan |
 | Fase 12 — UI Panel Media | — | ~30 menit | — | — |
 | Fase 13 — UI Bacaan Panjang & Jendela Melayang | — | ~30 menit | — | — |
 | Fase 14 — UI Progres Siswa & Bantuan | — | ~30 menit | — | — |

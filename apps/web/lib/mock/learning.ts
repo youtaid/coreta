@@ -51,7 +51,7 @@ export const worksheets: WorksheetSummary[] = [
     answeredCount: 8,
     estimatedMinutes: 25,
     status: "completed",
-    score: 0.875,
+    score: 0.8125,
   },
 ];
 

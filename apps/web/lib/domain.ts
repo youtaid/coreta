@@ -69,3 +69,74 @@ export const SUBSCRIPTION_STATUSES: SubscriptionStatus[] = [
   "canceled",
   "expired",
 ];
+
+export type QuestionOutcome = "correct" | "partial" | "incorrect";
+
+export interface ResultQuestion {
+  number: number;
+  prompt: string;
+  studentAnswer: string;
+  correctAnswer: string;
+  outcome: QuestionOutcome;
+  points: number;
+  maxPoints: number;
+  /** Worked solution; stays collapsed until the student opens it. */
+  explanation: string;
+  hintsUsed: number;
+}
+
+export interface WorksheetResult {
+  assignmentId: string;
+  title: string;
+  stageName: string;
+  /** Final score 0-1. */
+  score: number;
+  durationMinutes: number;
+  questions: ResultQuestion[];
+}
+
+export type WorkspaceLayoutMode = "standar" | "media" | "bacaan";
+
+export type QuestionTier = "dasar" | "mahir" | "ujian";
+
+export type AnswerType = "pg" | "pgk" | "bs" | "isian";
+
+export interface WorkspaceOption {
+  id: string;
+  label: string;
+  text: string;
+}
+
+export interface WorkspaceMedia {
+  id: string;
+  kind: "diagram" | "image" | "table" | "audio" | "video";
+  altText: string;
+  title?: string;
+  caption?: string;
+  url?: string;
+}
+
+export interface WorkspaceStimulus {
+  id: string;
+  kind: "reading" | "table" | "media_set";
+  title: string;
+  subtitle?: string;
+  bodyText: string;
+  source?: string;
+}
+
+export interface WorkspaceQuestion {
+  id: string;
+  number: number;
+  totalQuestions: number;
+  code: string;
+  competencyName: string;
+  tier: QuestionTier;
+  answerType: AnswerType;
+  layoutMode: WorkspaceLayoutMode;
+  prompt: string;
+  formula?: string;
+  options?: WorkspaceOption[];
+  media?: WorkspaceMedia;
+  stimulus?: WorkspaceStimulus;
+}
