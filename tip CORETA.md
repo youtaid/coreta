@@ -998,7 +998,7 @@ _Skema Supabase, RLS, akun, dan menghubungkan layar jalur/worksheet ke data nyat
   - `supabase db reset` berjalan dari nol tanpa galat
   - `supabase test db` lulus, termasuk tes negatif (siswa A tidak bisa membaca siswa B)
 - **Gerbang persetujuan**: Youta menyetujui migrasi yang menyentuh RLS dan data anak
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [x] Sedang | [ ] Selesai (menunggu persetujuan Youta)
 
 #### Fase 31 — Migrasi 2: Kurikulum & Konten
 
@@ -1013,7 +1013,7 @@ _Skema Supabase, RLS, akun, dan menghubungkan layar jalur/worksheet ke data nyat
   - Query siswa ke `items` langsung ditolak; query ke `items_public` tidak memuat kolom kunci
   - Semua tes RLS lulus
 - **Gerbang persetujuan**: Youta menyetujui migrasi RLS
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [x] Sedang | [ ] Selesai (menunggu persetujuan Youta)
 
 #### Fase 32 — Migrasi 3: Data Belajar
 
@@ -1877,7 +1877,7 @@ Keputusan yang sudah diambil sebelum coding dimulai (menyimpang atau melengkapi 
 
 | Fase | Keputusan | Alasan |
 |------|-----------|--------|
-| 3 | Port Supabase lokal Coreta digeser ke 54420–54429 (API 54421, DB 54422, Studio 54423, Mailpit 54424); inspector edge runtime 8183 | Proyek Supabase lokal lain (`xabi`) memakai port bawaan 54321–54329; dengan rentang sendiri keduanya bisa berjalan bersamaan |
+| 3 | Port Supabase lokal Coreta di 15420–15429 (API 15421, DB 15422, Studio 15423, Mailpit 15424); inspector edge runtime 8183 | Proyek Supabase lokal lain (`xabi`) memakai port bawaan 54321–54329, jadi Coreta memakai rentang sendiri. Awalnya 54420–54429, tetapi Windows (Hyper-V) mencadangkan 54326–54425 secara dinamis sehingga port itu gagal di-bind (Fase 30, 7 Okt 2026). Port di bawah 49152 tidak ikut dicadangkan |
 | 3 | `[analytics]` lokal dimatikan | Kontainer `vector` crash-loop di Docker Desktop Windows (butuh daemon di `tcp://localhost:2375`); hanya memengaruhi Logs Explorer di Studio lokal |
 | 3 | `.env.example` di root; Next.js membaca `apps/web/.env.local` (diisi dari `supabase status -o env`) | Next.js hanya memuat berkas env dari folder aplikasinya; worker nanti memakai `apps/worker/.env` |
 | 3 | Nama variabel tetap `NEXT_PUBLIC_SUPABASE_ANON_KEY` dan `SUPABASE_SERVICE_ROLE_KEY` (kunci JWT legacy), belum memakai kunci `sb_publishable_`/`sb_secret_` | Mengikuti daftar variabel di bagian 4; migrasi ke kunci baru bisa diputuskan sebelum deploy (Fase 45) |
