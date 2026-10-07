@@ -785,7 +785,7 @@ _Semua layar dibangun lebih dulu dengan data tiruan di `lib/mock`. Belum ada Sup
 - **Definition of Done**:
   - Pratinjau butir bisa berpindah antara tablet mendatar, tegak, dan ponsel
   - Form butir menampilkan semua bidang dari model data `items`
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 19 — UI Halaman Publik
 
@@ -801,7 +801,7 @@ _Semua layar dibangun lebih dulu dengan data tiruan di `lib/mock`. Belum ada Sup
 - **Definition of Done**:
   - Halaman jual memuat hero, manfaat, cara kerja, FAQ, dan tautan ke `/harga` dan `/daftar`
   - Semua form punya validasi tampilan (kolom wajib) tanpa memanggil server
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 > **Titik berhenti — Milestone 2**: semua layar bisa diklik dari awal sampai akhir dengan data tiruan. Youta menyetujui tampilan.
 
@@ -828,7 +828,7 @@ _Paket-paket murni yang bisa diuji tanpa Supabase: penilaian, penguasaan, mesin 
   - Tes: PG benar = 1, salah = 0; B/S 3 dari 4 baris benar = 0,75
   - Petunjuk yang dikembalikan sesuai pilihan salah
   - Fungsi tidak memakai jaringan, waktu, atau acak
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 21 — Penilaian: PG Kompleks
 
@@ -845,7 +845,7 @@ _Paket-paket murni yang bisa diuji tanpa Supabase: penilaian, penguasaan, mesin 
   - Tes: 2 kunci + 1 salah dicentang = 0,67 (salah tidak mengurangi)
   - Tes: semua pilihan dicentang = 0 dan petunjuk pengaman muncul
   - Tes: tidak ada yang dicentang = 0
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 22 — Penilaian: Isian & Normalisasi
 
@@ -860,7 +860,7 @@ _Paket-paket murni yang bisa diuji tanpa Supabase: penilaian, penguasaan, mesin 
   - Minimal 20 kasus tes, misalnya `60.000`, `60000`, `60 ribu`, `Rp60.000` semuanya cocok dengan kunci 60000
   - `0,75`, `3/4`, dan `75%` cocok dengan kunci 0,75
   - Jawaban kosong dan teks non-angka menghasilkan 0 tanpa galat
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 23 — Model Penguasaan v1
 
@@ -1961,7 +1961,7 @@ Catat bug, blocker, atau hal yang perlu dievaluasi. Jangan langsung dieksekusi �
 | Fase 16 — UI Orang Tua: Langganan, Harga & Faktur | — | ~30 menit | — | — |
 | Fase 17 — UI Admin: Antrean & Pekerjaan Gagal | — | ~30 menit | — | — |
 | Fase 18 — UI Admin: Konten, Editor Butir & Rilis | — | ~30 menit | — | — |
-| Fase 19 — UI Halaman Publik | — | ~30 menit | — | — |
+| Fase 19 — UI Halaman Publik | Selesai | ~30 menit | 2026-10-07 | Halaman jual lengkap (hero, manfaat, cara kerja, stimulus media highlight, FAQ accordion, CTA harga & daftar), halaman masuk (tab peran ortu/siswa), pendaftaran akun + profil anak dengan banner trial, dan persetujuan orang tua (UU PDP/COPPA) dengan konfirmasi tolak/setuju; validasi form sisi klien; 225 tes hijau, build dan lint sukses. |
 | Fase 20 — Penilaian: Pilihan Ganda & Benar-Salah | — | ~30 menit | — | — |
 | Fase 21 — Penilaian: PG Kompleks | — | ~30 menit | — | — |
 | Fase 22 — Penilaian: Isian & Normalisasi | — | ~30 menit | — | — |
