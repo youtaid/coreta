@@ -690,7 +690,7 @@ _Semua layar dibangun lebih dulu dengan data tiruan di `lib/mock`. Belum ada Sup
 - **Definition of Done**:
   - Keempat jenis media tampil dalam ruang kerja tanpa membuat halaman scroll
   - Setiap media punya teks alternatif; audio punya transkrip
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 13 — UI Bacaan Panjang & Jendela Melayang
 
@@ -705,7 +705,7 @@ _Semua layar dibangun lebih dulu dengan data tiruan di `lib/mock`. Belum ada Sup
 - **Definition of Done**:
   - Soal dengan bacaan 600 kata tampil tanpa scroll halaman
   - Jendela melayang bisa digeser dengan pena dan jari, dan tidak keluar layar
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 14 — UI Progres Siswa & Bantuan
 
@@ -721,7 +721,7 @@ _Semua layar dibangun lebih dulu dengan data tiruan di `lib/mock`. Belum ada Sup
 - **Definition of Done**:
   - Progres dan chat tampil dengan data tiruan
   - Chat menyimpan pesan di state lokal dan menampilkan balasan tiruan
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 15 — UI Orang Tua: Laporan & Profil Anak
 
@@ -737,7 +737,7 @@ _Semua layar dibangun lebih dulu dengan data tiruan di `lib/mock`. Belum ada Sup
 - **Definition of Done**:
   - Laporan mingguan tampil sesuai mockup
   - Semua teks berbahasa Indonesia dan angka berasal dari data tiruan
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 16 — UI Orang Tua: Langganan, Harga & Faktur
 
@@ -753,7 +753,7 @@ _Semua layar dibangun lebih dulu dengan data tiruan di `lib/mock`. Belum ada Sup
 - **Definition of Done**:
   - Keenam status langganan bisa dilihat lewat data tiruan
   - Harga coret hanya tampil untuk paket yang punya harga coret
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 17 — UI Admin: Antrean & Pekerjaan Gagal
 
@@ -769,7 +769,7 @@ _Semua layar dibangun lebih dulu dengan data tiruan di `lib/mock`. Belum ada Sup
 - **Definition of Done**:
   - Hitung mundur berjalan dan berubah merah di bawah 4 jam
   - Panel tinjau terbuka dari baris antrean
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 18 — UI Admin: Konten, Editor Butir & Rilis
 
@@ -1898,7 +1898,7 @@ Keputusan yang sudah diambil sebelum coding dimulai (menyimpang atau melengkapi 
 | 6 | `KompetensiBar` diberi nama kode `CompetencyBar` (`components/domain/competency-bar.tsx`) | Aturan 10: nama kode berbahasa Inggris; galeri menulis keduanya agar mudah dicari |
 | 6 | Tipe props domain (`Stage`, `WorksheetSummary`, `CompetencyMastery`, `StatSummary`, `Plan`, `SubscriptionStatus`) dan `MASTERY_THRESHOLD = 0.8` ada di `lib/domain.ts`, bukan di `lib/mock` | `lib/mock` akan dihapus setelah data terhubung; komponen dan kueri Supabase nanti memetakan ke tipe yang sama |
 | 6 | Enam status langganan dipetakan ke kode `trialing`, `active`, `paused`, `past_due`, `canceled`, `expired` (label: Uji coba, Aktif, Dijeda, Menunggak, Dibatalkan, Berakhir) | Nilai kolom `subscriptions.status` yang diusulkan untuk Fase 33 |
-| 6 | Harga tiruan semester Rp149.000 (coret Rp179.400) dan tahunan Rp269.000 (coret Rp358.800) | Harga coret = 6× dan 12× harga bulanan; **harga paket semester/tahunan belum diputuskan** |
+| 6 | Harga tiruan semester Rp149.000 (coret Rp179.400) dan tahunan Rp249.000 (coret Rp358.800; diselaraskan dengan Fase 16, sebelumnya Rp269.000) | Harga coret = 6× dan 12× harga bulanan; **harga paket semester/tahunan belum diputuskan** |
 | 6 | `lib/format.ts`: `formatRupiah` (gaya "Rp29.900", tanpa spasi) dan `formatPercent`, dengan tes | Dipakai PriceCard, StatCard, CompetencyBar, dan layar berikutnya |
 | 6 | ESLint melarang `components/**` mengimpor `@/lib/mock`, `@/lib/supabase/*`, dan `next/headers` | Menjaga DoD "komponen hanya menerima props"; data dimuat di halaman |
 | 6 | Tombol berbasis tautan memakai `<Button nativeButton={false} render={<Link href=… />}>` | Pola Base UI untuk merender `<a>` dengan gaya Button |
@@ -1954,7 +1954,7 @@ Catat bug, blocker, atau hal yang perlu dievaluasi. Jangan langsung dieksekusi �
 | Fase 9 — UI Daftar Worksheet & Hasil | — | ~30 menit | — | — |
 | Fase 10 — UI Ruang Kerja: Tata Letak Satu Layar | Selesai | ~30 menit | 2026-10-07 | Rute `/belajar/kerjakan/[assignmentId]` memakai route group `(workspace)` tanpa shell; tinggi 100dvh dan overflow hidden di 1180×820, 820×1180, dan 390×844 tanpa scroll; 3 mode tata letak (standar, media, bacaan) tampil interaktif; panel bacaan satu-satunya scroll internal; 88 tes unit, typecheck, lint, dan build hijau |
 | Fase 11 — UI Panel Jawaban | Selesai | ~30 menit | 2026-10-07 | Empat tipe jawaban tersedia dengan state lokal dan target sentuh 44 px; galeri dev merender seluruh tipe; 80 tes web, lint, typecheck, dan build hijau. Otomasi screenshot lokal gagal di lingkungan browser, sehingga pemeriksaan visual manual tetap disarankan |
-| Fase 12 — UI Panel Media | — | ~30 menit | — | — |
+| Fase 12 — UI Panel Media | Selesai | ~30 menit | 2026-10-07 | MediaPanel mendukung gambar/diagram (zoom + lightbox), tabel terstruktur KaTeX 0.19, audio dengan transkrip lipat, video dengan takarir terintegrasi; 187 tes hijau, lint dan build sukses. |
 | Fase 13 — UI Bacaan Panjang & Jendela Melayang | — | ~30 menit | — | — |
 | Fase 14 — UI Progres Siswa & Bantuan | — | ~30 menit | — | — |
 | Fase 15 — UI Orang Tua: Laporan & Profil Anak | — | ~30 menit | — | — |

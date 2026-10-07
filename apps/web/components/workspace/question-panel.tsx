@@ -4,6 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import type { QuestionTier, WorkspaceQuestion } from "@/lib/domain";
 import { cn } from "@/lib/utils";
 
+import { MathFormula } from "./media/math-formula";
+
 export interface QuestionPanelProps {
   question: WorkspaceQuestion;
   selectedOptionId?: string | null;
@@ -73,10 +75,10 @@ export function QuestionPanel({
             {question.prompt}
           </p>
 
-          {/* Mathematical Formula block if provided */}
+          {/* Mathematical Formula block rendered with KaTeX */}
           {question.formula && (
-            <div className="my-2.5 flex items-center justify-center rounded-lg border border-primary/20 bg-primary/5 px-4 py-2.5 font-mono text-xs text-primary sm:text-sm dark:bg-primary/10">
-              <span className="select-all tracking-wider font-semibold">{question.formula}</span>
+            <div className="my-2.5 flex items-center justify-center rounded-lg border border-primary/20 bg-primary/5 px-4 py-2 font-mono text-xs text-primary sm:text-sm dark:bg-primary/10">
+              <MathFormula formula={question.formula} displayMode />
             </div>
           )}
         </div>

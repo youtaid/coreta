@@ -4,13 +4,21 @@ import { ExternalLink, Layout, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
-import { MediaView } from "@/components/workspace/media-view";
+import { AnswerPanel } from "@/components/workspace/AnswerPanel";
+import { MediaPanel } from "@/components/workspace/media-panel";
 import { QuestionPanel } from "@/components/workspace/question-panel";
 import { ReadingPanel } from "@/components/workspace/reading-panel";
 import { ScratchArea } from "@/components/workspace/scratch-area";
-import { AnswerPanel } from "@/components/workspace/AnswerPanel";
 import { buttonVariants } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { AnswerType, WorkspaceQuestion } from "@/lib/domain";
+import {
+  mockAudioMedia,
+  mockDiagramMedia,
+  mockImageMedia,
+  mockTableMedia,
+  mockVideoMedia,
+} from "@/lib/mock/media";
 import { mockWorkspaceQuestions } from "@/lib/mock/workspace";
 import { cn } from "@/lib/utils";
 
@@ -56,7 +64,6 @@ export function WorkspaceGallery() {
   const [selectedOption, setSelectedOption] = useState<string | null>("opt-1-a");
 
   const standardQuestion = mockWorkspaceQuestions[0];
-  const mediaQuestion = mockWorkspaceQuestions[1];
   const readingQuestion = mockWorkspaceQuestions[2];
 
   return (
@@ -65,7 +72,7 @@ export function WorkspaceGallery() {
         id="workspace"
         className="-mb-6 border-t pt-10 text-sm font-semibold tracking-wide text-muted-foreground uppercase"
       >
-        Komponen ruang kerja (Workspace) · Fase 10–11
+        Komponen ruang kerja (Workspace) · Fase 10–12
       </p>
 
       {/* Demo link to full 100dvh workspace */}
@@ -90,7 +97,7 @@ export function WorkspaceGallery() {
       </div>
 
       {/* 1. QuestionPanel Showcase */}
-      <Section id="question-panel" title="QuestionPanel (Panel Soal)">
+      <Section id="question-panel" title="QuestionPanel (Panel Soal & KaTeX)">
         <div className="grid gap-6 md:grid-cols-2">
           <div className="h-[420px] flex flex-col">
             <QuestionPanel
@@ -109,31 +116,142 @@ export function WorkspaceGallery() {
               • Menampilkan nomor butir, lencana tingkat kesulitan (Dasar, Mahir, Ujian UTBK), dan
               kompetensi.
             </p>
-            <p>• Mendukung formula matematika dengan blok monospace terformat.</p>
+            <p>
+              • Render formula matematika menggunakan <strong>KaTeX 0.19</strong> tanpa gambar.
+            </p>
             <p>• Pilihan jawaban A–E dengan target sentuh ≥ 44px (WCAG 2.5.5 / Apple HIG).</p>
             <p>• Interaktif: dapat dipilih dengan klik atau sentuhan di layar tablet.</p>
           </div>
         </div>
       </Section>
 
-      {/* 2. MediaView Showcase */}
-      <Section id="media-view" title="MediaView (Diagram & Grafik Geometri)">
-        <div className="grid gap-6 md:grid-cols-2">
-          <div className="h-[320px] flex flex-col">
-            {mediaQuestion.media && <MediaView media={mediaQuestion.media} />}
-          </div>
+      {/* 2. MediaPanel Showcase (Fase 12) */}
+      <Section
+        id="media-panel"
+        title="MediaPanel (Fase 12 — Gambar, Tabel KaTeX, Audio & Video MP4)"
+      >
+        <p className="text-xs sm:text-sm text-muted-foreground -mt-1">
+          Panel media terpadu untuk 4 jenis stimulus pembelajaran tanpa menyebabkan scroll pada
+          layar ruang kerja. Dilengkapi kontrol sentuh ≥ 44px, teks alternatif, transkrip audio, dan
+          takarir video.
+        </p>
 
-          <div className="space-y-3 rounded-xl border bg-card p-5 text-xs text-muted-foreground">
-            <div className="font-bold text-foreground text-sm">Diagram Kartesius Vektor</div>
-            <p>
-              • Menggambar kurva kuadrat parabola $y = x^2 - 4x + 3$ beresolusi tinggi (vektor SVG).
-            </p>
-            <p>
-              • Menandai titik puncak $P(2, -1)$, akar $(1, 0)$ dan $(3, 0)$, serta sumbu koordinat.
-            </p>
-            <p>• Bebas blur di tablet resolusi tinggi (Retina / AMOLED).</p>
-          </div>
-        </div>
+        <Tabs defaultValue="diagram" className="w-full">
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-5 h-auto p-1">
+            <TabsTrigger value="diagram" className="text-xs py-2">
+              Diagram Vektor
+            </TabsTrigger>
+            <TabsTrigger value="image" className="text-xs py-2">
+              Gambar (Zoom)
+            </TabsTrigger>
+            <TabsTrigger value="table" className="text-xs py-2">
+              Tabel KaTeX
+            </TabsTrigger>
+            <TabsTrigger value="audio" className="text-xs py-2">
+              Audio + Transkrip
+            </TabsTrigger>
+            <TabsTrigger value="video" className="text-xs py-2">
+              Video + Takarir
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="diagram" className="mt-4">
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="h-[360px] flex flex-col">
+                <MediaPanel media={mockDiagramMedia} />
+              </div>
+              <div className="space-y-3 rounded-xl border bg-card p-5 text-xs text-muted-foreground">
+                <div className="font-bold text-foreground text-sm">1. Diagram Vektor SVG</div>
+                <p>
+                  • Menggambar kurva kuadrat parabola beresolusi tajam tanpa blur pada layar retina.
+                </p>
+                <p>• Dilengkapi kontrol zoom (perkecil, 100%, perbesar) dan modal layar penuh.</p>
+                <p>• Teks alternatif lengkap untuk pembaca layar (screen reader).</p>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="image" className="mt-4">
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="h-[360px] flex flex-col">
+                <MediaPanel media={mockImageMedia} />
+              </div>
+              <div className="space-y-3 rounded-xl border bg-card p-5 text-xs text-muted-foreground">
+                <div className="font-bold text-foreground text-sm">
+                  2. Gambar Pembelajaran (Bisa Diperbesar)
+                </div>
+                <p>• Render gambar dengan penskalaan adaptif dan rasio aspek terjaga.</p>
+                <p>• Tombol kontrol perbesar hingga 250% dengan scroll internal terisolasi.</p>
+                <p>
+                  • Tombol &apos;Layar Penuh&apos; membuka modal Lightbox beresolusi tinggi dengan
+                  target sentuh ≥ 44px.
+                </p>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="table" className="mt-4">
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="h-[360px] flex flex-col">
+                <MediaPanel media={mockTableMedia} />
+              </div>
+              <div className="space-y-3 rounded-xl border bg-card p-5 text-xs text-muted-foreground">
+                <div className="font-bold text-foreground text-sm">
+                  3. Tabel Data Terstruktur & KaTeX
+                </div>
+                <p>• Tabel numerasi dengan baris zebra dan pembatas kolom yang kontras.</p>
+                <p>
+                  • Otomatis merender rumus matematika LaTeX di header maupun isi sel tabel
+                  menggunakan KaTeX.
+                </p>
+                <p>
+                  • Scroll horizontal internal dengan semantik HTML tabel lengkap (caption, thead,
+                  tbody, th, td).
+                </p>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="audio" className="mt-4">
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="h-[380px] flex flex-col">
+                <MediaPanel media={mockAudioMedia} />
+              </div>
+              <div className="space-y-3 rounded-xl border bg-card p-5 text-xs text-muted-foreground">
+                <div className="font-bold text-foreground text-sm">
+                  4. Pemutar Audio & Transkrip Teks
+                </div>
+                <p>• Pemutar audio HTML5 dengan tombol Play/Pause ramah sentuh (≥ 44px).</p>
+                <p>
+                  • Slider progress scrubber interaktif, timer berjalan, dan tombol senyapkan suara.
+                </p>
+                <p>• Tombol buka-tutup transkrip teks lengkap untuk aksesibilitas siswa.</p>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="video" className="mt-4">
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="h-[420px] flex flex-col">
+                <MediaPanel media={mockVideoMedia} />
+              </div>
+              <div className="space-y-3 rounded-xl border bg-card p-5 text-xs text-muted-foreground">
+                <div className="font-bold text-foreground text-sm">
+                  5. Pemutar Video MP4 & Takarir (CC)
+                </div>
+                <p>• Pemutar video MP4 dengan kontrol sentuh khusus dan overlay tombol putar.</p>
+                <p>
+                  • Takarir (closed-captions) bahasa Indonesia yang tersinkronisasi otomatis dengan
+                  waktu video.
+                </p>
+                <p>
+                  • Opsi melihat daftar takarir interaktif untuk melompat langsung ke detik
+                  tertentu.
+                </p>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
       </Section>
 
       {/* 3. ReadingPanel Showcase */}

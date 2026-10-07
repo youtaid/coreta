@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toast";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { themeInitScript } from "@/lib/theme";
 
+import "katex/dist/katex.min.css";
 import "./globals.css";
 
 const jakarta = Plus_Jakarta_Sans({
