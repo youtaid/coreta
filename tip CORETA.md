@@ -877,7 +877,7 @@ _Paket-paket murni yang bisa diuji tanpa Supabase: penilaian, penguasaan, mesin 
   - Tes: percobaan ulang pada butir yang sama tidak menaikkan skor
   - Tes: pembukaan tingkat dan status tuntas tepat di ambang (70%/5, 80%/8)
   - Tes: jadwal ulang berjarak maju dan mundur sesuai aturan
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 24 — Komposisi Worksheet Mingguan
 
@@ -892,7 +892,7 @@ _Paket-paket murni yang bisa diuji tanpa Supabase: penilaian, penguasaan, mesin 
   - Tes: komposisi normal 4/2/2
   - Tes: tanpa soal ulang jatuh tempo menghasilkan 6 soal baru + 2 adaptif
   - Hasil selalu 8 soal berbeda
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 25 — Mesin Tinta Dasar
 
@@ -1962,11 +1962,11 @@ Catat bug, blocker, atau hal yang perlu dievaluasi. Jangan langsung dieksekusi �
 | Fase 17 — UI Admin: Antrean & Pekerjaan Gagal | — | ~30 menit | — | — |
 | Fase 18 — UI Admin: Konten, Editor Butir & Rilis | — | ~30 menit | — | — |
 | Fase 19 — UI Halaman Publik | Selesai | ~30 menit | 2026-10-07 | Halaman jual lengkap (hero, manfaat, cara kerja, stimulus media highlight, FAQ accordion, CTA harga & daftar), halaman masuk (tab peran ortu/siswa), pendaftaran akun + profil anak dengan banner trial, dan persetujuan orang tua (UU PDP/COPPA) dengan konfirmasi tolak/setuju; validasi form sisi klien; 225 tes hijau, build dan lint sukses. |
-| Fase 20 — Penilaian: Pilihan Ganda & Benar-Salah | — | ~30 menit | — | — |
-| Fase 21 — Penilaian: PG Kompleks | — | ~30 menit | — | — |
-| Fase 22 — Penilaian: Isian & Normalisasi | — | ~30 menit | — | — |
-| Fase 23 — Model Penguasaan v1 | — | ~30 menit | — | — |
-| Fase 24 — Komposisi Worksheet Mingguan | — | ~30 menit | — | — |
+| Fase 20 — Penilaian: Pilihan Ganda & Benar-Salah | Selesai | ~30 menit | 2026-10-07 | Tipe Item, Answer, ScoreResult di `@coreta/scoring`; fungsi murni `scorePg`, `scoreBs`, `scoreItem` dengan pengembalian petunjuk pengecoh; fungsi tanpa efek samping (clock/net/random); tes unit lulus |
+| Fase 21 — Penilaian: PG Kompleks | Selesai | ~30 menit | 2026-10-07 | Fungsi murni `scorePgk` dengan rasio benar/kunci, pilihan salah tidak mengurangi; aturan pengaman centang semua menghasilkan skor 0 dan petunjuk peringatan; tes unit lengkap lulus |
+| Fase 22 — Penilaian: Isian & Normalisasi | Selesai | ~30 menit | 2026-10-07 | Fungsi `normalizeAnswer` dan `scoreIsian` menangani pemisah ribuan, desimal koma/titik, pecahan, persen, kata ribu/juta, satuan terdaftar, dan toleransi numerik; 98 kasus tes lulus |
+| Fase 23 — Model Penguasaan v1 | Selesai | ~30 menit | 2026-10-07 | `computeMastery`, `applyReview`, `isReviewDue`; hanya percobaan pertama tiap butir yang dihitung; ambang unlock 70%/5 dan tuntas 80%/8; pencabutan <60%; jadwal ulang berjarak 3, 7, 14, 30 hari; tes unit lulus |
+| Fase 24 — Komposisi Worksheet Mingguan | Selesai | ~30 menit | 2026-10-07 | Fungsi `composeWorksheet` menyusun 8 soal unik: 4 baru + 2 adaptif (skor terlemah) + 2 ulang berjarak jatuh tempo; slot kosong dialihkan ke soal baru; deduplikasi penuh; tes unit lulus |
 | Fase 25 — Mesin Tinta Dasar | — | ~30 menit | — | — |
 | Fase 26 — Format Coreta Ink v1 | — | ~30 menit | — | — |
 | Fase 27 — Lapisan Tempel (Paste-to-Ink) | — | ~30 menit | — | — |
