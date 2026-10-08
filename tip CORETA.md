@@ -517,7 +517,7 @@ _Hanya setup. Belum ada fitur. Tujuannya: repo rapi, bisa dijalankan, ada CI, da
 - **Definition of Done**:
   - `pnpm lint`, `pnpm typecheck`, `pnpm test` lulus di lokal
   - PR percobaan menampilkan CI hijau di GitHub
-- **Status**: [ ] Belum | [x] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 3 — Supabase Lokal & Klien
 
@@ -612,7 +612,7 @@ _Semua layar dibangun lebih dulu dengan data tiruan di `lib/mock`. Belum ada Sup
 - **Definition of Done**:
   - Semua rute pada bagian 5 terbuka dari navigasi tanpa 404
   - Tampilan rapi di tablet mendatar, tablet tegak, dan ponsel
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 8 — UI Jalur Belajar
 
@@ -1899,6 +1899,12 @@ Keputusan yang sudah diambil sebelum coding dimulai (menyimpang atau melengkapi 
 | 6 | `lib/format.ts`: `formatRupiah` (gaya "Rp29.900", tanpa spasi) dan `formatPercent`, dengan tes | Dipakai PriceCard, StatCard, CompetencyBar, dan layar berikutnya |
 | 6 | ESLint melarang `components/**` mengimpor `@/lib/mock`, `@/lib/supabase/*`, dan `next/headers` | Menjaga DoD "komponen hanya menerima props"; data dimuat di halaman |
 | 6 | Tombol berbasis tautan memakai `<Button nativeButton={false} render={<Link href=… />}>` | Pola Base UI untuk merender `<a>` dengan gaya Button |
+| 2 | Skrip `typecheck` web menjadi `next typegen && tsc --noEmit` | `LayoutProps`/`PageProps` adalah tipe global hasil generate Next 16; tanpa typegen `pnpm typecheck` gagal di mesin bersih dan CI |
+| 7 | AppShell ada di `components/domain/app-shell.tsx` (nama berkas kebab-case, komponen `AppShell`); konfigurasi menu di `lib/navigation.ts` tanpa React (tipe `AppRole`, `NAV_ITEMS`, `ROLE_HOME`, `findActiveItem`) dengan tes unit | Mengikuti konvensi berkas Fase 6; aturan "item aktif = awalan terpanjang" bisa diuji tanpa browser dan dipakai ulang penjaga peran (Fase 35) |
+| 7 | Navigasi per peran: siswa bar bawah di semua ukuran; orang tua bar bawah di ponsel dan bar atas mulai lebar tablet (`md`); admin sidebar mulai `md` dan bar atas yang bisa digulir di ponsel | Siswa memakai tablet dengan stylus (jempol di bawah); admin perlu enam menu yang tidak muat di bar bawah |
+| 7 | Route group `(publik)` ikut dibuat dengan `layout.tsx` sendiri (bar atas: Harga, Masuk, Daftar) dan beranda `/` dipindah ke `app/(publik)/page.tsx`; `/tema` dan `/dev/komponen` tetap di luar grup | Halaman publik juga perlu navigasi agar DoD "semua rute terbuka dari navigasi" terpenuhi; alat pengembang tidak memakai shell |
+| 7 | Halaman placeholder memakai komponen sementara `PlaceholderPage` (`components/domain/placeholder-page.tsx`): PageHeader + catatan fase pembangun + tautan lanjutan sesuai peta layar §5 | 23 halaman seragam dan rute dinamis (`/belajar/kerjakan/[id]`, `/ortu/laporan/[week]`, dst.) tetap terjangkau lewat tautan contoh; komponen dihapus saat halaman terakhir diganti |
+| 7 | Pemilih peran dev: `/?peran=siswa\|ortu\|admin` dialihkan ke beranda peran hanya saat `NODE_ENV=development` (di `app/(publik)/page.tsx`), ditambah `DevRoleSwitcher` di header tiap shell yang merender `null` di produksi; nilai tak dikenal diabaikan | Belum ada login (Fase 35); build produksi tidak membawa jalan pintas peran (`/` tetap statis karena cabang dev dibuang saat build) |
 
 ### 9b. Temuan & Isu
 
@@ -1910,7 +1916,8 @@ Catat bug, blocker, atau hal yang perlu dievaluasi. Jangan langsung dieksekusi �
 | 4 | Ukuran tombol bawaan shadcn (`h-8` = 32 px, `icon` = 32 px) di bawah target sentuh 44 px; halaman contoh menimpanya dengan `h-touch`/`size-touch` | Med | Selesai di Fase 5 |
 | 3 | Supabase lokal mengikat semua layanan ke `0.0.0.0` dan Studio tanpa autentikasi (peringatan CLI) — terjangkau dari jaringan yang sama | Low | Terbuka |
 | 3 | Supabase CLI terpasang v2.106.0, tersedia v2.119.0 | Low | Terbuka |
-| 2 | Workflow CI sudah dibuat dan seluruh langkah hijau lokal, tetapi belum diverifikasi pada PR karena remote GitHub privat belum terautentikasi di sesi ini | Med | Terbuka |
+| 2 | Workflow CI sudah dibuat dan seluruh langkah hijau lokal, tetapi belum diverifikasi pada PR karena remote GitHub privat belum terautentikasi di sesi ini | Med | Selesai di Fase 7: CI PR #1 merah di langkah `format:check` karena `README.md` (dibuat lewat GitHub) tanpa baris kosong setelah judul; diperbaiki dengan `prettier --write`. Peringatan CI: `actions/*@v4` masih menarget Node 20 (deprecated) — naikkan ke versi baru saat memperbarui workflow |
+| 7 | Pada `next dev`, lencana Next DevTools di kiri bawah menutupi item pertama bar bawah (siswa/orang tua) dan pemilih peran di sidebar admin; tidak terjadi di build produksi | Low | Terbuka (bisa dipindah lewat `devIndicators.position` jika mengganggu uji manual) |
 
 **Pertanyaan terbuka sebelum fase terkait:**
 - Sebelum Fase 45 (deploy): spesifikasi VPS (CPU, RAM, disk) dan tagihan bulanan
@@ -1925,12 +1932,12 @@ Catat bug, blocker, atau hal yang perlu dievaluasi. Jangan langsung dieksekusi �
 |------|--------|----------------|-----------------|---------|
 | Fase 0 — Buat Proyek Next.js & Verifikasi | Selesai | ~15 menit | 2026-10-05 | Next.js 16.3.8; install, lint, build, dan GET `/` (200) sukses |
 | Fase 1 — Monorepo & Struktur Folder | Selesai | ~30 menit | 2026-10-05 | 7 workspace strict; install, typecheck, lint, Turbo build, dan worker dev sukses |
-| Fase 2 — Lint, Format, Tes Dasar & CI | Sedang | ~30 menit | — | Implementasi lokal hijau; menunggu verifikasi workflow pada PR GitHub |
+| Fase 2 — Lint, Format, Tes Dasar & CI | Selesai | ~30 menit | 2026-10-08 | Workflow berjalan di PR #1 (sebelumnya merah di `format:check` karena `README.md`, kini diperbaiki); `typecheck` web menjalankan `next typegen` dulu agar hijau di CI |
 | Fase 3 — Supabase Lokal & Klien | Selesai | ~30 menit | 2026-10-05 | Supabase lokal (port 544xx) berjalan; `/api/health` 200 `{ ok: true, supabase: 'up' }` dan 503 saat Auth dijeda; impor `admin.ts` dari komponen klien membuat build gagal (`server-only`); lint, typecheck, test, format hijau |
 | Fase 4 — Tema & Token Desain | Selesai | ~30 menit | 2026-10-05 | `/tema` menampilkan palet, tipografi (Plus Jakarta Sans, Kalam), tombol, dan target sentuh 44 px; tombol tema 44×44 berfungsi dan tersimpan; kontras 50/50 tes lulus; konsol browser bersih (Playwright, Chromium); build, lint, typecheck, format hijau |
 | Fase 5 — Komponen Dasar UI | Selesai | ~30 menit | 2026-10-05 | 10 komponen (Button, Card, Badge, Input, Tabs, Progress, Dialog, Toast, Tooltip, Skeleton) tampil di `/dev/komponen` pada kedua tema; 31 elemen interaktif galeri ≥ 44 px; fokus Tab terlihat; dialog, toast, tooltip diuji di Chromium tanpa galat konsol; produksi `/dev/komponen` = 404 |
 | Fase 6 — Komponen Domain (Tanpa Logika) | Selesai | ~30 menit | 2026-10-05 | 8 komponen (PageHeader, PathNode, StatCard, CompetencyBar, WorksheetCard, SubscriptionBadge, PriceCard, EmptyState) tampil di `/dev/komponen#domain` dengan data `lib/mock` pada kedua tema; tautan/tombol ≥ 44 px; konsol bersih; tidak ada akses data di `components/domain` (dijaga ESLint); 60 tes web lulus; build hijau |
-| Fase 7 — Layout & Navigasi per Peran | — | ~30 menit | — | — |
+| Fase 7 — Layout & Navigasi per Peran | Selesai | ~30 menit | 2026-10-08 | 4 route group, `AppShell` 3 peran (bar bawah siswa, bar bawah/atas orang tua, sidebar admin), 23 halaman placeholder; 26 rute §5 menjawab 200 dan klik 14 item menu membuka rute + judul yang benar dengan status aktif tepat (Playwright, build produksi); target sentuh menu 44–46 px; tangkapan layar 1024×768, 768×1024, 390×844 rapi di tema terang/gelap; konsol bersih; `/?peran=` hanya aktif di dev; 74 tes web (+14 navigasi) lulus; lint, typecheck, format, build hijau |
 | Fase 8 — UI Jalur Belajar | — | ~30 menit | — | — |
 | Fase 9 — UI Daftar Worksheet & Hasil | — | ~30 menit | — | — |
 | Fase 10 — UI Ruang Kerja: Tata Letak Satu Layar | — | ~30 menit | — | — |
