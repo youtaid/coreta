@@ -539,7 +539,7 @@ _Hanya setup. Belum ada fitur. Tujuannya: repo rapi, bisa dijalankan, ada CI, da
   - `supabase status` menampilkan semua layanan berjalan
   - `GET /api/health` mengembalikan `{ ok: true, supabase: 'up' }`
   - `admin.ts` tidak pernah diimpor dari komponen klien (diperiksa dengan `import 'server-only'`)
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 4 — Tema & Token Desain
 
@@ -557,7 +557,7 @@ _Hanya setup. Belum ada fitur. Tujuannya: repo rapi, bisa dijalankan, ada CI, da
   - Halaman contoh menampilkan palet, tipografi, dan tombol pengganti tema terang/gelap
   - Rasio kontras teks utama ≥ 4,5:1 di kedua tema
   - Ukuran target sentuh minimal 44 px tersedia sebagai token
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 > **Titik berhenti — Milestone 1**: repo berjalan, CI hijau, tema siap. Boleh lanjut ke UI.
 
@@ -579,7 +579,7 @@ _Semua layar dibangun lebih dulu dengan data tiruan di `lib/mock`. Belum ada Sup
 - **Definition of Done**:
   - Semua komponen tampil di galeri pada tema terang dan gelap
   - Button tingginya ≥ 44 px; fokus papan ketik terlihat jelas
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 6 — Komponen Domain (Tanpa Logika)
 
@@ -593,7 +593,7 @@ _Semua layar dibangun lebih dulu dengan data tiruan di `lib/mock`. Belum ada Sup
 - **Definition of Done**:
   - Semua komponen tampil di galeri dengan data tiruan
   - Komponen hanya menerima props; tidak memanggil API
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 7 — Layout & Navigasi per Peran
 
@@ -1874,7 +1874,31 @@ Keputusan yang sudah diambil sebelum coding dimulai (menyimpang atau melengkapi 
 
 | Fase | Keputusan | Alasan |
 |------|-----------|--------|
-| — | — | — |
+| 3 | Port Supabase lokal Coreta digeser ke 54420–54429 (API 54421, DB 54422, Studio 54423, Mailpit 54424); inspector edge runtime 8183 | Proyek Supabase lokal lain (`xabi`) memakai port bawaan 54321–54329; dengan rentang sendiri keduanya bisa berjalan bersamaan |
+| 3 | `[analytics]` lokal dimatikan | Kontainer `vector` crash-loop di Docker Desktop Windows (butuh daemon di `tcp://localhost:2375`); hanya memengaruhi Logs Explorer di Studio lokal |
+| 3 | `.env.example` di root; Next.js membaca `apps/web/.env.local` (diisi dari `supabase status -o env`) | Next.js hanya memuat berkas env dari folder aplikasinya; worker nanti memakai `apps/worker/.env` |
+| 3 | Nama variabel tetap `NEXT_PUBLIC_SUPABASE_ANON_KEY` dan `SUPABASE_SERVICE_ROLE_KEY` (kunci JWT legacy), belum memakai kunci `sb_publishable_`/`sb_secret_` | Mengikuti daftar variabel di bagian 4; migrasi ke kunci baru bisa diputuskan sebelum deploy (Fase 45) |
+| 3 | Validasi env bersifat malas (`getPublicEnv()`/`getServerEnv()`), bukan saat impor | `next build` dan CI tidak gagal ketika variabel belum diisi; galat muncul saat klien pertama kali dibuat |
+| 3 | `GET /api/health` memanggil `auth.admin.listUsers` lewat klien admin dengan batas waktu 3 detik; gagal = HTTP 503 `{ ok: false, supabase: 'down' }` | Belum ada tabel aplikasi; panggilan ini melewati gateway, Auth, dan Postgres sekaligus |
+| 4 | `shadcn init -d` memakai gaya bawaan CLI 4.x: `base-nova` (Base UI, `@base-ui/react`), bukan Radix | Bawaan resmi shadcn CLI saat ini; komponen tetap kode milik sendiri di `components/ui` |
+| 4 | Penggabung kelas memakai paket `cn` (pengganti `clsx` + `tailwind-merge` dari shadcn) lewat `createCn` di `lib/utils.ts` yang mengenal token `touch`; ESLint melarang `import "cn"` langsung | Tanpa ekstensi, `cn("size-8", "size-touch")` menyisakan keduanya. **Setelah `shadcn add` di Fase 5, ganti impor `cn` di komponen baru ke `@/lib/utils`** (lint akan gagal bila lupa) |
+| 4 | Pengganti tema dibuat sendiri (`lib/theme.ts` + skrip inline di `<head>`), tidak memakai `next-themes` | `next-themes` 0.4.6 terakhir rilis Mar 2025 dan memicu peringatan `<script>` di React 19; versi sendiri ±40 baris, tanpa kedipan tema, mengikuti OS bila belum ada pilihan |
+| 4 | Token warna ditulis hex di `:root`/`.dark` (bukan oklch bawaan shadcn); palet gelap dirancang sendiri (latar `#0D1424`, primer `#8DA8FF`, sukses `#4CC38A`, perhatian `#F2A65A`) | Hex mudah dicocokkan dengan mockup dan dibaca tes kontras; mockup hanya memberi warna mode terang |
+| 4 | Token tambahan: `success`, `warning`, `ink` (warna coretan), `font-hand` (Kalam), `--spacing-touch` = 44 px | Dibutuhkan status penilaian, contoh coretan, dan target sentuh tablet |
+| 4 | Tes kontras `apps/web/lib/theme-contrast.test.ts` (WCAG AA 4,5:1 untuk 23 pasangan teks, 3:1 untuk batas input, di kedua tema); Vitest kini juga mencakup `apps/web/**/*.test.ts` dan skrip tes tiap paket memfilter foldernya sendiri | DoD kontras dijaga otomatis setiap kali palet diubah |
+| 4 | Halaman contoh di `/tema`; beranda `/` diganti placeholder Coreta (halaman publik dibangun di Fase 19) | Halaman bawaan Next.js memakai font dan warna yang sudah dihapus |
+| 5 | Toast memakai komponen `toast` Base UI dari registry `base-nova` (bukan `sonner`); `Toaster` dan `TooltipProvider` dipasang di root layout, toast dipanggil lewat `toast.add({ title, description, type })` | Tanpa dependensi tambahan dan tanpa `next-themes` (wrapper `sonner` shadcn bergantung padanya) |
+| 5 | Ukuran Button dirombak: semua ukuran ≥ 44 px (`sm`/bawaan = `h-touch`, `lg` = 48 px, `icon`/`icon-sm` = 44×44, `icon-lg` = 48×48); ukuran `xs` dan `icon-xs` dihapus; teks bawaan 16 px | Aturan target sentuh tablet; tidak ada komponen yang memakai `xs` |
+| 5 | Cincin fokus memakai warna `ring` penuh (bawaan shadcn 50%); Button menambah `ring-offset-2` | Cincin 50% nyaris tak terlihat di latar terang dan menyatu dengan tombol primer |
+| 5 | Penyesuaian lain atas kode shadcn: Input `h-touch` dan teks 16 px di semua lebar (Safari iOS memperbesar input < 16 px); TabsTrigger `min-h-touch` dan teks tab tidak aktif `muted-foreground` (kontras ≥ 4,5:1); Progress 8 px; latar Dialog `black/40`; Badge varian `success` dan `warning`; ikon toast diberi warna token; label `Close` → `Tutup` | Target sentuh, kontras, dan teks antarmuka berbahasa Indonesia |
+| 5 | `/dev/komponen` memanggil `notFound()` di luar mode development (build produksi menjawab 404) dan diberi `robots: noindex` | Galeri hanya alat pengembang |
+| 6 | `KompetensiBar` diberi nama kode `CompetencyBar` (`components/domain/competency-bar.tsx`) | Aturan 10: nama kode berbahasa Inggris; galeri menulis keduanya agar mudah dicari |
+| 6 | Tipe props domain (`Stage`, `WorksheetSummary`, `CompetencyMastery`, `StatSummary`, `Plan`, `SubscriptionStatus`) dan `MASTERY_THRESHOLD = 0.8` ada di `lib/domain.ts`, bukan di `lib/mock` | `lib/mock` akan dihapus setelah data terhubung; komponen dan kueri Supabase nanti memetakan ke tipe yang sama |
+| 6 | Enam status langganan dipetakan ke kode `trialing`, `active`, `paused`, `past_due`, `canceled`, `expired` (label: Uji coba, Aktif, Dijeda, Menunggak, Dibatalkan, Berakhir) | Nilai kolom `subscriptions.status` yang diusulkan untuk Fase 33 |
+| 6 | Harga tiruan semester Rp149.000 (coret Rp179.400) dan tahunan Rp269.000 (coret Rp358.800) | Harga coret = 6× dan 12× harga bulanan; **harga paket semester/tahunan belum diputuskan** |
+| 6 | `lib/format.ts`: `formatRupiah` (gaya "Rp29.900", tanpa spasi) dan `formatPercent`, dengan tes | Dipakai PriceCard, StatCard, CompetencyBar, dan layar berikutnya |
+| 6 | ESLint melarang `components/**` mengimpor `@/lib/mock`, `@/lib/supabase/*`, dan `next/headers` | Menjaga DoD "komponen hanya menerima props"; data dimuat di halaman |
+| 6 | Tombol berbasis tautan memakai `<Button nativeButton={false} render={<Link href=… />}>` | Pola Base UI untuk merender `<a>` dengan gaya Button |
 
 ### 9b. Temuan & Isu
 
@@ -1883,6 +1907,9 @@ Catat bug, blocker, atau hal yang perlu dievaluasi. Jangan langsung dieksekusi �
 | Fase | Temuan | Prioritas (High/Med/Low) | Status |
 |------|--------|--------------------------|--------|
 | — | — | — | — |
+| 4 | Ukuran tombol bawaan shadcn (`h-8` = 32 px, `icon` = 32 px) di bawah target sentuh 44 px; halaman contoh menimpanya dengan `h-touch`/`size-touch` | Med | Selesai di Fase 5 |
+| 3 | Supabase lokal mengikat semua layanan ke `0.0.0.0` dan Studio tanpa autentikasi (peringatan CLI) — terjangkau dari jaringan yang sama | Low | Terbuka |
+| 3 | Supabase CLI terpasang v2.106.0, tersedia v2.119.0 | Low | Terbuka |
 | 2 | Workflow CI sudah dibuat dan seluruh langkah hijau lokal, tetapi belum diverifikasi pada PR karena remote GitHub privat belum terautentikasi di sesi ini | Med | Terbuka |
 
 **Pertanyaan terbuka sebelum fase terkait:**
@@ -1899,10 +1926,10 @@ Catat bug, blocker, atau hal yang perlu dievaluasi. Jangan langsung dieksekusi �
 | Fase 0 — Buat Proyek Next.js & Verifikasi | Selesai | ~15 menit | 2026-10-05 | Next.js 16.3.8; install, lint, build, dan GET `/` (200) sukses |
 | Fase 1 — Monorepo & Struktur Folder | Selesai | ~30 menit | 2026-10-05 | 7 workspace strict; install, typecheck, lint, Turbo build, dan worker dev sukses |
 | Fase 2 — Lint, Format, Tes Dasar & CI | Sedang | ~30 menit | — | Implementasi lokal hijau; menunggu verifikasi workflow pada PR GitHub |
-| Fase 3 — Supabase Lokal & Klien | — | ~30 menit | — | — |
-| Fase 4 — Tema & Token Desain | — | ~30 menit | — | — |
-| Fase 5 — Komponen Dasar UI | — | ~30 menit | — | — |
-| Fase 6 — Komponen Domain (Tanpa Logika) | — | ~30 menit | — | — |
+| Fase 3 — Supabase Lokal & Klien | Selesai | ~30 menit | 2026-10-05 | Supabase lokal (port 544xx) berjalan; `/api/health` 200 `{ ok: true, supabase: 'up' }` dan 503 saat Auth dijeda; impor `admin.ts` dari komponen klien membuat build gagal (`server-only`); lint, typecheck, test, format hijau |
+| Fase 4 — Tema & Token Desain | Selesai | ~30 menit | 2026-10-05 | `/tema` menampilkan palet, tipografi (Plus Jakarta Sans, Kalam), tombol, dan target sentuh 44 px; tombol tema 44×44 berfungsi dan tersimpan; kontras 50/50 tes lulus; konsol browser bersih (Playwright, Chromium); build, lint, typecheck, format hijau |
+| Fase 5 — Komponen Dasar UI | Selesai | ~30 menit | 2026-10-05 | 10 komponen (Button, Card, Badge, Input, Tabs, Progress, Dialog, Toast, Tooltip, Skeleton) tampil di `/dev/komponen` pada kedua tema; 31 elemen interaktif galeri ≥ 44 px; fokus Tab terlihat; dialog, toast, tooltip diuji di Chromium tanpa galat konsol; produksi `/dev/komponen` = 404 |
+| Fase 6 — Komponen Domain (Tanpa Logika) | Selesai | ~30 menit | 2026-10-05 | 8 komponen (PageHeader, PathNode, StatCard, CompetencyBar, WorksheetCard, SubscriptionBadge, PriceCard, EmptyState) tampil di `/dev/komponen#domain` dengan data `lib/mock` pada kedua tema; tautan/tombol ≥ 44 px; konsol bersih; tidak ada akses data di `components/domain` (dijaga ESLint); 60 tes web lulus; build hijau |
 | Fase 7 — Layout & Navigasi per Peran | — | ~30 menit | — | — |
 | Fase 8 — UI Jalur Belajar | — | ~30 menit | — | — |
 | Fase 9 — UI Daftar Worksheet & Hasil | — | ~30 menit | — | — |

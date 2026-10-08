@@ -7,7 +7,8 @@ export default defineConfig({
   root: workspaceRoot,
   test: {
     environment: "node",
-    include: ["packages/**/src/**/*.test.ts"],
+    include: ["packages/**/src/**/*.test.ts", "apps/web/**/*.test.ts"],
+    exclude: ["**/node_modules/**", "**/.next/**"],
     passWithNoTests: false,
   },
 });
