@@ -1,9 +1,11 @@
 import { BookOpenCheck } from "lucide-react";
 
 import { CompetencyBar } from "@/components/domain/competency-bar";
+import { DailyTargetCard } from "@/components/domain/daily-target-card";
 import { EmptyState } from "@/components/domain/empty-state";
 import { Logo } from "@/components/domain/logo";
 import { PageHeader } from "@/components/domain/page-header";
+import { PathMap } from "@/components/domain/path-map";
 import { PathNode } from "@/components/domain/path-node";
 import { PriceCard } from "@/components/domain/price-card";
 import { StatCard } from "@/components/domain/stat-card";
@@ -99,6 +101,24 @@ export function DomainGallery() {
             </li>
           ))}
         </ol>
+      </Section>
+
+      <Section id="path-map" title="PathMap">
+        <p className="text-muted-foreground">
+          Daftar vertikal bergaris di ponsel, grid tiga kolom mulai lebar tablet.
+        </p>
+        <PathMap
+          stages={stages}
+          stageHref={(stage) => `/belajar/worksheet?tahap=${stage.number}`}
+        />
+      </Section>
+
+      <Section id="daily-target-card" title="DailyTargetCard">
+        <div className="grid gap-4 md:grid-cols-3">
+          <DailyTargetCard done={0} goal={6} streak={0} />
+          <DailyTargetCard done={4} goal={6} streak={3} />
+          <DailyTargetCard done={7} goal={6} streak={4} />
+        </div>
       </Section>
 
       <Section id="stat-card" title="StatCard">
