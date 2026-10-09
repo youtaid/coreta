@@ -1,19 +1,17 @@
-import type { Metadata } from "next";
+import { PageHeader } from "@/components/domain/page-header";
+import { ReviewQueue } from "@/components/domain/review-queue";
+import { hintReportReasonLabels, hintReports } from "@/lib/mock/admin";
+import { SLA_HOURS, URGENT_BELOW_HOURS } from "@/lib/sla";
 
-import { PlaceholderPage } from "@/components/domain/placeholder-page";
-
-export const metadata: Metadata = {
-  title: "Antrean Tinjauan — Coreta",
-};
-
-export default function Page() {
+export default function ReviewQueuePage() {
   return (
-    <PlaceholderPage
-      eyebrow="Admin"
-      title="Antrean Tinjauan"
-      description="Laporan petunjuk dengan batas 24 jam."
-      phase={17}
-      links={[{ label: "Buka editor butir contoh", href: "/admin/konten/butir/item-mock-001" }]}
-    />
+    <section className="space-y-8">
+      <PageHeader
+        eyebrow="Admin"
+        title="Antrean tinjauan"
+        description={`Laporan petunjuk dari siswa. Setiap laporan harus ditinjau dalam ${SLA_HOURS} jam; hitung mundur menjadi merah saat sisa waktu kurang dari ${URGENT_BELOW_HOURS} jam.`}
+      />
+      <ReviewQueue reports={hintReports} reasonLabels={hintReportReasonLabels} />
+    </section>
   );
 }

@@ -1,18 +1,16 @@
-import type { Metadata } from "next";
+import { PageHeader } from "@/components/domain/page-header";
+import { UserDirectory } from "@/components/domain/user-directory";
+import { adminUsers } from "@/lib/mock/content";
 
-import { PlaceholderPage } from "@/components/domain/placeholder-page";
-
-export const metadata: Metadata = {
-  title: "Pengguna — Coreta",
-};
-
-export default function Page() {
+export default function UsersPage() {
   return (
-    <PlaceholderPage
-      eyebrow="Admin"
-      title="Pengguna"
-      description="Pencarian pengguna, status langganan, dan tindakan."
-      phase={18}
-    />
+    <section className="space-y-8">
+      <PageHeader
+        eyebrow="Admin"
+        title="Pengguna"
+        description="Cari pengguna, lihat status langganan, lalu perpanjang atau nonaktifkan akses."
+      />
+      <UserDirectory users={adminUsers} />
+    </section>
   );
 }

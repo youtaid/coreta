@@ -1,18 +1,16 @@
 import { BookOpenCheck } from "lucide-react";
-import Link from "next/link";
 
 import { CompetencyBar } from "@/components/domain/competency-bar";
 import { EmptyState } from "@/components/domain/empty-state";
+import { Logo } from "@/components/domain/logo";
 import { PageHeader } from "@/components/domain/page-header";
 import { PathNode } from "@/components/domain/path-node";
-import { PlaceholderPage } from "@/components/domain/placeholder-page";
 import { PriceCard } from "@/components/domain/price-card";
 import { StatCard } from "@/components/domain/stat-card";
 import { SubscriptionBadge } from "@/components/domain/subscription-badge";
 import { WorksheetCard } from "@/components/domain/worksheet-card";
 import { Button } from "@/components/ui/button";
 import { SUBSCRIPTION_STATUSES } from "@/lib/domain";
-import { NAV_ITEMS, ROLE_HOME, ROLE_LABELS } from "@/lib/navigation";
 import { plans } from "@/lib/mock/billing";
 import { competencies, stages, weeklyStats, worksheets } from "@/lib/mock/learning";
 
@@ -27,6 +25,55 @@ export function DomainGallery() {
       >
         Komponen domain · data tiruan dari <code>lib/mock</code>
       </p>
+
+      <Section id="logo" title="Logo Coreta (Brand)">
+        <div className="grid gap-6">
+          <div className="flex flex-col gap-3 rounded-xl border bg-card p-6">
+            <span className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+              Varian Horizontal (Bawaan Header)
+            </span>
+            <div className="flex flex-wrap items-center gap-6">
+              <Logo variant="horizontal" size="sm" />
+              <Logo variant="horizontal" size="md" />
+              <Logo variant="horizontal" size="lg" />
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3 rounded-xl border bg-card p-6">
+            <span className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+              Varian dengan Tagline
+            </span>
+            <div className="flex flex-wrap items-center gap-6">
+              <Logo variant="tagline" size="sm" />
+              <Logo variant="tagline" size="md" />
+              <Logo variant="tagline" size="lg" />
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3 rounded-xl border bg-card p-6">
+            <span className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+              Varian Ikon Aplikasi (Favicon / App Icon)
+            </span>
+            <div className="flex flex-wrap items-center gap-6">
+              <Logo variant="icon" size="sm" />
+              <Logo variant="icon" size="md" />
+              <Logo variant="icon" size="lg" />
+              <Logo variant="icon" size="xl" />
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3 rounded-xl border bg-card p-6">
+            <span className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+              Varian Bertumpuk (Stacked / Splash)
+            </span>
+            <div className="flex flex-wrap items-end gap-6">
+              <Logo variant="stacked" size="sm" />
+              <Logo variant="stacked" size="md" />
+              <Logo variant="stacked" size="lg" />
+            </div>
+          </div>
+        </div>
+      </Section>
 
       <Section id="page-header" title="PageHeader">
         <div className="rounded-xl border bg-card p-6">
@@ -116,42 +163,6 @@ export function DomainGallery() {
           description="Worksheet minggu ini terbit setiap Senin pagi. Sambil menunggu, ulangi tahap yang sudah tuntas."
           action={{ label: "Buka jalur belajar", href: "/belajar" }}
         />
-      </Section>
-
-      <Section id="app-shell" title="AppShell">
-        <p className="text-muted-foreground">
-          Kerangka navigasi per peran membungkus seluruh halaman, jadi dilihat langsung di rutenya.
-          Tiap tautan di bawah membuka beranda peran beserta menunya.
-        </p>
-        <ul className="grid gap-4 md:grid-cols-3">
-          {(["student", "parent", "admin"] as const).map((role) => (
-            <li key={role} className="rounded-xl border bg-card p-4 text-card-foreground">
-              <p className="font-semibold">{ROLE_LABELS[role]}</p>
-              <p className="mb-3 text-sm text-muted-foreground">
-                {NAV_ITEMS[role].map((item) => item.label).join(" · ")}
-              </p>
-              <Button
-                variant="outline"
-                nativeButton={false}
-                render={<Link href={ROLE_HOME[role]} />}
-              >
-                Buka {ROLE_HOME[role]}
-              </Button>
-            </li>
-          ))}
-        </ul>
-      </Section>
-
-      <Section id="placeholder-page" title="PlaceholderPage">
-        <div className="rounded-xl border bg-card p-6">
-          <PlaceholderPage
-            eyebrow="Contoh"
-            title="Halaman contoh"
-            description="Dipakai setiap rute sampai layar aslinya dibangun."
-            phase={99}
-            links={[{ label: "Jalur belajar", href: "/belajar" }]}
-          />
-        </div>
       </Section>
     </>
   );

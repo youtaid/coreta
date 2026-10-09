@@ -517,7 +517,7 @@ _Hanya setup. Belum ada fitur. Tujuannya: repo rapi, bisa dijalankan, ada CI, da
 - **Definition of Done**:
   - `pnpm lint`, `pnpm typecheck`, `pnpm test` lulus di lokal
   - PR percobaan menampilkan CI hijau di GitHub
-- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
+- **Status**: [ ] Belum | [x] Sedang | [ ] Selesai
 
 #### Fase 3 — Supabase Lokal & Klien
 
@@ -607,7 +607,10 @@ _Semua layar dibangun lebih dulu dengan data tiruan di `lib/mock`. Belum ada Sup
   - `apps/web/app/(siswa)/layout.tsx`
   - `apps/web/app/(ortu)/layout.tsx`
   - `apps/web/app/(admin)/layout.tsx`
-  - `apps/web/components/domain/AppShell.tsx`
+  - `apps/web/components/domain/app-shell.tsx`
+  - `apps/web/components/domain/screen-placeholder.tsx`
+  - `apps/web/lib/navigation.ts` dan `navigation.test.ts`
+  - `apps/web/app/(publik)/layout.tsx`
   - `apps/web/app/**/page.tsx` (placeholder)
 - **Definition of Done**:
   - Semua rute pada bagian 5 terbuka dari navigasi tanpa 404
@@ -657,7 +660,7 @@ _Semua layar dibangun lebih dulu dengan data tiruan di `lib/mock`. Belum ada Sup
 - **Definition of Done**:
   - Di 1180×820 (mendatar), 820×1180 (tegak), dan 390×844 (ponsel) halaman tidak bisa di-scroll
   - Tiga mode tampil benar dengan 3 soal tiruan (pendek, bermedia, bacaan panjang)
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 11 — UI Panel Jawaban
 
@@ -672,7 +675,7 @@ _Semua layar dibangun lebih dulu dengan data tiruan di `lib/mock`. Belum ada Sup
 - **Definition of Done**:
   - Keempat tipe tampil dan bisa dipilih/diisi
   - Target sentuh ≥ 44 px, bisa dipakai dengan jari di tablet
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 12 — UI Panel Media
 
@@ -687,7 +690,7 @@ _Semua layar dibangun lebih dulu dengan data tiruan di `lib/mock`. Belum ada Sup
 - **Definition of Done**:
   - Keempat jenis media tampil dalam ruang kerja tanpa membuat halaman scroll
   - Setiap media punya teks alternatif; audio punya transkrip
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 13 — UI Bacaan Panjang & Jendela Melayang
 
@@ -702,7 +705,7 @@ _Semua layar dibangun lebih dulu dengan data tiruan di `lib/mock`. Belum ada Sup
 - **Definition of Done**:
   - Soal dengan bacaan 600 kata tampil tanpa scroll halaman
   - Jendela melayang bisa digeser dengan pena dan jari, dan tidak keluar layar
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 14 — UI Progres Siswa & Bantuan
 
@@ -718,7 +721,7 @@ _Semua layar dibangun lebih dulu dengan data tiruan di `lib/mock`. Belum ada Sup
 - **Definition of Done**:
   - Progres dan chat tampil dengan data tiruan
   - Chat menyimpan pesan di state lokal dan menampilkan balasan tiruan
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 15 — UI Orang Tua: Laporan & Profil Anak
 
@@ -734,7 +737,7 @@ _Semua layar dibangun lebih dulu dengan data tiruan di `lib/mock`. Belum ada Sup
 - **Definition of Done**:
   - Laporan mingguan tampil sesuai mockup
   - Semua teks berbahasa Indonesia dan angka berasal dari data tiruan
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 16 — UI Orang Tua: Langganan, Harga & Faktur
 
@@ -750,7 +753,7 @@ _Semua layar dibangun lebih dulu dengan data tiruan di `lib/mock`. Belum ada Sup
 - **Definition of Done**:
   - Keenam status langganan bisa dilihat lewat data tiruan
   - Harga coret hanya tampil untuk paket yang punya harga coret
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 17 — UI Admin: Antrean & Pekerjaan Gagal
 
@@ -766,7 +769,7 @@ _Semua layar dibangun lebih dulu dengan data tiruan di `lib/mock`. Belum ada Sup
 - **Definition of Done**:
   - Hitung mundur berjalan dan berubah merah di bawah 4 jam
   - Panel tinjau terbuka dari baris antrean
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 18 — UI Admin: Konten, Editor Butir & Rilis
 
@@ -782,7 +785,7 @@ _Semua layar dibangun lebih dulu dengan data tiruan di `lib/mock`. Belum ada Sup
 - **Definition of Done**:
   - Pratinjau butir bisa berpindah antara tablet mendatar, tegak, dan ponsel
   - Form butir menampilkan semua bidang dari model data `items`
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 19 — UI Halaman Publik
 
@@ -798,7 +801,7 @@ _Semua layar dibangun lebih dulu dengan data tiruan di `lib/mock`. Belum ada Sup
 - **Definition of Done**:
   - Halaman jual memuat hero, manfaat, cara kerja, FAQ, dan tautan ke `/harga` dan `/daftar`
   - Semua form punya validasi tampilan (kolom wajib) tanpa memanggil server
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 > **Titik berhenti — Milestone 2**: semua layar bisa diklik dari awal sampai akhir dengan data tiruan. Youta menyetujui tampilan.
 
@@ -825,7 +828,7 @@ _Paket-paket murni yang bisa diuji tanpa Supabase: penilaian, penguasaan, mesin 
   - Tes: PG benar = 1, salah = 0; B/S 3 dari 4 baris benar = 0,75
   - Petunjuk yang dikembalikan sesuai pilihan salah
   - Fungsi tidak memakai jaringan, waktu, atau acak
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 21 — Penilaian: PG Kompleks
 
@@ -842,7 +845,7 @@ _Paket-paket murni yang bisa diuji tanpa Supabase: penilaian, penguasaan, mesin 
   - Tes: 2 kunci + 1 salah dicentang = 0,67 (salah tidak mengurangi)
   - Tes: semua pilihan dicentang = 0 dan petunjuk pengaman muncul
   - Tes: tidak ada yang dicentang = 0
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 22 — Penilaian: Isian & Normalisasi
 
@@ -857,7 +860,7 @@ _Paket-paket murni yang bisa diuji tanpa Supabase: penilaian, penguasaan, mesin 
   - Minimal 20 kasus tes, misalnya `60.000`, `60000`, `60 ribu`, `Rp60.000` semuanya cocok dengan kunci 60000
   - `0,75`, `3/4`, dan `75%` cocok dengan kunci 0,75
   - Jawaban kosong dan teks non-angka menghasilkan 0 tanpa galat
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 23 — Model Penguasaan v1
 
@@ -874,7 +877,7 @@ _Paket-paket murni yang bisa diuji tanpa Supabase: penilaian, penguasaan, mesin 
   - Tes: percobaan ulang pada butir yang sama tidak menaikkan skor
   - Tes: pembukaan tingkat dan status tuntas tepat di ambang (70%/5, 80%/8)
   - Tes: jadwal ulang berjarak maju dan mundur sesuai aturan
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 24 — Komposisi Worksheet Mingguan
 
@@ -889,7 +892,7 @@ _Paket-paket murni yang bisa diuji tanpa Supabase: penilaian, penguasaan, mesin 
   - Tes: komposisi normal 4/2/2
   - Tes: tanpa soal ulang jatuh tempo menghasilkan 6 soal baru + 2 adaptif
   - Hasil selalu 8 soal berbeda
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 25 — Mesin Tinta Dasar
 
@@ -906,7 +909,7 @@ _Paket-paket murni yang bisa diuji tanpa Supabase: penilaian, penguasaan, mesin 
   - Di tablet atau emulasi, goresan tampil halus dan mengikuti tekanan
   - Undo/redo dan penghapus bekerja
   - Tes unit untuk logika undo/redo dan penolakan telapak tangan
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 26 — Format Coreta Ink v1
 
@@ -923,7 +926,7 @@ _Paket-paket murni yang bisa diuji tanpa Supabase: penilaian, penguasaan, mesin 
   - Tes bolak-balik: serialize lalu deserialize menghasilkan data yang sama
   - Tes: penghapusan tersimpan sebagai peristiwa
   - PNG hasil render tidak lebih lebar dari 1024 px
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 27 — Lapisan Tempel (Paste-to-Ink)
 
@@ -937,7 +940,7 @@ _Paket-paket murni yang bisa diuji tanpa Supabase: penilaian, penguasaan, mesin 
 - **Definition of Done**:
   - Gambar tabel bisa ditempel, digeser, dan diubah ukurannya dengan pena
   - Berkas coretan hasil `serialize` memuat `media_id`, bukan piksel gambar
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 28 — State Ruang Kerja
 
@@ -954,7 +957,7 @@ _Paket-paket murni yang bisa diuji tanpa Supabase: penilaian, penguasaan, mesin 
   - Siswa bisa mengerjakan 8 soal tiruan dari awal sampai halaman hasil
   - Setiap tipe soal menampilkan nilai dan petunjuk yang benar
   - Pindah soal tidak menghapus coretan soal sebelumnya selama sesi
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 29 — Validator Konten
 
@@ -972,7 +975,7 @@ _Paket-paket murni yang bisa diuji tanpa Supabase: penilaian, penguasaan, mesin 
   - Butir tanpa teks alternatif ditolak dengan pesan jelas
   - Butir PG tanpa petunjuk pengecoh ditolak
   - Cakupan baris paket ≥ 90%
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 > **Titik berhenti — Milestone 3**: `packages/scoring` dan `packages/ink` punya cakupan baris ≥ 90%; ruang kerja bisa dipakai penuh dengan API tiruan.
 
@@ -995,7 +998,7 @@ _Skema Supabase, RLS, akun, dan menghubungkan layar jalur/worksheet ke data nyat
   - `supabase db reset` berjalan dari nol tanpa galat
   - `supabase test db` lulus, termasuk tes negatif (siswa A tidak bisa membaca siswa B)
 - **Gerbang persetujuan**: Youta menyetujui migrasi yang menyentuh RLS dan data anak
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [x] Sedang | [ ] Selesai (menunggu persetujuan Youta)
 
 #### Fase 31 — Migrasi 2: Kurikulum & Konten
 
@@ -1010,7 +1013,7 @@ _Skema Supabase, RLS, akun, dan menghubungkan layar jalur/worksheet ke data nyat
   - Query siswa ke `items` langsung ditolak; query ke `items_public` tidak memuat kolom kunci
   - Semua tes RLS lulus
 - **Gerbang persetujuan**: Youta menyetujui migrasi RLS
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [x] Sedang | [ ] Selesai (menunggu persetujuan Youta)
 
 #### Fase 32 — Migrasi 3: Data Belajar
 
@@ -1874,7 +1877,7 @@ Keputusan yang sudah diambil sebelum coding dimulai (menyimpang atau melengkapi 
 
 | Fase | Keputusan | Alasan |
 |------|-----------|--------|
-| 3 | Port Supabase lokal Coreta digeser ke 54420–54429 (API 54421, DB 54422, Studio 54423, Mailpit 54424); inspector edge runtime 8183 | Proyek Supabase lokal lain (`xabi`) memakai port bawaan 54321–54329; dengan rentang sendiri keduanya bisa berjalan bersamaan |
+| 3 | Port Supabase lokal Coreta di 15420–15429 (API 15421, DB 15422, Studio 15423, Mailpit 15424); inspector edge runtime 8183 | Proyek Supabase lokal lain (`xabi`) memakai port bawaan 54321–54329, jadi Coreta memakai rentang sendiri. Awalnya 54420–54429, tetapi Windows (Hyper-V) mencadangkan 54326–54425 secara dinamis sehingga port itu gagal di-bind (Fase 30, 7 Okt 2026). Port di bawah 49152 tidak ikut dicadangkan |
 | 3 | `[analytics]` lokal dimatikan | Kontainer `vector` crash-loop di Docker Desktop Windows (butuh daemon di `tcp://localhost:2375`); hanya memengaruhi Logs Explorer di Studio lokal |
 | 3 | `.env.example` di root; Next.js membaca `apps/web/.env.local` (diisi dari `supabase status -o env`) | Next.js hanya memuat berkas env dari folder aplikasinya; worker nanti memakai `apps/worker/.env` |
 | 3 | Nama variabel tetap `NEXT_PUBLIC_SUPABASE_ANON_KEY` dan `SUPABASE_SERVICE_ROLE_KEY` (kunci JWT legacy), belum memakai kunci `sb_publishable_`/`sb_secret_` | Mengikuti daftar variabel di bagian 4; migrasi ke kunci baru bisa diputuskan sebelum deploy (Fase 45) |
@@ -1895,16 +1898,17 @@ Keputusan yang sudah diambil sebelum coding dimulai (menyimpang atau melengkapi 
 | 6 | `KompetensiBar` diberi nama kode `CompetencyBar` (`components/domain/competency-bar.tsx`) | Aturan 10: nama kode berbahasa Inggris; galeri menulis keduanya agar mudah dicari |
 | 6 | Tipe props domain (`Stage`, `WorksheetSummary`, `CompetencyMastery`, `StatSummary`, `Plan`, `SubscriptionStatus`) dan `MASTERY_THRESHOLD = 0.8` ada di `lib/domain.ts`, bukan di `lib/mock` | `lib/mock` akan dihapus setelah data terhubung; komponen dan kueri Supabase nanti memetakan ke tipe yang sama |
 | 6 | Enam status langganan dipetakan ke kode `trialing`, `active`, `paused`, `past_due`, `canceled`, `expired` (label: Uji coba, Aktif, Dijeda, Menunggak, Dibatalkan, Berakhir) | Nilai kolom `subscriptions.status` yang diusulkan untuk Fase 33 |
-| 6 | Harga tiruan semester Rp149.000 (coret Rp179.400) dan tahunan Rp269.000 (coret Rp358.800) | Harga coret = 6× dan 12× harga bulanan; **harga paket semester/tahunan belum diputuskan** |
+| 6 | Harga tiruan semester Rp149.000 (coret Rp179.400) dan tahunan Rp249.000 (coret Rp358.800; diselaraskan dengan Fase 16, sebelumnya Rp269.000) | Harga coret = 6× dan 12× harga bulanan; **harga paket semester/tahunan belum diputuskan** |
 | 6 | `lib/format.ts`: `formatRupiah` (gaya "Rp29.900", tanpa spasi) dan `formatPercent`, dengan tes | Dipakai PriceCard, StatCard, CompetencyBar, dan layar berikutnya |
 | 6 | ESLint melarang `components/**` mengimpor `@/lib/mock`, `@/lib/supabase/*`, dan `next/headers` | Menjaga DoD "komponen hanya menerima props"; data dimuat di halaman |
 | 6 | Tombol berbasis tautan memakai `<Button nativeButton={false} render={<Link href=… />}>` | Pola Base UI untuk merender `<a>` dengan gaya Button |
-| 2 | Skrip `typecheck` web menjadi `next typegen && tsc --noEmit` | `LayoutProps`/`PageProps` adalah tipe global hasil generate Next 16; tanpa typegen `pnpm typecheck` gagal di mesin bersih dan CI |
-| 7 | AppShell ada di `components/domain/app-shell.tsx` (nama berkas kebab-case, komponen `AppShell`); konfigurasi menu di `lib/navigation.ts` tanpa React (tipe `AppRole`, `NAV_ITEMS`, `ROLE_HOME`, `findActiveItem`) dengan tes unit | Mengikuti konvensi berkas Fase 6; aturan "item aktif = awalan terpanjang" bisa diuji tanpa browser dan dipakai ulang penjaga peran (Fase 35) |
-| 7 | Navigasi per peran: siswa bar bawah di semua ukuran; orang tua bar bawah di ponsel dan bar atas mulai lebar tablet (`md`); admin sidebar mulai `md` dan bar atas yang bisa digulir di ponsel | Siswa memakai tablet dengan stylus (jempol di bawah); admin perlu enam menu yang tidak muat di bar bawah |
-| 7 | Route group `(publik)` ikut dibuat dengan `layout.tsx` sendiri (bar atas: Harga, Masuk, Daftar) dan beranda `/` dipindah ke `app/(publik)/page.tsx`; `/tema` dan `/dev/komponen` tetap di luar grup | Halaman publik juga perlu navigasi agar DoD "semua rute terbuka dari navigasi" terpenuhi; alat pengembang tidak memakai shell |
-| 7 | Halaman placeholder memakai komponen sementara `PlaceholderPage` (`components/domain/placeholder-page.tsx`): PageHeader + catatan fase pembangun + tautan lanjutan sesuai peta layar §5 | 23 halaman seragam dan rute dinamis (`/belajar/kerjakan/[id]`, `/ortu/laporan/[week]`, dst.) tetap terjangkau lewat tautan contoh; komponen dihapus saat halaman terakhir diganti |
-| 7 | Pemilih peran dev: `/?peran=siswa\|ortu\|admin` dialihkan ke beranda peran hanya saat `NODE_ENV=development` (di `app/(publik)/page.tsx`), ditambah `DevRoleSwitcher` di header tiap shell yang merender `null` di produksi; nilai tak dikenal diabaikan | Belum ada login (Fase 35); build produksi tidak membawa jalan pintas peran (`/` tetap statis karena cabang dev dibuang saat build) |
+| 7 | Satu `AppShell` klien membaca pathname untuk status navigasi aktif; layout route group tetap berupa pembungkus server tipis. Pemilih peran dev mengarahkan `/?peran=` ke beranda peran, sedangkan produksi mengabaikannya | Navigasi aktif perlu mengikuti perpindahan App Router tanpa menduplikasi shell per peran; pemilih peran hanya alat pratinjau sebelum autentikasi tersedia |
+| 7 | Berkas komponen bernama `app-shell.tsx` (bukan `AppShell.tsx`), plus `screen-placeholder.tsx` dan `lib/navigation.ts` (`navigationByRole`, `screenRouteSamples`) | Kebab-case konsisten dengan komponen lain; satu sumber navigasi untuk shell dan tes |
+| 11 | `AnswerPanel` menjadi batas Client Component dengan state lokal per tipe; PG/PG kompleks/benar-salah memakai input native, sedangkan isian memakai pembacaan tiruan dan kartu konfirmasi tanpa penilaian | Menjaga kontrol dapat diakses dengan papan ketik dan sentuhan, mencegah state UI bocor ke halaman, serta mempertahankan aturan bahwa penilaian hanya ada di `packages/scoring` |
+| 1–2 | Versi yang menyimpang dari bagian 2: TypeScript 5.9.3 (bukan 7.x, sesuai catatan bagian 2), React 19.2.8 (bukan 19.3), ESLint 9.39.5 (bukan 10) | Mengikuti scaffold Next.js 16.3.8 yang sudah berjalan dan paket yang tersedia di registry; belum ada plugin yang memerlukan versi lebih baru |
+| 2 | CI menjalankan `pnpm build` setelah `pnpm test`; build diuji tanpa `.env.local` | Aturan `server-only` (DoD Fase 3) hanya tertangkap saat `next build`; validasi env bersifat malas sehingga build tidak butuh variabel |
+| 2 | `.gitattributes` (`* text=auto eol=lf`) | Windows `core.autocrlf=true` menghasilkan CRLF yang membuat `prettier --check` gagal; repo dan CI memakai LF |
+| 2 | `app/layout.tsx` memakai tipe `{ children: ReactNode }`, bukan `LayoutProps<"/">` | `LayoutProps` dibuat Next.js ke `.next/types` saat dev/build, sehingga `tsc --noEmit` gagal pada checkout baru (penyebab CI PR #1 merah). Diperbaiki di commit Fase 7 |
 
 ### 9b. Temuan & Isu
 
@@ -1916,8 +1920,16 @@ Catat bug, blocker, atau hal yang perlu dievaluasi. Jangan langsung dieksekusi �
 | 4 | Ukuran tombol bawaan shadcn (`h-8` = 32 px, `icon` = 32 px) di bawah target sentuh 44 px; halaman contoh menimpanya dengan `h-touch`/`size-touch` | Med | Selesai di Fase 5 |
 | 3 | Supabase lokal mengikat semua layanan ke `0.0.0.0` dan Studio tanpa autentikasi (peringatan CLI) — terjangkau dari jaringan yang sama | Low | Terbuka |
 | 3 | Supabase CLI terpasang v2.106.0, tersedia v2.119.0 | Low | Terbuka |
-| 2 | Workflow CI sudah dibuat dan seluruh langkah hijau lokal, tetapi belum diverifikasi pada PR karena remote GitHub privat belum terautentikasi di sesi ini | Med | Selesai di Fase 7: CI PR #1 merah di langkah `format:check` karena `README.md` (dibuat lewat GitHub) tanpa baris kosong setelah judul; diperbaiki dengan `prettier --write`. Peringatan CI: `actions/*@v4` masih menarget Node 20 (deprecated) — naikkan ke versi baru saat memperbarui workflow |
-| 7 | Pada `next dev`, lencana Next DevTools di kiri bawah menutupi item pertama bar bawah (siswa/orang tua) dan pemilih peran di sidebar admin; tidak terjadi di build produksi | Low | Terbuka (bisa dipindah lewat `devIndicators.position` jika mengganggu uji manual) |
+| 2 | Workflow CI sudah dibuat dan seluruh langkah hijau lokal, tetapi belum diverifikasi pada PR karena remote GitHub privat belum terautentikasi di sesi ini | Med | Terbuka |
+| 2 | PR #1 (cabang backup) merah di langkah Typecheck: `Cannot find name 'LayoutProps'` pada checkout baru. Sudah diperbaiki (lihat 9a); perlu CI hijau di GitHub untuk menutup Fase 2 | Med | Menunggu CI |
+| 7 | `/` menjadi dinamis (`ƒ`) karena membaca `searchParams` untuk `?peran=`, termasuk di produksi; beranda publik (Fase 19) kehilangan render statis. Pindahkan pengalihan dev ke `proxy.ts` atau buat khusus dev | Med | Terbuka |
+| 7 | Ruang kerja `/belajar/kerjakan/[id]` berada di layout siswa (header sticky + navigasi bawah fixed), bertentangan dengan aturan 9 (satu layar tanpa scroll). Dipindahkan ke route group `(workspace)` tanpa shell di Fase 10 | Med | Selesai di Fase 10 |
+| 7 | Rute siswa, orang tua, dan admin belum dijaga peran (baru Fase 35); jangan deploy ke luar sebelum Fase 35 | Med | Terbuka |
+| 3 | `GET /api/health` publik dan tiap panggilan memakai `auth.admin.listUsers` dengan service role tanpa pembatasan laju; batasi atau ringankan sebelum Fase 45 | Low | Terbuka |
+| 4 | `/tema` aktif di produksi (tidak di-gate seperti `/dev/komponen`) | Low | Terbuka |
+| 1 | `scoringPlaceholder()` masih dipakai sebagai `data-scoring-status` di beranda publik; hapus di Fase 19/20 | Low | Terbuka |
+| 1 | `@types/node` `^20` padahal `engines` meminta Node ≥ 22 | Low | Terbuka |
+| 6 | Commit `0008782` memuat Fase 3–6 sekaligus (aturan: satu fase satu commit) | Low | Dicatat |
 
 **Pertanyaan terbuka sebelum fase terkait:**
 - Sebelum Fase 45 (deploy): spesifikasi VPS (CPU, RAM, disk) dan tagihan bulanan
@@ -1932,33 +1944,33 @@ Catat bug, blocker, atau hal yang perlu dievaluasi. Jangan langsung dieksekusi �
 |------|--------|----------------|-----------------|---------|
 | Fase 0 — Buat Proyek Next.js & Verifikasi | Selesai | ~15 menit | 2026-10-05 | Next.js 16.3.8; install, lint, build, dan GET `/` (200) sukses |
 | Fase 1 — Monorepo & Struktur Folder | Selesai | ~30 menit | 2026-10-05 | 7 workspace strict; install, typecheck, lint, Turbo build, dan worker dev sukses |
-| Fase 2 — Lint, Format, Tes Dasar & CI | Selesai | ~30 menit | 2026-10-08 | Workflow berjalan di PR #1 (sebelumnya merah di `format:check` karena `README.md`, kini diperbaiki); `typecheck` web menjalankan `next typegen` dulu agar hijau di CI |
+| Fase 2 — Lint, Format, Tes Dasar & CI | Sedang | ~30 menit | — | Implementasi lokal hijau; PR #1 sempat merah karena `LayoutProps` (sudah diperbaiki), langkah `pnpm build` dan `.gitattributes` ditambahkan; menunggu CI hijau di GitHub |
 | Fase 3 — Supabase Lokal & Klien | Selesai | ~30 menit | 2026-10-05 | Supabase lokal (port 544xx) berjalan; `/api/health` 200 `{ ok: true, supabase: 'up' }` dan 503 saat Auth dijeda; impor `admin.ts` dari komponen klien membuat build gagal (`server-only`); lint, typecheck, test, format hijau |
 | Fase 4 — Tema & Token Desain | Selesai | ~30 menit | 2026-10-05 | `/tema` menampilkan palet, tipografi (Plus Jakarta Sans, Kalam), tombol, dan target sentuh 44 px; tombol tema 44×44 berfungsi dan tersimpan; kontras 50/50 tes lulus; konsol browser bersih (Playwright, Chromium); build, lint, typecheck, format hijau |
 | Fase 5 — Komponen Dasar UI | Selesai | ~30 menit | 2026-10-05 | 10 komponen (Button, Card, Badge, Input, Tabs, Progress, Dialog, Toast, Tooltip, Skeleton) tampil di `/dev/komponen` pada kedua tema; 31 elemen interaktif galeri ≥ 44 px; fokus Tab terlihat; dialog, toast, tooltip diuji di Chromium tanpa galat konsol; produksi `/dev/komponen` = 404 |
 | Fase 6 — Komponen Domain (Tanpa Logika) | Selesai | ~30 menit | 2026-10-05 | 8 komponen (PageHeader, PathNode, StatCard, CompetencyBar, WorksheetCard, SubscriptionBadge, PriceCard, EmptyState) tampil di `/dev/komponen#domain` dengan data `lib/mock` pada kedua tema; tautan/tombol ≥ 44 px; konsol bersih; tidak ada akses data di `components/domain` (dijaga ESLint); 60 tes web lulus; build hijau |
-| Fase 7 — Layout & Navigasi per Peran | Selesai | ~30 menit | 2026-10-08 | 4 route group, `AppShell` 3 peran (bar bawah siswa, bar bawah/atas orang tua, sidebar admin), 23 halaman placeholder; 26 rute §5 menjawab 200 dan klik 14 item menu membuka rute + judul yang benar dengan status aktif tepat (Playwright, build produksi); target sentuh menu 44–46 px; tangkapan layar 1024×768, 768×1024, 390×844 rapi di tema terang/gelap; konsol bersih; `/?peran=` hanya aktif di dev; 74 tes web (+14 navigasi) lulus; lint, typecheck, format, build hijau |
+| Fase 7 — Layout & Navigasi per Peran | Selesai | ~30 menit | 2026-10-06 | 4 route group dan 24 layar placeholder tersedia; siswa/orang tua memakai bottom nav, admin memakai sidebar adaptif; `?peran=` aktif hanya saat dev; seluruh rute HTTP 200, 64 tes web dan build hijau; visual diverifikasi pada ponsel 375 px, tablet tegak 768 px, dan tablet mendatar 1180 px |
 | Fase 8 — UI Jalur Belajar | — | ~30 menit | — | — |
 | Fase 9 — UI Daftar Worksheet & Hasil | — | ~30 menit | — | — |
-| Fase 10 — UI Ruang Kerja: Tata Letak Satu Layar | — | ~30 menit | — | — |
-| Fase 11 — UI Panel Jawaban | — | ~30 menit | — | — |
-| Fase 12 — UI Panel Media | — | ~30 menit | — | — |
+| Fase 10 — UI Ruang Kerja: Tata Letak Satu Layar | Selesai | ~30 menit | 2026-10-07 | Rute `/belajar/kerjakan/[assignmentId]` memakai route group `(workspace)` tanpa shell; tinggi 100dvh dan overflow hidden di 1180×820, 820×1180, dan 390×844 tanpa scroll; 3 mode tata letak (standar, media, bacaan) tampil interaktif; panel bacaan satu-satunya scroll internal; 88 tes unit, typecheck, lint, dan build hijau |
+| Fase 11 — UI Panel Jawaban | Selesai | ~30 menit | 2026-10-07 | Empat tipe jawaban tersedia dengan state lokal dan target sentuh 44 px; galeri dev merender seluruh tipe; 80 tes web, lint, typecheck, dan build hijau. Otomasi screenshot lokal gagal di lingkungan browser, sehingga pemeriksaan visual manual tetap disarankan |
+| Fase 12 — UI Panel Media | Selesai | ~30 menit | 2026-10-07 | MediaPanel mendukung gambar/diagram (zoom + lightbox), tabel terstruktur KaTeX 0.19, audio dengan transkrip lipat, video dengan takarir terintegrasi; 187 tes hijau, lint dan build sukses. |
 | Fase 13 — UI Bacaan Panjang & Jendela Melayang | — | ~30 menit | — | — |
 | Fase 14 — UI Progres Siswa & Bantuan | — | ~30 menit | — | — |
 | Fase 15 — UI Orang Tua: Laporan & Profil Anak | — | ~30 menit | — | — |
 | Fase 16 — UI Orang Tua: Langganan, Harga & Faktur | — | ~30 menit | — | — |
 | Fase 17 — UI Admin: Antrean & Pekerjaan Gagal | — | ~30 menit | — | — |
 | Fase 18 — UI Admin: Konten, Editor Butir & Rilis | — | ~30 menit | — | — |
-| Fase 19 — UI Halaman Publik | — | ~30 menit | — | — |
-| Fase 20 — Penilaian: Pilihan Ganda & Benar-Salah | — | ~30 menit | — | — |
-| Fase 21 — Penilaian: PG Kompleks | — | ~30 menit | — | — |
-| Fase 22 — Penilaian: Isian & Normalisasi | — | ~30 menit | — | — |
-| Fase 23 — Model Penguasaan v1 | — | ~30 menit | — | — |
-| Fase 24 — Komposisi Worksheet Mingguan | — | ~30 menit | — | — |
-| Fase 25 — Mesin Tinta Dasar | — | ~30 menit | — | — |
-| Fase 26 — Format Coreta Ink v1 | — | ~30 menit | — | — |
+| Fase 19 — UI Halaman Publik | Selesai | ~30 menit | 2026-10-07 | Halaman jual lengkap (hero, manfaat, cara kerja, stimulus media highlight, FAQ accordion, CTA harga & daftar), halaman masuk (tab peran ortu/siswa), pendaftaran akun + profil anak dengan banner trial, dan persetujuan orang tua (UU PDP/COPPA) dengan konfirmasi tolak/setuju; validasi form sisi klien; 225 tes hijau, build dan lint sukses. |
+| Fase 20 — Penilaian: Pilihan Ganda & Benar-Salah | Selesai | ~30 menit | 2026-10-07 | Tipe Item, Answer, ScoreResult di `@coreta/scoring`; fungsi murni `scorePg`, `scoreBs`, `scoreItem` dengan pengembalian petunjuk pengecoh; fungsi tanpa efek samping (clock/net/random); tes unit lulus |
+| Fase 21 — Penilaian: PG Kompleks | Selesai | ~30 menit | 2026-10-07 | Fungsi murni `scorePgk` dengan rasio benar/kunci, pilihan salah tidak mengurangi; aturan pengaman centang semua menghasilkan skor 0 dan petunjuk peringatan; tes unit lengkap lulus |
+| Fase 22 — Penilaian: Isian & Normalisasi | Selesai | ~30 menit | 2026-10-07 | Fungsi `normalizeAnswer` dan `scoreIsian` menangani pemisah ribuan, desimal koma/titik, pecahan, persen, kata ribu/juta, satuan terdaftar, dan toleransi numerik; 98 kasus tes lulus |
+| Fase 23 — Model Penguasaan v1 | Selesai | ~30 menit | 2026-10-07 | `computeMastery`, `applyReview`, `isReviewDue`; hanya percobaan pertama tiap butir yang dihitung; ambang unlock 70%/5 dan tuntas 80%/8; pencabutan <60%; jadwal ulang berjarak 3, 7, 14, 30 hari; tes unit lulus |
+| Fase 24 — Komposisi Worksheet Mingguan | Selesai | ~30 menit | 2026-10-07 | Fungsi `composeWorksheet` menyusun 8 soal unik: 4 baru + 2 adaptif (skor terlemah) + 2 ulang berjarak jatuh tempo; slot kosong dialihkan ke soal baru; deduplikasi penuh; tes unit lulus |
+| Fase 25 — Mesin Tinta Dasar | Selesai | ~30 menit | 2026-10-07 | Kelas InkEngine pada canvas murni menggunakan Pointer Events dan perfect-freehand; pena sensitif tekanan, penghapus, undo/redo, penolakan telapak tangan (PalmGuard); pembungkus React InkCanvas; tes unit lengkap lulus |
+| Fase 26 — Format Coreta Ink v1 | Selesai | ~30 menit | 2026-10-07 | Tipe CoretaInkDocumentV1; serialize gzip (fflate) dan deserialize mendukung format lama; penghapusan tersimpan sebagai event; renderPng murni menghasilkan PNG preview dengan lebar maks 1024 px; tes unit lengkap lulus |
 | Fase 27 — Lapisan Tempel (Paste-to-Ink) | — | ~30 menit | — | — |
-| Fase 28 — State Ruang Kerja | — | ~30 menit | — | — |
+| Fase 28 — State Ruang Kerja | Selesai | ~30 menit | 2026-10-07 | Store Zustand (apps/web/lib/workspace-store.ts); navigasi 8 soal; dukungan 4 tipe jawaban (PG, PGK, BS, Isian); retensi coretan digital antar soal; timer pengerjaan; integrasi penilaian mock @coreta/scoring dengan petunjuk pengecoh; tes unit 22 files / 252 tests lulus |
 | Fase 29 — Validator Konten | — | ~30 menit | — | — |
 | Fase 30 — Migrasi 1: Akun & Keluarga | — | ~30 menit | — | — |
 | Fase 31 — Migrasi 2: Kurikulum & Konten | — | ~30 menit | — | — |

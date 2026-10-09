@@ -1,19 +1,15 @@
-import type { Metadata } from "next";
+import { MockChat } from "@/app/_chat/mock-chat";
+import { PageHeader } from "@/components/domain/page-header";
 
-import { PlaceholderPage } from "@/components/domain/placeholder-page";
-
-export const metadata: Metadata = {
-  title: "Bantuan — Coreta",
-};
-
-export default function Page() {
+export default function ParentHelpPage() {
   return (
-    <PlaceholderPage
-      eyebrow="Orang tua"
-      title="Bantuan"
-      description="Asisten layanan tingkat 1 dan riwayat percakapan."
-      phase={14}
-      links={[{ label: "Laporan", href: "/ortu/laporan" }]}
-    />
+    <section className="space-y-8">
+      <PageHeader
+        eyebrow="Orang tua"
+        title="Bantuan"
+        description="Pertanyaan soal laporan, langganan, atau akun anak? Tanya asisten Coreta."
+      />
+      <MockChat audience="ortu" />
+    </section>
   );
 }

@@ -1,21 +1,13 @@
-import type { Metadata } from "next";
+import { ScreenPlaceholder } from "@/components/domain/screen-placeholder";
 
-import { PlaceholderPage } from "@/components/domain/placeholder-page";
-
-export const metadata: Metadata = {
-  title: "Jalur Belajar — Coreta",
-};
-
-export default function Page() {
+export default function LearningPathPage() {
   return (
-    <PlaceholderPage
-      eyebrow="Belajar"
-      title="Jalur Belajar"
-      description="Peta Tahap 0–8, target harian, dan tombol lanjut belajar."
-      phase={8}
-      links={[
-        { label: "Worksheet", href: "/belajar/worksheet" },
-        { label: "Progres", href: "/belajar/progres" },
+    <ScreenPlaceholder
+      eyebrow="Siswa"
+      title="Jalur belajar"
+      relatedRoutes={[
+        { href: "/belajar/worksheet", label: "Buka worksheet" },
+        { href: "/belajar/progres", label: "Lihat progres" },
       ]}
     />
   );

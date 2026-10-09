@@ -1,55 +1,36 @@
 import { describe, expect, it } from "vitest";
 
-import { NAV_ITEMS, ROLE_HOME, findActiveItem, parseDevRole } from "./navigation";
+import {
+  getDevRoleLanding,
+  isNavigationItemActive,
+  navigationByRole,
+  screenRouteSamples,
+} from "./navigation";
 
-describe("findActiveItem", () => {
-  const student = NAV_ITEMS.student;
-
-  it.each([
-    ["/belajar", "path"],
-    ["/belajar/worksheet", "worksheet"],
-    ["/belajar/kerjakan/ws-mock-301", "worksheet"],
-    ["/belajar/hasil/ws-mock-201", "worksheet"],
-    ["/belajar/progres", "progress"],
-    ["/bantuan", "help"],
-  ])("%s → %s", (pathname, key) => {
-    expect(findActiveItem(student, pathname)?.key).toBe(key);
+describe("role navigation", () => {
+  it("keeps the student and parent bottom navigation within four items", () => {
+    expect(navigationByRole.siswa).toHaveLength(4);
+    expect(navigationByRole.ortu).toHaveLength(4);
   });
 
-  it("does not treat a sibling path with the same prefix as active", () => {
-    expect(findActiveItem(student, "/belajarku")).toBeNull();
-    expect(findActiveItem(student, "/bantuan-lain")).toBeNull();
+  it("contains unique concrete paths for every screen in the TIP map", () => {
+    expect(screenRouteSamples).toHaveLength(24);
+    expect(new Set(screenRouteSamples).size).toBe(screenRouteSamples.length);
   });
 
-  it("maps invoices to the subscription item for parents", () => {
-    expect(findActiveItem(NAV_ITEMS.parent, "/ortu/faktur")?.key).toBe("subscription");
+  it("marks nested and related routes on their primary navigation item", () => {
+    const worksheet = navigationByRole.siswa[1];
+    const content = navigationByRole.admin[2];
+
+    expect(isNavigationItemActive("/belajar/kerjakan/demo", worksheet)).toBe(true);
+    expect(isNavigationItemActive("/belajar/hasil/demo", worksheet)).toBe(true);
+    expect(isNavigationItemActive("/admin/konten/butir/demo", content)).toBe(true);
+    expect(isNavigationItemActive("/belajar/progres", navigationByRole.siswa[0])).toBe(false);
   });
 
-  it("returns null outside the role's area", () => {
-    expect(findActiveItem(NAV_ITEMS.admin, "/belajar")).toBeNull();
-  });
-});
-
-describe("role homes", () => {
-  it("are reachable from each role's navigation", () => {
-    for (const role of ["student", "parent", "admin"] as const) {
-      expect(findActiveItem(NAV_ITEMS[role], ROLE_HOME[role])?.href).toBe(ROLE_HOME[role]);
-    }
-  });
-});
-
-describe("parseDevRole", () => {
-  it.each([
-    ["siswa", "student"],
-    ["ORTU", "parent"],
-    ["admin", "admin"],
-  ])("%s → %s", (value, role) => {
-    expect(parseDevRole(value)).toBe(role);
-  });
-
-  it("rejects unknown, missing, or repeated values", () => {
-    expect(parseDevRole("guru")).toBeNull();
-    expect(parseDevRole(undefined)).toBeNull();
-    expect(parseDevRole(["siswa", "admin"])).toBeNull();
+  it("resolves only known development roles", () => {
+    expect(getDevRoleLanding("siswa")).toBe("/belajar");
+    expect(getDevRoleLanding(["ortu", "admin"])).toBe("/ortu/laporan");
+    expect(getDevRoleLanding("tidak-ada")).toBeUndefined();
   });
 });

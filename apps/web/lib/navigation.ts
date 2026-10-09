@@ -1,91 +1,126 @@
-// Role-based navigation used by AppShell (components/domain/app-shell.tsx). Kept free of React
-// so the matching rules can be unit-tested and reused by the role guard later (Fase 35).
+export const appRoles = ["publik", "siswa", "ortu", "admin"] as const;
 
-export type AppRole = "student" | "parent" | "admin";
+export type AppRole = (typeof appRoles)[number];
 
-export const ROLE_LABELS: Record<AppRole, string> = {
-  student: "Siswa",
-  parent: "Orang tua",
+export type NavigationIcon =
+  | "home"
+  | "price"
+  | "login"
+  | "register"
+  | "path"
+  | "worksheet"
+  | "progress"
+  | "help"
+  | "report"
+  | "subscription"
+  | "children"
+  | "queue"
+  | "agent"
+  | "content"
+  | "release"
+  | "users"
+  | "failed-job";
+
+export interface NavigationItem {
+  label: string;
+  href: string;
+  icon: NavigationIcon;
+  additionalActivePrefixes?: readonly string[];
+}
+
+export const roleLabels: Record<AppRole, string> = {
+  publik: "Publik",
+  siswa: "Siswa",
+  ortu: "Orang tua",
   admin: "Admin",
 };
 
-/** Landing page per role after login (TIP §5). */
-export const ROLE_HOME: Record<AppRole, string> = {
-  student: "/belajar",
-  parent: "/ortu/laporan",
+export const roleLandingPaths: Record<AppRole, string> = {
+  publik: "/",
+  siswa: "/belajar",
+  ortu: "/ortu/laporan",
   admin: "/admin/antrean",
 };
 
-/** Values accepted by the dev-only `?peran=` switch (no login yet). */
-export const DEV_ROLE_PARAM = "peran";
-export const DEV_ROLE_VALUES: Record<string, AppRole> = {
-  siswa: "student",
-  ortu: "parent",
-  admin: "admin",
-};
-
-export function parseDevRole(value: string | string[] | undefined): AppRole | null {
-  if (typeof value !== "string") return null;
-  return DEV_ROLE_VALUES[value.toLowerCase()] ?? null;
-}
-
-export interface NavItem {
-  /** Stable key, also used to pick the icon in AppShell. */
-  key: string;
-  label: string;
-  href: string;
-  /** Extra path prefixes that count as this item (e.g. the workspace under "Worksheet"). */
-  matches?: string[];
-}
-
-export const NAV_ITEMS: Record<AppRole, NavItem[]> = {
-  student: [
-    { key: "path", label: "Jalur", href: "/belajar" },
+export const navigationByRole: Record<AppRole, readonly NavigationItem[]> = {
+  publik: [
+    { label: "Beranda", href: "/", icon: "home" },
+    { label: "Harga", href: "/harga", icon: "price" },
+    { label: "Masuk", href: "/masuk", icon: "login" },
+    { label: "Daftar", href: "/daftar", icon: "register" },
+  ],
+  siswa: [
+    { label: "Jalur", href: "/belajar", icon: "path" },
     {
-      key: "worksheet",
       label: "Worksheet",
       href: "/belajar/worksheet",
-      matches: ["/belajar/kerjakan", "/belajar/hasil"],
+      icon: "worksheet",
+      additionalActivePrefixes: ["/belajar/kerjakan", "/belajar/hasil"],
     },
-    { key: "progress", label: "Progres", href: "/belajar/progres" },
-    { key: "help", label: "Bantuan", href: "/bantuan" },
+    { label: "Progres", href: "/belajar/progres", icon: "progress" },
+    { label: "Bantuan", href: "/bantuan", icon: "help" },
   ],
-  parent: [
-    { key: "reports", label: "Laporan", href: "/ortu/laporan" },
-    { key: "subscription", label: "Langganan", href: "/ortu/langganan", matches: ["/ortu/faktur"] },
-    { key: "children", label: "Anak", href: "/ortu/anak" },
-    { key: "help", label: "Bantuan", href: "/ortu/bantuan" },
+  ortu: [
+    { label: "Laporan", href: "/ortu/laporan", icon: "report" },
+    { label: "Langganan", href: "/ortu/langganan", icon: "subscription" },
+    { label: "Anak", href: "/ortu/anak", icon: "children" },
+    { label: "Bantuan", href: "/ortu/bantuan", icon: "help" },
   ],
   admin: [
-    { key: "queue", label: "Antrean", href: "/admin/antrean" },
-    { key: "agents", label: "Agen AI", href: "/admin/agen" },
-    { key: "content", label: "Konten", href: "/admin/konten" },
-    { key: "releases", label: "Rilis", href: "/admin/rilis" },
-    { key: "users", label: "Pengguna", href: "/admin/pengguna" },
-    { key: "failed-jobs", label: "Pekerjaan gagal", href: "/admin/pekerjaan-gagal" },
+    { label: "Antrean", href: "/admin/antrean", icon: "queue" },
+    { label: "Agen AI", href: "/admin/agen", icon: "agent" },
+    { label: "Konten", href: "/admin/konten", icon: "content" },
+    { label: "Rilis", href: "/admin/rilis", icon: "release" },
+    { label: "Pengguna", href: "/admin/pengguna", icon: "users" },
+    { label: "Pekerjaan gagal", href: "/admin/pekerjaan-gagal", icon: "failed-job" },
   ],
 };
 
-function matchLength(prefix: string, pathname: string): number {
-  if (pathname === prefix || pathname.startsWith(`${prefix}/`)) return prefix.length;
-  return -1;
+/** Concrete URLs used to verify every screen in TIP section 5, including dynamic routes. */
+export const screenRouteSamples = [
+  "/",
+  "/harga",
+  "/masuk",
+  "/daftar",
+  "/persetujuan/demo-persetujuan",
+  "/belajar",
+  "/belajar/worksheet",
+  "/belajar/kerjakan/demo-assignment",
+  "/belajar/hasil/demo-assignment",
+  "/belajar/progres",
+  "/bantuan",
+  "/ortu/laporan",
+  "/ortu/laporan/2026-W40",
+  "/ortu/langganan",
+  "/ortu/faktur",
+  "/ortu/anak",
+  "/ortu/bantuan",
+  "/admin/antrean",
+  "/admin/agen",
+  "/admin/konten",
+  "/admin/konten/butir/demo-item",
+  "/admin/rilis",
+  "/admin/pengguna",
+  "/admin/pekerjaan-gagal",
+] as const;
+
+function pathMatchesPrefix(pathname: string, prefix: string) {
+  return pathname === prefix || pathname.startsWith(`${prefix}/`);
 }
 
-/**
- * The item to highlight for a pathname: the longest matching prefix wins, so "/belajar/progres"
- * highlights "Progres" rather than "Jalur" ("/belajar"). Returns null when nothing matches.
- */
-export function findActiveItem(items: NavItem[], pathname: string): NavItem | null {
-  let best: NavItem | null = null;
-  let bestLength = -1;
-  for (const item of items) {
-    for (const prefix of [item.href, ...(item.matches ?? [])]) {
-      const length = matchLength(prefix, pathname);
-      if (length > bestLength) {
-        best = item;
-        bestLength = length;
-      }
-    }
+export function isNavigationItemActive(pathname: string, item: NavigationItem) {
+  if (item.href === "/" || item.href === "/belajar") {
+    return pathname === item.href;
   }
-  return best;
+
+  return (
+    pathMatchesPrefix(pathname, item.href) ||
+    item.additionalActivePrefixes?.some((prefix) => pathMatchesPrefix(pathname, prefix)) === true
+  );
+}
+
+export function getDevRoleLanding(value: string | string[] | undefined) {
+  const role = Array.isArray(value) ? value[0] : value;
+
+  return appRoles.includes(role as AppRole) ? roleLandingPaths[role as AppRole] : undefined;
 }

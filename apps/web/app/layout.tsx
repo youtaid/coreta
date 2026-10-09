@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { Kalam, Plus_Jakarta_Sans } from "next/font/google";
+import type { ReactNode } from "react";
 
 import { Toaster } from "@/components/ui/toast";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { themeInitScript } from "@/lib/theme";
 
+import "katex/dist/katex.min.css";
 import "./globals.css";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -22,9 +24,13 @@ const kalam = Kalam({
 export const metadata: Metadata = {
   title: "Coreta",
   description: "Worksheet matematika TKA/UTBK yang dikerjakan dengan mencoret langsung di layar.",
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/images/coreta-ikon-aplikasi-centang-1024.png",
+  },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     // The init script adds the "dark" class before hydration, so the attribute differs by design.
     <html

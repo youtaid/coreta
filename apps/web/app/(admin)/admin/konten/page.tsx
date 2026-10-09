@@ -1,19 +1,28 @@
-import type { Metadata } from "next";
+import { Upload } from "lucide-react";
 
-import { PlaceholderPage } from "@/components/domain/placeholder-page";
+import { ContentTable } from "@/components/domain/content-table";
+import { NotConnectedButton } from "@/components/domain/not-connected-button";
+import { PageHeader } from "@/components/domain/page-header";
+import { adminItems } from "@/lib/mock/content";
 
-export const metadata: Metadata = {
-  title: "Daftar Butir Soal — Coreta",
-};
-
-export default function Page() {
+export default function ContentListPage() {
   return (
-    <PlaceholderPage
-      eyebrow="Admin"
-      title="Daftar Butir Soal"
-      description="Tabel butir, filter, impor, dan kesehatan butir."
-      phase={18}
-      links={[{ label: "Editor butir contoh", href: "/admin/konten/butir/item-mock-001" }]}
-    />
+    <section className="space-y-8">
+      <PageHeader
+        eyebrow="Admin"
+        title="Daftar butir soal"
+        description="Semua butir beserta statusnya. Butir yang terlalu mudah, terlalu sulit, atau sering dilaporkan ditandai merah."
+        actions={
+          <NotConnectedButton
+            variant="outline"
+            description="Impor butir dihubungkan setelah database siap."
+          >
+            <Upload aria-hidden data-icon="inline-start" />
+            Impor butir
+          </NotConnectedButton>
+        }
+      />
+      <ContentTable items={adminItems} />
+    </section>
   );
 }
