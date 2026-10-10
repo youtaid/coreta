@@ -407,3 +407,23 @@ export interface AdminUser {
   lastActiveLabel: string;
   active: boolean;
 }
+
+/** Hasil penilaian satu worksheet: skor per butir (id butir → ScoreResult) dan skor keseluruhan. */
+export interface GradedWorksheetResult {
+  assignmentId: string;
+  overallScore: number;
+  results: Record<string, import("@coreta/scoring").ScoreResult>;
+  completedAt: number;
+  durationSeconds: number;
+}
+
+/**
+ * Penilai worksheet untuk ruang kerja. Ruang kerja asli memakai server action (kunci jawaban
+ * hanya di server); galeri dan tes memakai penilai tiruan di lib/mock/api.ts.
+ */
+export type WorksheetGrader = (input: {
+  assignmentId: string;
+  answers: Record<string, import("@coreta/scoring").Answer>;
+  questionIds: readonly string[];
+  elapsedSeconds: number;
+}) => Promise<GradedWorksheetResult>;

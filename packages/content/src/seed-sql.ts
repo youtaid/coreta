@@ -8,6 +8,7 @@ import { derivePinPassword, isWeakPin, normalizeLoginCode, studentAuthEmail } fr
 import { z } from "zod";
 
 import { importItems, formatImportReport } from "./import";
+import { LearningSchema, renderLearning, validateLearning } from "./seed-learning";
 import type { Item } from "./schema";
 
 // --- Seed file shapes ---------------------------------------------------------------------------
@@ -84,6 +85,7 @@ export interface SeedSources {
   stimuli: unknown;
   items: unknown;
   families: unknown;
+  learning: unknown;
 }
 
 export interface SeedBuild {
@@ -169,11 +171,19 @@ export function buildSeedSql(sources: SeedSources): SeedBuild {
   if (!curriculum.success) problems.push(formatZodError("curriculum.json", curriculum.error));
   if (!stimuli.success) problems.push(formatZodError("stimuli.json", stimuli.error));
   if (!families.success) problems.push(formatZodError("families.json", families.error));
+  const learning = LearningSchema.safeParse(sources.learning);
+  if (!learning.success) problems.push(formatZodError("learning.json", learning.error));
 
   const imported = importItems(sources.items);
   if (!imported.ok) problems.push(`items.json:\n${formatImportReport(imported)}`);
 
-  if (!curriculum.success || !stimuli.success || !families.success || !imported.ok) {
+  if (
+    !curriculum.success ||
+    !stimuli.success ||
+    !families.success ||
+    !learning.success ||
+    !imported.ok
+  ) {
     return { ok: false, report: problems.join("\n\n"), items: imported.items };
   }
 
@@ -231,16 +241,39 @@ export function buildSeedSql(sources: SeedSources): SeedBuild {
   if (new Set(codes).size !== codes.length)
     problems.push("families.json: kode masuk siswa kembar.");
 
+  const learningContext = {
+    competencies,
+    stageNumbers,
+    publishedItemCodes: new Set(
+      imported.items.filter((item) => item.status === "published").map((item) => item.code),
+    ),
+    dailyTargets: new Map(
+      families.data.families.map(({ student }) => [student.id, student.daily_target]),
+    ),
+  };
+  problems.push(...validateLearning(learning.data, learningContext));
+
   if (problems.length > 0) {
     return { ok: false, report: problems.join("\n"), items: imported.items };
   }
 
-  const sql = render(curriculum.data, stimuli.data, imported.items, families.data);
+  const sql =
+    [
+      render(curriculum.data, stimuli.data, imported.items, families.data),
+      renderLearning(learning.data, learningContext, {
+        uuid: seedUuid,
+        string: sqlString,
+        itemId: (code) => seedUuid("item", code),
+        stageId: (stage) => seedUuid("stage", String(stage)),
+        competencyId: (code) => seedUuid("competency", code),
+      }).join("\n"),
+    ].join("\n") + "\n";
   const published = imported.items.filter((item) => item.status === "published").length;
   const report = [
     `${stages.length} tahap, ${competencies.length} kompetensi, ${prereqs.length} prasyarat.`,
     `${imported.items.length} butir lolos validateItem (${published} terbit, ${imported.items.length - published} draf).`,
     `${stimuli.data.stimuli.length} stimulus, ${families.data.families.length} keluarga, ${families.data.admins.length} admin.`,
+    `${learning.data.worksheets.length} worksheet, ${learning.data.students.reduce((sum, student) => sum + student.assignments.length, 0)} penugasan.`,
   ].join("\n");
   return { ok: true, sql, report, items: imported.items };
 }

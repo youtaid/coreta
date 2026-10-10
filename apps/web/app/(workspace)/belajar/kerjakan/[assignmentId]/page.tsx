@@ -1,104 +1,32 @@
-"use client";
+import { notFound, redirect } from "next/navigation";
 
-import { use, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { getCurrentStudent, getWorkspaceAssignment } from "@/lib/queries/student";
 
-import { useWorkspaceStore } from "@/components/workspace/store";
-import { WorkspaceLayout } from "@/components/workspace/workspace-layout";
-import { getMockWorkspaceAssignment } from "@/lib/mock/workspace";
+import { WorkspaceScreen } from "./workspace-screen";
 
-interface WorkspacePageProps {
-  params: Promise<{ assignmentId: string }>;
-}
+export const dynamic = "force-dynamic";
 
-export default function WorkspacePage({ params }: WorkspacePageProps) {
-  const router = useRouter();
-  const { assignmentId } = use(params);
+export default async function WorkspacePage({
+  params,
+}: PageProps<"/belajar/kerjakan/[assignmentId]">) {
+  const { assignmentId } = await params;
+  const student = await getCurrentStudent();
+  if (!student) {
+    redirect(`/masuk?next=${encodeURIComponent(`/belajar/kerjakan/${assignmentId}`)}`);
+  }
 
-  const assignment = getMockWorkspaceAssignment(assignmentId);
-  const assignmentQuestions = assignment.questions;
-
-  const {
-    questions,
-    currentQuestionIndex,
-    answers,
-    strokesByQuestion,
-    submissionStatus,
-    scoreResults,
-    overallScore,
-    elapsedSeconds,
-    initialize,
-    goToQuestion,
-    nextQuestion,
-    previousQuestion,
-    setAnswer,
-    setPgAnswer,
-    setStrokes,
-    submit,
-  } = useWorkspaceStore();
-
-  // Initialize store when assignment loads
-  useEffect(() => {
-    initialize(assignmentId, assignmentQuestions);
-  }, [assignmentId, assignmentQuestions, initialize]);
-
-  // Timer interval
-  useEffect(() => {
-    const timer = setInterval(() => {
-      useWorkspaceStore.getState().tickTimer();
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const activeQuestions = questions.length > 0 ? questions : assignmentQuestions;
-  const currentQuestion = activeQuestions[currentQuestionIndex] ?? activeQuestions[0];
-  const currentAnswer = currentQuestion ? answers[currentQuestion.id] : undefined;
-  const currentOptionId = currentAnswer?.type === "pg" ? currentAnswer.choice : null;
-  const currentScoreResult = currentQuestion ? scoreResults[currentQuestion.id] : undefined;
-  const currentStrokes = currentQuestion ? (strokesByQuestion[currentQuestion.id] ?? []) : [];
-
-  const handleSelectOption = (optionId: string) => {
-    if (!currentQuestion) return;
-    setPgAnswer(currentQuestion.id, optionId);
-  };
-
-  const handleSubmit = async () => {
-    if (submissionStatus === "graded") {
-      router.push(`/belajar/hasil/${assignmentId || assignment.id}`);
-      return;
-    }
-    await submit();
-  };
-
-  const handleViewResults = () => {
-    router.push(`/belajar/hasil/${assignmentId || assignment.id}`);
-  };
+  // Dibaca dengan sesi siswa: penugasan orang lain atau yang belum terbit = 404.
+  const assignment = await getWorkspaceAssignment(assignmentId);
+  if (!assignment || assignment.questions.length === 0) notFound();
 
   return (
-    <WorkspaceLayout
-      question={currentQuestion}
-      questions={activeQuestions}
-      currentQuestionIndex={currentQuestionIndex}
-      totalQuestions={activeQuestions.length}
-      worksheetTitle={assignment.title}
-      stageName={assignment.stageName}
-      selectedOptionId={currentOptionId}
-      currentAnswer={currentAnswer}
-      onAnswerChange={(ans) => currentQuestion && setAnswer(currentQuestion.id, ans)}
-      scoreResult={currentScoreResult}
-      strokes={currentStrokes}
-      onStrokesChange={(strokes) => currentQuestion && setStrokes(currentQuestion.id, strokes)}
-      elapsedSeconds={elapsedSeconds}
-      submissionStatus={submissionStatus}
-      overallScore={overallScore}
-      isSubmitting={submissionStatus === "submitting"}
-      onSelectOption={handleSelectOption}
-      onSelectQuestion={goToQuestion}
-      onPreviousQuestion={previousQuestion}
-      onNextQuestion={nextQuestion}
-      onSubmit={handleSubmit}
-      onViewResults={handleViewResults}
-      onExitHref="/belajar/worksheet"
+    <WorkspaceScreen
+      assignment={{
+        id: assignment.id,
+        title: assignment.title,
+        stageName: assignment.stageName,
+        questions: assignment.questions,
+      }}
     />
   );
 }

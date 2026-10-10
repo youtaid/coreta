@@ -149,4 +149,16 @@ describe("ScratchArea", () => {
       expect(html).toContain(`aria-label="${name}"`);
     }
   });
+
+  it("menampilkan skor pecahan 0-1 sebagai persen", () => {
+    const html = renderToStaticMarkup(
+      createElement(WorkspaceLayout, {
+        question: mockWorkspaceQuestions[0],
+        questions: mockWorkspaceQuestions,
+        submissionStatus: "graded",
+        overallScore: 0.625,
+      }),
+    );
+    expect(html.replace(/<!-- -->/g, "")).toContain("Skor: 63%");
+  });
 });

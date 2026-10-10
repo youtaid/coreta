@@ -1,15 +1,36 @@
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it, vi } from "vitest";
 
 import LearningPathPage from "../../app/(siswa)/belajar/page";
-import { pathStages } from "../../lib/mock/path";
+import {
+  TODAY,
+  dailyGoal,
+  nextWorksheet,
+  pathActivity,
+  pathStages,
+  todayCount,
+} from "../../lib/mock/path";
 import { DailyTargetCard } from "./daily-target-card";
 import { PathMap } from "./path-map";
 
 function count(html: string, needle: string): number {
   return html.split(needle).length - 1;
 }
+
+// Halaman membaca Supabase lewat lib/queries/student; di tes diganti data contoh yang sama.
+vi.mock("@/lib/queries/student", () => ({
+  getCurrentStudent: async () => ({ id: "siswa", goal: "both", daily_target: dailyGoal }),
+  getLearningPath: async () => ({
+    stages: pathStages,
+    nextWorksheet,
+    today: TODAY,
+    todayCount,
+    dailyGoal,
+    activity: pathActivity,
+  }),
+}));
+vi.mock("next/navigation", () => ({ redirect: vi.fn() }));
 
 describe("PathMap", () => {
   const html = renderToStaticMarkup(
@@ -64,7 +85,10 @@ describe("DailyTargetCard", () => {
 });
 
 describe("/belajar page", () => {
-  const html = renderToStaticMarkup(createElement(LearningPathPage));
+  let html = "";
+  beforeAll(async () => {
+    html = renderToStaticMarkup(await LearningPathPage());
+  });
 
   it("sends 'Lanjut belajar' to the worksheet list", () => {
     expect(html).toMatch(/<a[^>]*href="\/belajar\/worksheet"[^>]*>Lanjut belajar/);

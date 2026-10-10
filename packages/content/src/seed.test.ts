@@ -14,6 +14,7 @@ const sources = {
   stimuli: read("stimuli.json"),
   items: read("items.json"),
   families: read("families.json"),
+  learning: read("learning.json"),
 };
 const rawItems = (sources.items as { items: unknown[] }).items;
 const build = buildSeedSql(sources);
@@ -183,6 +184,28 @@ describe("buildSeedSql", () => {
     expect(build.sql).toContain("'RAKA4826'");
     expect(build.sql).not.toContain("'482913'");
     expect(build.sql).toContain("@siswa.coreta.invalid");
+  });
+
+  it("refuses learning data that points at draft items, unknown worksheets, or double mastery", () => {
+    type Learning = {
+      worksheets: { items: { code: string; slot: string }[] }[];
+      students: { assignments: string[]; mastered_competencies: string[] }[];
+    };
+    const broken = structuredClone(sources) as typeof sources & { learning: Learning };
+    broken.learning.worksheets[0].items.push({ code: "MAT-SMA-BIL-09", slot: "baru" });
+    broken.learning.students[0].assignments.push("tidak-ada");
+    broken.learning.students[0].mastered_competencies.push("M0.1");
+    const report = buildSeedSql(broken).report;
+    expect(report).toContain("MAT-SMA-BIL-09 yang tidak ada atau belum terbit");
+    expect(report).toContain("worksheet tidak-ada tidak ada");
+    expect(report).toContain("M0.1 sudah tuntas lewat mastered_stages");
+  });
+
+  it("seeds worksheets, assignments, mastery, and daily activity relative to today", () => {
+    expect(build.sql).toContain("insert into public.worksheets");
+    expect(build.sql).toContain("insert into public.assignments");
+    expect(build.sql).toContain("insert into public.mastery");
+    expect(build.sql).toContain("(now() at time zone 'Asia/Jakarta')::date - 0");
   });
 
   it("uses stable ids that match Postgres md5(text)::uuid", () => {

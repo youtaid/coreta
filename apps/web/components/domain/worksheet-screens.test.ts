@@ -1,5 +1,5 @@
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import WorksheetResultPage from "../../app/(siswa)/belajar/hasil/[assignmentId]/page";
 import WorksheetListPage from "../../app/(siswa)/belajar/worksheet/page";
@@ -10,6 +10,20 @@ import {
   stageFilterHref,
   stageFilterOptions,
 } from "../../lib/mock/worksheets";
+
+const queries = vi.hoisted(() => ({ worksheets: null as unknown[] | null }));
+// Daftar worksheet membaca Supabase lewat lib/queries/student; di tes diganti data contoh.
+vi.mock("@/lib/queries/student", async () => {
+  const { worksheets } = await import("../../lib/mock/learning");
+  return {
+    getCurrentStudent: async () => ({ id: "siswa", goal: "both", daily_target: 6 }),
+    getWorksheetSummaries: async () => queries.worksheets ?? worksheets,
+  };
+});
+vi.mock("next/navigation", async (original) => ({
+  ...(await original<typeof import("next/navigation")>()),
+  redirect: vi.fn(),
+}));
 
 async function renderList(query: Record<string, string> = {}) {
   const element = await WorksheetListPage({ searchParams: Promise.resolve(query) });
@@ -95,6 +109,16 @@ describe("/belajar/worksheet", () => {
   it("renders card actions as links, not role=button", async () => {
     const html = await renderList();
     expect(html).not.toContain('role="button"');
+  });
+});
+
+describe("/belajar/worksheet without assignments", () => {
+  it("explains that worksheets are released on Monday", async () => {
+    queries.worksheets = [];
+    const html = await renderList();
+    queries.worksheets = null;
+    expect(html).toContain("Belum ada worksheet");
+    expect(html).toContain('href="/belajar"');
   });
 });
 

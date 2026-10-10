@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 import { DailyTargetCard } from "@/components/domain/daily-target-card";
 import { PageHeader } from "@/components/domain/page-header";
@@ -8,21 +9,27 @@ import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress, ProgressLabel, ProgressValue } from "@/components/ui/progress";
 import { countMastered, findCurrentStage, goalStreak } from "@/lib/learning-path";
-import {
-  TODAY,
-  dailyGoal,
-  nextWorksheet,
-  pathActivity,
-  pathStages,
-  todayCount,
-} from "@/lib/mock/path";
+import { getCurrentStudent, getLearningPath } from "@/lib/queries/student";
 
 const WORKSHEET_HREF = "/belajar/worksheet";
 
-export default function LearningPathPage() {
+export const dynamic = "force-dynamic";
+
+export default async function LearningPathPage() {
+  const student = await getCurrentStudent();
+  if (!student) redirect("/masuk?next=%2Fbelajar");
+
+  const {
+    stages: pathStages,
+    nextWorksheet,
+    today,
+    todayCount,
+    dailyGoal,
+    activity,
+  } = await getLearningPath(student);
   const current = findCurrentStage(pathStages);
   const mastered = countMastered(pathStages);
-  const streak = goalStreak(pathActivity, dailyGoal, TODAY);
+  const streak = goalStreak(activity, dailyGoal, today);
 
   // A plain link styled as a button: it navigates, so assistive tech should announce a link.
   const continueButton = (

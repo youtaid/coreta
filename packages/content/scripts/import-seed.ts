@@ -14,6 +14,7 @@ const build = buildSeedSql({
   stimuli: read("stimuli.json"),
   items: read("items.json"),
   families: read("families.json"),
+  learning: read("learning.json"),
 });
 
 if (!build.ok || build.sql === undefined) {

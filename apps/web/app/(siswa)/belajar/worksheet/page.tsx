@@ -1,10 +1,11 @@
 import { BookOpenCheck } from "lucide-react";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 import { EmptyState } from "@/components/domain/empty-state";
 import { PageHeader } from "@/components/domain/page-header";
 import { WorksheetCard } from "@/components/domain/worksheet-card";
-import { worksheets } from "@/lib/mock/learning";
+import { getCurrentStudent, getWorksheetSummaries } from "@/lib/queries/student";
 import {
   STAGE_PARAM,
   filterByStage,
@@ -16,11 +17,15 @@ import {
 } from "@/lib/mock/worksheets";
 import { cn } from "@/lib/utils";
 
+export const dynamic = "force-dynamic";
+
 export default async function WorksheetListPage({
   searchParams,
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
+  if (!(await getCurrentStudent())) redirect("/masuk?next=%2Fbelajar%2Fworksheet");
+  const worksheets = await getWorksheetSummaries();
   const selected = parseStageFilter((await searchParams)[STAGE_PARAM]);
   const groups = groupWorksheets(filterByStage(worksheets, selected));
   const options = stageFilterOptions(worksheets, selected);
@@ -52,7 +57,16 @@ export default async function WorksheetListPage({
         })}
       </nav>
 
-      {groups.length === 0 && (
+      {worksheets.length === 0 && (
+        <EmptyState
+          icon={BookOpenCheck}
+          title="Belum ada worksheet"
+          description="Worksheet baru terbit setiap Senin pagi. Sambil menunggu, lihat jalur belajarmu."
+          action={{ label: "Lihat jalur belajar", href: "/belajar" }}
+        />
+      )}
+
+      {worksheets.length > 0 && groups.length === 0 && (
         <EmptyState
           icon={BookOpenCheck}
           // Non-breaking space keeps "Tahap 0" together when the title wraps.

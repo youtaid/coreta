@@ -173,3 +173,90 @@ insert into public.consents (parent_id, type, granted, version) values
   ('5eed0000-0000-4000-8000-000000000011', 'data_anak', true, 'persetujuan-v1-2026-10'),
   ('5eed0000-0000-4000-8000-000000000012', 'data_anak', true, 'persetujuan-v1-2026-10'),
   ('5eed0000-0000-4000-8000-000000000013', 'data_anak', true, 'persetujuan-v1-2026-10');
+
+-- Data belajar contoh (Fase 37): worksheet terbit, penugasan, penguasaan, aktivitas
+insert into public.worksheets (id, title, stage_id, release_at, status) values
+  ('900c099a-5009-86a7-1401-341d2d9ae3f5', 'Worksheet Minggu Ini', 'cca5a5ff-5291-077d-a3aa-ab578a290e31', now() - interval '2 days', 'published'),
+  ('7bc086c7-91a1-6114-2852-53df62e40e21', 'Ulang: Bilangan & Matriks', '2107bbff-00e7-6fbe-b391-ec1b45e4f465', now() - interval '1 days', 'published');
+
+insert into public.worksheet_items (worksheet_id, item_id, position, slot) values
+  ('900c099a-5009-86a7-1401-341d2d9ae3f5', '837e61ae-1058-0237-8324-8e953877308d', 1, 'baru'),
+  ('900c099a-5009-86a7-1401-341d2d9ae3f5', '1fe80267-0998-bf19-5658-92ac338d5430', 2, 'baru'),
+  ('900c099a-5009-86a7-1401-341d2d9ae3f5', '77ddea7e-837a-8409-bb21-f59a1e351b26', 3, 'baru'),
+  ('900c099a-5009-86a7-1401-341d2d9ae3f5', '8989df82-2ebf-4ac2-bf19-b56c46aaa7be', 4, 'baru'),
+  ('900c099a-5009-86a7-1401-341d2d9ae3f5', '3bba4c01-73f7-81d9-65ac-4666b2b4e251', 5, 'ulang'),
+  ('900c099a-5009-86a7-1401-341d2d9ae3f5', '17cdf998-e2a1-73e2-b5b0-1ac2a6b16159', 6, 'ulang'),
+  ('900c099a-5009-86a7-1401-341d2d9ae3f5', 'e40568ad-b311-b367-2d2f-6a59a80f454c', 7, 'adaptif'),
+  ('900c099a-5009-86a7-1401-341d2d9ae3f5', '66ee6f90-db07-3e49-7630-c5310e167c39', 8, 'adaptif'),
+  ('7bc086c7-91a1-6114-2852-53df62e40e21', '3bba4c01-73f7-81d9-65ac-4666b2b4e251', 1, 'ulang'),
+  ('7bc086c7-91a1-6114-2852-53df62e40e21', '17cdf998-e2a1-73e2-b5b0-1ac2a6b16159', 2, 'ulang');
+
+insert into public.assignments (id, student_id, worksheet_id, assigned_at) values
+  ('563b7fbb-5afd-2132-61c5-c07793534037', '5eed0000-0000-4000-8000-000000000031', '900c099a-5009-86a7-1401-341d2d9ae3f5', now() - interval '1 day'),
+  ('c8e110a2-7b2f-8636-3bd5-bbea905e33da', '5eed0000-0000-4000-8000-000000000031', '7bc086c7-91a1-6114-2852-53df62e40e21', now() - interval '1 day'),
+  ('594f5a9b-e433-413c-13d6-a06738012b44', '5eed0000-0000-4000-8000-000000000032', '900c099a-5009-86a7-1401-341d2d9ae3f5', now() - interval '1 day'),
+  ('3e34e812-e48f-2be8-b3a8-65a2489bac39', '5eed0000-0000-4000-8000-000000000033', '900c099a-5009-86a7-1401-341d2d9ae3f5', now() - interval '1 day'),
+  ('10d2c875-f609-5df3-a605-7299bd6e1ccd', '5eed0000-0000-4000-8000-000000000033', '7bc086c7-91a1-6114-2852-53df62e40e21', now() - interval '1 day');
+
+insert into public.mastery (student_id, competency_id, tier, score, n_attempts, mastered_at, review_step, next_review_at) values
+  ('5eed0000-0000-4000-8000-000000000031', 'ec56b0a3-8beb-5669-b011-fef759813dab', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000031', 'e79228dd-db23-1254-3d26-499a11151ab6', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000031', '819a29ee-c2da-3ac1-cea5-d72b3341c7e6', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000031', '7c538831-672a-cb59-780c-2c27fdf78b80', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000031', '9be7ad1f-28de-b912-42b7-30cd165d9af0', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000031', '9d3126fc-8a77-e376-9778-269e6bce7cf3', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000031', '795859b5-3db1-1646-e597-d12fa4a3f2c3', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000031', 'ea0d7c9d-65c2-68f1-8736-47fb86c305c5', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000031', '1d1ce9ca-b15a-5d27-e529-443645ded5e1', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000031', '001680ca-4152-96d4-f0d1-0b56f6184ec1', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000031', '162498de-c84b-9bd1-2e69-6ba30ddc63ae', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000031', '23a9a4ef-50cf-5409-ed84-f8df432d06cf', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000031', 'fa2e9c22-7f13-8e59-4fad-32a89151957a', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000031', '2f41d7d5-9805-3055-f8d5-7def73be2e52', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000031', '3f6a9564-cc5c-e9c0-3e4d-d66627b223d6', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000031', 'fd8ab079-b786-432c-ff05-b1d3a9909442', 'mahir', 0.55, 6, null, 0, null),
+  ('5eed0000-0000-4000-8000-000000000031', 'c05bb498-3d07-d157-83a9-82c155fc723d', 'dasar', 0.4, 3, null, 0, null),
+  ('5eed0000-0000-4000-8000-000000000032', 'ec56b0a3-8beb-5669-b011-fef759813dab', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000032', 'e79228dd-db23-1254-3d26-499a11151ab6', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000032', '819a29ee-c2da-3ac1-cea5-d72b3341c7e6', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000032', '7c538831-672a-cb59-780c-2c27fdf78b80', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000032', '9be7ad1f-28de-b912-42b7-30cd165d9af0', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000032', '9d3126fc-8a77-e376-9778-269e6bce7cf3', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000032', '795859b5-3db1-1646-e597-d12fa4a3f2c3', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000032', 'ea0d7c9d-65c2-68f1-8736-47fb86c305c5', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000032', '1d1ce9ca-b15a-5d27-e529-443645ded5e1', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000032', '001680ca-4152-96d4-f0d1-0b56f6184ec1', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000032', '162498de-c84b-9bd1-2e69-6ba30ddc63ae', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000032', '23a9a4ef-50cf-5409-ed84-f8df432d06cf', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000032', 'fa2e9c22-7f13-8e59-4fad-32a89151957a', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000032', '2f41d7d5-9805-3055-f8d5-7def73be2e52', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000032', '3f6a9564-cc5c-e9c0-3e4d-d66627b223d6', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000032', 'fd8ab079-b786-432c-ff05-b1d3a9909442', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000032', '1d910c2d-602d-59aa-eb3f-7cc5c42afeff', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000032', 'c05bb498-3d07-d157-83a9-82c155fc723d', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000032', '8431313c-ce9c-8f88-cc6a-63eb0a4ece96', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000032', 'd55e2081-faa1-f0bb-7709-33486d445b2e', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000032', 'c0667636-929a-f11b-a134-a4aa08acf223', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000032', 'b7180a58-3a67-72fd-35d1-00e3e7b77c83', 'mahir', 0.7, 8, null, 0, null),
+  ('5eed0000-0000-4000-8000-000000000033', 'ec56b0a3-8beb-5669-b011-fef759813dab', 'ujian', 0.9, 10, now() - interval '10 days', 1, now() + interval '4 days'),
+  ('5eed0000-0000-4000-8000-000000000033', 'e79228dd-db23-1254-3d26-499a11151ab6', 'dasar', 0.5, 4, null, 0, null);
+
+insert into public.daily_activity (student_id, date, items_done, minutes, target_met) values
+  ('5eed0000-0000-4000-8000-000000000031', (now() at time zone 'Asia/Jakarta')::date - 7, 6, 18, true),
+  ('5eed0000-0000-4000-8000-000000000031', (now() at time zone 'Asia/Jakarta')::date - 6, 7, 21, true),
+  ('5eed0000-0000-4000-8000-000000000031', (now() at time zone 'Asia/Jakarta')::date - 5, 6, 18, true),
+  ('5eed0000-0000-4000-8000-000000000031', (now() at time zone 'Asia/Jakarta')::date - 4, 3, 9, false),
+  ('5eed0000-0000-4000-8000-000000000031', (now() at time zone 'Asia/Jakarta')::date - 3, 6, 18, true),
+  ('5eed0000-0000-4000-8000-000000000031', (now() at time zone 'Asia/Jakarta')::date - 2, 8, 24, true),
+  ('5eed0000-0000-4000-8000-000000000031', (now() at time zone 'Asia/Jakarta')::date - 1, 6, 18, true),
+  ('5eed0000-0000-4000-8000-000000000031', (now() at time zone 'Asia/Jakarta')::date - 0, 6, 18, true),
+  ('5eed0000-0000-4000-8000-000000000032', (now() at time zone 'Asia/Jakarta')::date - 5, 8, 24, true),
+  ('5eed0000-0000-4000-8000-000000000032', (now() at time zone 'Asia/Jakarta')::date - 4, 9, 27, true),
+  ('5eed0000-0000-4000-8000-000000000032', (now() at time zone 'Asia/Jakarta')::date - 3, 8, 24, true),
+  ('5eed0000-0000-4000-8000-000000000032', (now() at time zone 'Asia/Jakarta')::date - 2, 0, 0, false),
+  ('5eed0000-0000-4000-8000-000000000032', (now() at time zone 'Asia/Jakarta')::date - 1, 10, 30, true),
+  ('5eed0000-0000-4000-8000-000000000032', (now() at time zone 'Asia/Jakarta')::date - 0, 8, 24, true),
+  ('5eed0000-0000-4000-8000-000000000033', (now() at time zone 'Asia/Jakarta')::date - 3, 2, 6, false),
+  ('5eed0000-0000-4000-8000-000000000033', (now() at time zone 'Asia/Jakarta')::date - 2, 5, 15, true),
+  ('5eed0000-0000-4000-8000-000000000033', (now() at time zone 'Asia/Jakarta')::date - 1, 0, 0, false),
+  ('5eed0000-0000-4000-8000-000000000033', (now() at time zone 'Asia/Jakarta')::date - 0, 3, 9, false);

@@ -5,15 +5,14 @@
 // - Digital ink strokes retained per question during session
 // - Timer tracking elapsed time
 // - Submission workflow: draft -> submitting -> graded
-// - Grading results and hints from @coreta/scoring via lib/mock/api.ts
+// - Grading results and hints from @coreta/scoring through an injected grader: the real workspace
+//   passes a server action (answer keys stay on the server), tests pass lib/mock/api.ts
 
 import type { Stroke } from "@coreta/ink";
 import type { Answer, ScoreResult } from "@coreta/scoring";
 import { create } from "zustand";
 
-import type { WorkspaceQuestion } from "@/lib/domain";
-import { type GradedWorksheetResult, submitWorksheetApi } from "@/lib/mock/api";
-import { mockWorkspaceQuestions } from "@/lib/mock/workspace";
+import type { GradedWorksheetResult, WorksheetGrader, WorkspaceQuestion } from "@/lib/domain";
 
 export type SubmissionStatus = "draft" | "submitting" | "graded";
 
@@ -22,6 +21,7 @@ export interface WorkspaceState {
   assignmentId: string;
   questions: readonly WorkspaceQuestion[];
   currentQuestionIndex: number;
+  grader: WorksheetGrader | null;
 
   // --- Answers & Ink Retention ---
   answers: Record<string, Answer>;
@@ -38,7 +38,11 @@ export interface WorkspaceState {
   isTimerRunning: boolean;
 
   // --- Actions ---
-  initialize: (assignmentId: string, questions?: readonly WorkspaceQuestion[]) => void;
+  initialize: (
+    assignmentId: string,
+    questions: readonly WorkspaceQuestion[],
+    grader: WorksheetGrader,
+  ) => void;
   goToQuestion: (index: number) => void;
   nextQuestion: () => void;
   previousQuestion: () => void;
@@ -57,9 +61,10 @@ export interface WorkspaceState {
 }
 
 export const useWorkspaceStore = create<WorkspaceState>((set, get) => ({
-  assignmentId: "demo-assignment",
-  questions: mockWorkspaceQuestions,
+  assignmentId: "",
+  questions: [],
   currentQuestionIndex: 0,
+  grader: null,
 
   answers: {},
   strokesByQuestion: {},
@@ -72,11 +77,11 @@ export const useWorkspaceStore = create<WorkspaceState>((set, get) => ({
   elapsedSeconds: 0,
   isTimerRunning: true,
 
-  initialize: (assignmentId: string, questions?: readonly WorkspaceQuestion[]) => {
-    const questionList = questions && questions.length > 0 ? questions : mockWorkspaceQuestions;
+  initialize: (assignmentId, questions, grader) => {
     set({
       assignmentId,
-      questions: questionList,
+      questions,
+      grader,
       currentQuestionIndex: 0,
       answers: {},
       strokesByQuestion: {},
@@ -178,13 +183,23 @@ export const useWorkspaceStore = create<WorkspaceState>((set, get) => ({
   },
 
   submit: async () => {
-    const { assignmentId, answers, questions, elapsedSeconds } = get();
+    const { assignmentId, answers, questions, elapsedSeconds, grader } = get();
+    if (!grader) throw new Error("Ruang kerja belum diinisialisasi dengan penilai.");
     set({ submissionStatus: "submitting", isTimerRunning: false });
 
-    const questionIds = questions.map((q) => q.id);
-    const result = await submitWorksheetApi(assignmentId, answers, questionIds, {
-      elapsedSeconds,
-    });
+    let result: GradedWorksheetResult;
+    try {
+      result = await grader({
+        assignmentId,
+        answers,
+        questionIds: questions.map((q) => q.id),
+        elapsedSeconds,
+      });
+    } catch (error) {
+      // Penilaian gagal (mis. koneksi putus): jawaban tetap ada, siswa bisa mengirim ulang.
+      set({ submissionStatus: "draft", isTimerRunning: true });
+      throw error;
+    }
 
     set({
       submissionStatus: "graded",

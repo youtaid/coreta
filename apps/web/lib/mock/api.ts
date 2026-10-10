@@ -16,6 +16,10 @@ import {
   type ScoreResult,
 } from "@coreta/scoring";
 
+import type { GradedWorksheetResult, WorksheetGrader } from "@/lib/domain";
+
+export type { GradedWorksheetResult };
+
 /** Mock answer keys and hints for the 8 standard mock questions. */
 export const mockScoringKeys: Record<string, Item> = {
   // Soal 1 (PG): Fungsi Kuadrat
@@ -145,14 +149,6 @@ export const mockScoringKeys: Record<string, Item> = {
   } satisfies PgkItem,
 };
 
-export interface GradedWorksheetResult {
-  assignmentId: string;
-  overallScore: number;
-  results: Record<string, ScoreResult>;
-  completedAt: number;
-  durationSeconds: number;
-}
-
 /**
  * Grades a single answer against mock keys using `@coreta/scoring`.
  */
@@ -206,3 +202,11 @@ export async function submitWorksheetApi(
     durationSeconds: options?.elapsedSeconds ?? 0,
   };
 }
+
+/** Penilai tiruan untuk galeri dev dan tes (kunci tiruan di atas, tanpa jeda). */
+export const mockWorksheetGrader: WorksheetGrader = ({
+  assignmentId,
+  answers,
+  questionIds,
+  elapsedSeconds,
+}) => submitWorksheetApi(assignmentId, answers, questionIds, { delayMs: 0, elapsedSeconds });

@@ -233,10 +233,11 @@ export function WorkspaceLayout({
 
           {submissionStatus === "graded" && overallScore !== null && overallScore !== undefined && (
             <Badge
-              variant={overallScore >= 70 ? "default" : "secondary"}
+              variant={overallScore >= 0.7 ? "default" : "secondary"}
               className="h-7 px-2.5 text-xs font-bold"
             >
-              Skor: {Math.round(overallScore)}%
+              {/* overallScore adalah pecahan 0-1 dari penilai. */}
+              Skor: {Math.round(overallScore * 100)}%
             </Badge>
           )}
 

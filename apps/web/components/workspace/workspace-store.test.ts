@@ -1,11 +1,16 @@
 import type { Stroke } from "@coreta/ink";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+import { mockWorksheetGrader } from "../../lib/mock/api";
+import { mockWorkspaceQuestions } from "../../lib/mock/workspace";
 
 import { useWorkspaceStore } from "./store";
 
 describe("Workspace Store (Fase 28)", () => {
   beforeEach(() => {
-    useWorkspaceStore.getState().reset();
+    useWorkspaceStore
+      .getState()
+      .initialize("demo-assignment", mockWorkspaceQuestions, mockWorksheetGrader);
   });
 
   describe("8-Question Navigation", () => {
@@ -215,6 +220,39 @@ describe("Workspace Store (Fase 28)", () => {
       // Overall score computed
       expect(result.overallScore).toBeGreaterThan(0);
       expect(finalState.overallScore).toBe(result.overallScore);
+    });
+  });
+
+  describe("Penilai", () => {
+    it("bila penilaian gagal, kembali ke draf dan jawaban tetap ada", async () => {
+      const store = useWorkspaceStore.getState();
+      store.initialize("tugas", mockWorkspaceQuestions, async () => {
+        throw new Error("jaringan putus");
+      });
+      useWorkspaceStore.getState().setPgAnswer("item-math-01", "opt-1-a");
+      await expect(useWorkspaceStore.getState().submit()).rejects.toThrow("jaringan putus");
+      const state = useWorkspaceStore.getState();
+      expect(state.submissionStatus).toBe("draft");
+      expect(state.answers["item-math-01"]).toEqual({ type: "pg", choice: "opt-1-a" });
+    });
+
+    it("mengirim id penugasan, jawaban, urutan soal, dan waktu ke penilai", async () => {
+      const grader = vi.fn(async ({ assignmentId }: { assignmentId: string }) => ({
+        assignmentId,
+        overallScore: 0,
+        results: {},
+        completedAt: 1,
+        durationSeconds: 0,
+      }));
+      useWorkspaceStore.getState().initialize("tugas-2", mockWorkspaceQuestions, grader);
+      await useWorkspaceStore.getState().submit();
+      expect(grader).toHaveBeenCalledWith(
+        expect.objectContaining({
+          assignmentId: "tugas-2",
+          questionIds: mockWorkspaceQuestions.map((question) => question.id),
+          elapsedSeconds: 0,
+        }),
+      );
     });
   });
 });

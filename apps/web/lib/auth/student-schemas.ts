@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { examGoals } from "@/lib/auth/schemas";
+import { uuidLike } from "@/lib/ids";
 
 /** Sama dengan PIN_LENGTH dan isWeakPin di @coreta/db; diulang di sini agar aman dipakai di peramban. */
 const pin = z
@@ -45,13 +46,13 @@ export const createStudentSchema = z
   .refine(pinsMatch, pinMismatch);
 
 export const updateTargetsSchema = z.object({
-  studentId: z.uuid({ error: "Anak tidak ditemukan." }),
+  studentId: uuidLike("Anak tidak ditemukan."),
   goal,
   dailyTarget,
 });
 
 export const resetPinSchema = z
-  .object({ studentId: z.uuid({ error: "Anak tidak ditemukan." }), pin, pinConfirm })
+  .object({ studentId: uuidLike("Anak tidak ditemukan."), pin, pinConfirm })
   .refine(pinsMatch, pinMismatch);
 
 export const studentSignInSchema = z.object({

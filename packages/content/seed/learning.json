@@ -1,0 +1,60 @@
+{
+  "$comment": "Data belajar contoh untuk pengembangan lokal (Fase 37): worksheet terbit, penugasan, penguasaan kompetensi, dan aktivitas harian siswa seed. Tanggal relatif terhadap hari reset (zona Asia/Jakarta). Worksheet hanya boleh berisi butir published.",
+  "worksheets": [
+    {
+      "key": "minggu-ini",
+      "title": "Worksheet Minggu Ini",
+      "stage": 3,
+      "released_days_ago": 2,
+      "items": [
+        { "code": "MAT-SMA-ALJ-01", "slot": "baru" },
+        { "code": "MAT-SMA-GEO-02", "slot": "baru" },
+        { "code": "MAT-SMA-LIT-03", "slot": "baru" },
+        { "code": "MAT-SMA-ALJ-04", "slot": "baru" },
+        { "code": "MAT-SMA-MAT-05", "slot": "ulang" },
+        { "code": "MAT-SMA-LIT-06", "slot": "ulang" },
+        { "code": "MAT-SMA-DIM-07", "slot": "adaptif" },
+        { "code": "MAT-SMA-STA-08", "slot": "adaptif" }
+      ]
+    },
+    {
+      "key": "ulang-dasar",
+      "title": "Ulang: Bilangan & Matriks",
+      "stage": 1,
+      "released_days_ago": 1,
+      "items": [
+        { "code": "MAT-SMA-MAT-05", "slot": "ulang" },
+        { "code": "MAT-SMA-LIT-06", "slot": "ulang" }
+      ]
+    }
+  ],
+  "students": [
+    {
+      "student_id": "5eed0000-0000-4000-8000-000000000031",
+      "assignments": ["minggu-ini", "ulang-dasar"],
+      "mastered_stages": [0, 1, 2],
+      "mastered_competencies": ["M3.1", "M3.2"],
+      "learning": [
+        { "competency": "M3.3", "tier": "mahir", "score": 0.55, "n_attempts": 6 },
+        { "competency": "M3.5", "tier": "dasar", "score": 0.4, "n_attempts": 3 }
+      ],
+      "activity": [6, 7, 6, 3, 6, 8, 6, 6]
+    },
+    {
+      "student_id": "5eed0000-0000-4000-8000-000000000032",
+      "assignments": ["minggu-ini"],
+      "mastered_stages": [0, 1, 2, 3, 4],
+      "mastered_competencies": [],
+      "learning": [{ "competency": "M5.1", "tier": "mahir", "score": 0.7, "n_attempts": 8 }],
+      "activity": [8, 9, 8, 0, 10, 8]
+    },
+    {
+      "student_id": "5eed0000-0000-4000-8000-000000000033",
+      "assignments": ["minggu-ini", "ulang-dasar"],
+      "mastered_stages": [],
+      "mastered_competencies": ["M0.1"],
+      "learning": [{ "competency": "M0.2", "tier": "dasar", "score": 0.5, "n_attempts": 4 }],
+      "activity": [2, 5, 0, 3]
+    }
+  ]
+}
