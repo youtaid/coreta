@@ -1028,7 +1028,7 @@ _Skema Supabase, RLS, akun, dan menghubungkan layar jalur/worksheet ke data nyat
   - Semua tes pgTAP lulus
   - Percobaan dengan `id` yang sama dua kali tidak membuat baris ganda (kunci utama)
 - **Gerbang persetujuan**: Youta menyetujui migrasi RLS dan data anak
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [x] Sedang | [ ] Selesai (menunggu persetujuan Youta)
 
 #### Fase 33 — Migrasi 4: Langganan, Layanan & Audit
 
@@ -1921,6 +1921,16 @@ Keputusan yang sudah diambil sebelum coding dimulai (menyimpang atau melengkapi 
 | 9 | `WorksheetSummary` mendapat field wajib `stageNumber` (diisi di `mock/learning.ts`); helper `parseStageFilter`, `stageFilterOptions`, `filterByStage`, `stageFilterHref` di `lib/mock/worksheets.ts` bersama helper yang sudah ada | Memfilter dari angka lebih aman daripada mengurai teks `stageName`; pindahkan helper ke `lib/` saat data dari database (Fase 37) |
 | 9 | Aksi di `WorksheetCard` (dengan `aria-label` "Mulai: <judul>"), `EmptyState`, dan header halaman hasil kini `<Link className={buttonVariants()}>` | Menuntaskan temuan `role="button"` Fase 8 untuk layar Fase 9; label membedakan banyak tombol "Mulai"/"Lihat hasil" di satu halaman |
 | 9 | Poin di lencana hasil memakai `formatNumber` (`lib/format.ts`, `id-ID`): "0,5/1", bukan "0.5/1"; judul keadaan kosong memakai spasi tak-putus di "Tahap N" | Gaya angka Indonesia; mencegah "0" tertinggal sendiri di baris baru pada ponsel |
+| 32 | Prinsip 0001 diteruskan: klien (siswa, orang tua, admin) hanya punya hak SELECT di 8 tabel data belajar; semua penulisan lewat server/worker dengan `service_role` (attempts dan hints_shown oleh `/api/attempts`, ink_sessions oleh `/api/ink/complete`, hint_reports oleh `/api/hint-reports`, assignments/mastery/daily_activity/weekly_reports oleh worker). Satu-satunya tulis dari klien: siswa mengunggah berkas ke folder Storage miliknya | Skor tidak boleh berasal dari klien; spesifikasi Fase 38–44 memang menaruh semua penulisan di route handler dan worker |
+| 32 | Kunci asing komposit `(…, student_id)`: attempts → assignments, ink_sessions/hints_shown/hint_reports → attempts, weekly_reports.sample_ink_id → ink_sessions; ink_sessions juga mengunci `item_id` ke butir percobaannya | Database sendiri menolak data siswa A yang ditempel ke penugasan, percobaan, atau coretan siswa B, walau server keliru |
+| 32 | `attempts.id` dari klien tanpa default (kunci outbox Fase 40); tambahan `received_at` (waktu server) dan cek `submitted_at <= received_at + 5 menit`; `unique (assignment_id, item_id, try_no)`; `score numeric(5,4)` 0–1 | Kirim ulang = satu baris lewat `ON CONFLICT (id) DO NOTHING`; percobaan offline yang terlambat tetap diterima, jam perangkat yang maju ditolak |
+| 32 | `mastery`: kunci `(student_id, competency_id)`; `tier` = tingkat tertinggi yang terbuka; kolom tambahan `revoked_at`, `review_step`, `updated_at` agar `MasteryState` di `packages/scoring` tersimpan utuh; cek `mastered_at` ⇔ `next_review_at` dan tuntas hanya di tingkat `ujian` | Mengikuti model penguasaan v1 (Fase 23); worker tidak bisa menyimpan state yang mustahil |
+| 32 | `hint_reports`: `created_at` dan `due_at` (= +24 jam) diisi trigger dan tidak bisa diubah; satu laporan terbuka per percobaan (indeks unik parsial); `status = 'open'` ⇔ `reviewed_at` kosong; dibaca siswa pelapor dan admin saja | Hitung mundur SLA tidak bisa digeser; tombol "Laporkan" yang ditekan berkali-kali tidak memenuhi antrean |
+| 32 | `hints_shown`: kolom tambahan `id`, `student_id`, `shown_at`; petunjuk `ai_ink` wajib punya `ai_decision_id`; kunci asingnya ke `ai_decisions` ditambahkan di 0004 | Aturan 3 (setiap keputusan AI tercatat); tabel `ai_decisions` baru ada di Fase 33 |
+| 32 | `weekly_reports`: `week_start` wajib Senin, satu laporan per siswa per minggu, terbit wajib punya narasi dan `published_at`; orang tua hanya membaca yang `published`, admin membaca draf, siswa tidak membacanya lewat klien | Laporan ditulis untuk orang tua dan ditinjau dulu sebelum terbit |
+| 32 | Bucket `ink` dibuat di migrasi (bukan `config.toml`): privat, maksimal 5 MB, MIME `application/gzip` dan `image/png`. Kebijakan: siswa INSERT hanya `{student_id}/{uuid}.json.gz\|png` di foldernya (tanpa subfolder); SELECT oleh pemilik, orang tuanya, atau admin lewat `can_read_student_folder(text)`; tanpa UPDATE/DELETE | Berlaku sama di lokal dan cloud; berkas coretan tidak bisa ditimpa atau dihapus dari klien |
+| 32 | Fungsi bantu `current_student_id()` dan `can_read_student_folder(text)`: `security definer`, `search_path = ''`, tidak bisa dipanggil anon. Yang kedua menerima teks agar nama folder bukan UUID tidak memicu galat cast | Pola yang sama dengan `is_guardian_of` di 0001 |
+| 32 | Verifikasi memakai harness lokal: PostgreSQL 16 + pgTAP 1.3.2 + tiruan minimal Supabase (peran `anon`/`authenticated`/`service_role`, hak default di `public`, `auth.users`, `auth.uid()`, `storage.buckets`/`storage.objects` ber-RLS, `storage.foldername`). Migrasi 0001–0003 dijalankan dari nol lalu `pg_prove` atas `supabase/tests` | Sandbox sesi ini tidak bisa menarik image Docker Supabase (CDN registry diblokir proxy, Docker Hub 429); lihat 9b |
 
 ### 9b. Temuan & Isu
 
@@ -1943,6 +1953,10 @@ Catat bug, blocker, atau hal yang perlu dievaluasi. Jangan langsung dieksekusi �
 | 1 | `@types/node` `^20` padahal `engines` meminta Node ≥ 22 | Low | Terbuka |
 | 6 | Commit `0008782` memuat Fase 3–6 sekaligus (aturan: satu fase satu commit) | Low | Dicatat |
 | 8 | Pola `<Button nativeButton={false} render={<Link href=… />}>` (keputusan Fase 6) merender `<a role="button">`; pembaca layar mengumumkan tautan navigasi sebagai tombol. Dipakai di banyak layar (mis. EmptyState, `/belajar/progres`). Fase 8 sudah memakai `<Link className={buttonVariants()}>` | Med | Sebagian: sudah diganti di `/belajar`, `WorksheetCard`, `EmptyState`, dan `/belajar/hasil` (Fase 8–9); layar lain menunggu fase perapian |
+| 32 | Migrasi 0001–0003 dan 253 tes pgTAP baru diverifikasi di harness Postgres 16 dengan tiruan skema Supabase, belum dengan `supabase db reset && supabase test db` sungguhan (Postgres 17, layanan Storage asli). Jalankan keduanya di mesin lokal sebelum menyetujui Fase 30–32 | High | Terbuka |
+| 32 | Menghapus akun siswa menghapus seluruh baris data belajarnya (cascade, dites), tetapi berkas di bucket `ink/{student_id}/` tidak ikut terhapus oleh database | Med | Terbuka (Fase 65: hapus objek Storage saat hapus data anak) |
+| 32 | `ink_sessions` mewajibkan baris `attempts` sudah ada. Fase 39: panggil `/api/ink/complete` setelah `/api/attempts` (atau buat keduanya dalam satu transaksi server). Unggahan ulang dari antrean offline yang mendapat "sudah ada" harus dianggap berhasil (tidak ada upsert) | Med | Catatan untuk Fase 39–40 |
+| 32 | `hints_shown.ai_decision_id` belum punya kunci asing karena `ai_decisions` dibuat di 0004 | Low | Terbuka (Fase 33) |
 
 **Pertanyaan terbuka sebelum fase terkait:**
 - Sebelum Fase 45 (deploy): spesifikasi VPS (CPU, RAM, disk) dan tagihan bulanan
@@ -1985,9 +1999,9 @@ Catat bug, blocker, atau hal yang perlu dievaluasi. Jangan langsung dieksekusi �
 | Fase 27 — Lapisan Tempel (Paste-to-Ink) | — | ~30 menit | — | — |
 | Fase 28 — State Ruang Kerja | Selesai | ~30 menit | 2026-10-07 | Store Zustand (apps/web/lib/workspace-store.ts); navigasi 8 soal; dukungan 4 tipe jawaban (PG, PGK, BS, Isian); retensi coretan digital antar soal; timer pengerjaan; integrasi penilaian mock @coreta/scoring dengan petunjuk pengecoh; tes unit 22 files / 252 tests lulus |
 | Fase 29 — Validator Konten | — | ~30 menit | — | — |
-| Fase 30 — Migrasi 1: Akun & Keluarga | — | ~30 menit | — | — |
-| Fase 31 — Migrasi 2: Kurikulum & Konten | — | ~30 menit | — | — |
-| Fase 32 — Migrasi 3: Data Belajar | — | ~30 menit | — | — |
+| Fase 30 — Migrasi 1: Akun & Keluarga | Sedang | ~30 menit | — | Menunggu persetujuan Youta. 2026-10-10: migrasi berjalan dari nol dan 64/64 tes pgTAP lulus di harness Postgres 16 (lihat 9a Fase 32); belum diuji dengan `supabase test db` |
+| Fase 31 — Migrasi 2: Kurikulum & Konten | Sedang | ~30 menit | — | Menunggu persetujuan Youta. 2026-10-10: migrasi berjalan dari nol dan 67/67 tes pgTAP lulus di harness Postgres 16; belum diuji dengan `supabase test db` |
+| Fase 32 — Migrasi 3: Data Belajar | Sedang | ~30 menit | — | Menunggu persetujuan Youta. `0003_belajar.sql` (8 tabel, bucket privat `ink`, 2 fungsi bantu, 1 trigger) dan `0003_rls_belajar.sql` (122 asersi): siswa tidak bisa menulis `mastery`/`daily_activity`/skor, orang tua hanya membaca data anaknya (draf laporan tidak), siswa hanya mengunggah ke foldernya, id percobaan ganda = satu baris. Semua 253 tes 0001–0003 lulus di harness Postgres 16; 3 uji mutasi (siswa boleh tulis mastery, cek folder unggahan dihapus, orang tua baca draf) masing-masing tertangkap tes. Belum diuji dengan `supabase test db` |
 | Fase 33 — Migrasi 4: Langganan, Layanan & Audit | — | ~30 menit | — | — |
 | Fase 34 — Seed Data & Tipe TypeScript | — | ~30 menit | — | — |
 | Fase 35 — Autentikasi Orang Tua & Penjaga Peran | — | ~30 menit | — | — |
