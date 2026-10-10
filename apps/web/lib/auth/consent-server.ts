@@ -54,3 +54,23 @@ export async function recordConsent(input: {
     source: input.source,
   });
 }
+
+/**
+ * Setelah orang tua menolak atau mencabut persetujuan data anak, sesi anak-anaknya dicabut:
+ * masuk berikutnya ditolak (signInStudent memeriksa persetujuan wali), dan sesi yang sedang
+ * berjalan tidak bisa diperpanjang. Mengembalikan jumlah anak yang sesinya dicabut.
+ */
+export async function revokeChildSessions(parentId: string) {
+  const admin = createAdminClient();
+  const { data, error } = await admin
+    .from("guardianships")
+    .select("students(profile_id)")
+    .eq("parent_id", parentId);
+  if (error) throw error;
+  const profiles = (data ?? []).flatMap((row) => (row.students ? [row.students.profile_id] : []));
+  for (const profileId of profiles) {
+    const revoked = await admin.rpc("revoke_user_sessions", { target_user: profileId });
+    if (revoked.error) throw revoked.error;
+  }
+  return profiles.length;
+}

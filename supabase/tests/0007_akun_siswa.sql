@@ -8,7 +8,7 @@
 
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(36);
+select plan(37);
 
 delete from auth.users;
 
@@ -50,6 +50,18 @@ select ok(
   and not has_function_privilege('anon', 'public.login_locked_until(text)', 'EXECUTE'),
   'NEGATIF: klien tidak bisa memanggil register_student dan fungsi pembatas'
 );
+select is_empty($$
+  select r.role, f.sig
+  from unnest(array['anon', 'authenticated']) as r(role)
+  cross join unnest(array[
+    'public.register_student(uuid, uuid, text, smallint, text, smallint, text)',
+    'public.note_login_failure(text, integer, integer, integer)',
+    'public.clear_login_failures(text)',
+    'public.login_locked_until(text)',
+    'public.sync_profile_role()'
+  ]) as f(sig)
+  where has_function_privilege(r.role, f.sig, 'EXECUTE')
+$$, 'NEGATIF: anon dan authenticated tidak bisa memanggil satu pun fungsi server 0007');
 select ok(not has_column_privilege('authenticated', 'public.students', 'login_code', 'UPDATE'),
   'NEGATIF: klien tidak bisa mengubah kode masuk');
 

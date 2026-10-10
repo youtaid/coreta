@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import { landingAfterSignIn } from "@/lib/auth/roles";
 import { type FieldErrors, fieldErrors, formValues } from "@/lib/auth/schemas";
 import { studentSignInSchema } from "@/lib/auth/student-schemas";
-import { signInStudent } from "@/lib/auth/student-server";
+import { type StudentSignInResult, signInStudent } from "@/lib/auth/student-server";
 
 export interface StudentSignInState {
   status: "idle" | "error";
@@ -21,6 +21,23 @@ const timeFormat = new Intl.DateTimeFormat("id-ID", {
   minute: "2-digit",
   timeZone: "Asia/Jakarta",
 });
+
+function signInMessage(result: Exclude<StudentSignInResult, { ok: true }>) {
+  switch (result.reason) {
+    case "locked": {
+      const until = timeFormat.format(new Date(result.lockedUntil));
+      return result.scope === "ip"
+        ? `Terlalu banyak percobaan masuk dari jaringan ini. Coba lagi setelah pukul ${until} WIB.`
+        : `Terlalu banyak percobaan. Coba lagi setelah pukul ${until} WIB, atau minta orang tua mengganti PIN.`;
+    }
+    case "busy":
+      return "Layanan masuk sedang sibuk. Coba lagi sebentar lagi.";
+    case "no-consent":
+      return "Akun belum aktif: orang tua atau wali perlu menyetujui pemrosesan data belajar di Coreta.";
+    default:
+      return "Kode masuk atau PIN salah.";
+  }
+}
 
 async function clientIp() {
   const list = await headers();
@@ -43,14 +60,7 @@ export async function signInWithCode(
   });
 
   if (!result.ok) {
-    return {
-      status: "error",
-      code,
-      message:
-        result.reason === "locked" && result.lockedUntil
-          ? `Terlalu banyak percobaan. Coba lagi setelah pukul ${timeFormat.format(new Date(result.lockedUntil))} WIB, atau minta orang tua mengganti PIN.`
-          : "Kode masuk atau PIN salah.",
-    };
+    return { status: "error", code, message: signInMessage(result) };
   }
 
   redirect(landingAfterSignIn("siswa", parsed.data.next));

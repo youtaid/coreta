@@ -159,6 +159,14 @@ function formatZodError(file: string, error: z.ZodError): string {
   return `${file}:\n${z.prettifyError(error)}`;
 }
 
+/**
+ * Larik kosong (mis. tanpa prasyarat atau tanpa worksheet) menghasilkan `insert ... values` tanpa
+ * baris, yang merupakan galat sintaks SQL. Blok seperti itu dibuang dari hasil akhir.
+ */
+export function dropEmptyInserts(sql: string): string {
+  return sql.replace(/^insert into [^\n]+ values\n;\n?/gm, "");
+}
+
 // --- Build --------------------------------------------------------------------------------------
 
 /** Validates every seed file (items through validateItem) and returns the seed SQL. */
@@ -250,6 +258,14 @@ export function buildSeedSql(sources: SeedSources): SeedBuild {
     dailyTargets: new Map(
       families.data.families.map(({ student }) => [student.id, student.daily_target]),
     ),
+    studentGoals: new Map(families.data.families.map(({ student }) => [student.id, student.goal])),
+    itemGoalScopes: new Map(
+      imported.items.map((item) => {
+        const competency = competencies.find((entry) => entry.code === item.competency_code);
+        const stage = stages.find((entry) => entry.number === competency?.stage);
+        return [item.code, stage?.goal_scope ?? "all"];
+      }),
+    ),
   };
   problems.push(...validateLearning(learning.data, learningContext));
 
@@ -257,7 +273,7 @@ export function buildSeedSql(sources: SeedSources): SeedBuild {
     return { ok: false, report: problems.join("\n"), items: imported.items };
   }
 
-  const sql =
+  const sql = dropEmptyInserts(
     [
       render(curriculum.data, stimuli.data, imported.items, families.data),
       renderLearning(learning.data, learningContext, {
@@ -267,7 +283,8 @@ export function buildSeedSql(sources: SeedSources): SeedBuild {
         stageId: (stage) => seedUuid("stage", String(stage)),
         competencyId: (code) => seedUuid("competency", code),
       }).join("\n"),
-    ].join("\n") + "\n";
+    ].join("\n") + "\n",
+  );
   const published = imported.items.filter((item) => item.status === "published").length;
   const report = [
     `${stages.length} tahap, ${competencies.length} kompetensi, ${prereqs.length} prasyarat.`,

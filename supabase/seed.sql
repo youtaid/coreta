@@ -177,6 +177,7 @@ insert into public.consents (parent_id, type, granted, version) values
 -- Data belajar contoh (Fase 37): worksheet terbit, penugasan, penguasaan, aktivitas
 insert into public.worksheets (id, title, stage_id, release_at, status) values
   ('900c099a-5009-86a7-1401-341d2d9ae3f5', 'Worksheet Minggu Ini', 'cca5a5ff-5291-077d-a3aa-ab578a290e31', now() - interval '2 days', 'published'),
+  ('d152c746-55d1-14aa-99a5-8f1b23a602e8', 'Latihan TKA Minggu Ini', '1282a1d6-fe95-87a9-c6cc-860db0f7a8e3', now() - interval '2 days', 'published'),
   ('7bc086c7-91a1-6114-2852-53df62e40e21', 'Ulang: Bilangan & Matriks', '2107bbff-00e7-6fbe-b391-ec1b45e4f465', now() - interval '1 days', 'published');
 
 insert into public.worksheet_items (worksheet_id, item_id, position, slot) values
@@ -188,6 +189,13 @@ insert into public.worksheet_items (worksheet_id, item_id, position, slot) value
   ('900c099a-5009-86a7-1401-341d2d9ae3f5', '17cdf998-e2a1-73e2-b5b0-1ac2a6b16159', 6, 'ulang'),
   ('900c099a-5009-86a7-1401-341d2d9ae3f5', 'e40568ad-b311-b367-2d2f-6a59a80f454c', 7, 'adaptif'),
   ('900c099a-5009-86a7-1401-341d2d9ae3f5', '66ee6f90-db07-3e49-7630-c5310e167c39', 8, 'adaptif'),
+  ('d152c746-55d1-14aa-99a5-8f1b23a602e8', '837e61ae-1058-0237-8324-8e953877308d', 1, 'baru'),
+  ('d152c746-55d1-14aa-99a5-8f1b23a602e8', '1fe80267-0998-bf19-5658-92ac338d5430', 2, 'baru'),
+  ('d152c746-55d1-14aa-99a5-8f1b23a602e8', '8989df82-2ebf-4ac2-bf19-b56c46aaa7be', 3, 'baru'),
+  ('d152c746-55d1-14aa-99a5-8f1b23a602e8', '3bba4c01-73f7-81d9-65ac-4666b2b4e251', 4, 'ulang'),
+  ('d152c746-55d1-14aa-99a5-8f1b23a602e8', '17cdf998-e2a1-73e2-b5b0-1ac2a6b16159', 5, 'ulang'),
+  ('d152c746-55d1-14aa-99a5-8f1b23a602e8', 'e40568ad-b311-b367-2d2f-6a59a80f454c', 6, 'adaptif'),
+  ('d152c746-55d1-14aa-99a5-8f1b23a602e8', '66ee6f90-db07-3e49-7630-c5310e167c39', 7, 'adaptif'),
   ('7bc086c7-91a1-6114-2852-53df62e40e21', '3bba4c01-73f7-81d9-65ac-4666b2b4e251', 1, 'ulang'),
   ('7bc086c7-91a1-6114-2852-53df62e40e21', '17cdf998-e2a1-73e2-b5b0-1ac2a6b16159', 2, 'ulang');
 
@@ -195,7 +203,7 @@ insert into public.assignments (id, student_id, worksheet_id, assigned_at) value
   ('563b7fbb-5afd-2132-61c5-c07793534037', '5eed0000-0000-4000-8000-000000000031', '900c099a-5009-86a7-1401-341d2d9ae3f5', now() - interval '1 day'),
   ('c8e110a2-7b2f-8636-3bd5-bbea905e33da', '5eed0000-0000-4000-8000-000000000031', '7bc086c7-91a1-6114-2852-53df62e40e21', now() - interval '1 day'),
   ('594f5a9b-e433-413c-13d6-a06738012b44', '5eed0000-0000-4000-8000-000000000032', '900c099a-5009-86a7-1401-341d2d9ae3f5', now() - interval '1 day'),
-  ('3e34e812-e48f-2be8-b3a8-65a2489bac39', '5eed0000-0000-4000-8000-000000000033', '900c099a-5009-86a7-1401-341d2d9ae3f5', now() - interval '1 day'),
+  ('627ddb6a-cf81-b979-f204-7fcbbd03c591', '5eed0000-0000-4000-8000-000000000033', 'd152c746-55d1-14aa-99a5-8f1b23a602e8', now() - interval '1 day'),
   ('10d2c875-f609-5df3-a605-7299bd6e1ccd', '5eed0000-0000-4000-8000-000000000033', '7bc086c7-91a1-6114-2852-53df62e40e21', now() - interval '1 day');
 
 insert into public.mastery (student_id, competency_id, tier, score, n_attempts, mastered_at, review_step, next_review_at) values

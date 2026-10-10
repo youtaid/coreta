@@ -5,7 +5,7 @@
 
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(122);
+select plan(123);
 
 -- Mulai dari basis data kosong: data seed pengembangan (supabase/seed.sql) dihapus di dalam
 -- transaksi tes ini dan kembali lagi lewat rollback di akhir berkas.
@@ -437,6 +437,14 @@ select is_empty($$
   union all select 1 from public.ink_sessions where student_id = '00000000-0000-0000-0000-00000000005b'
   union all select 1 from public.hint_reports where student_id = '00000000-0000-0000-0000-00000000005b'
 $$, 'hapus akun siswa B: semua data belajarnya ikut terhapus');
+
+-- Tidak ada kebijakan DELETE (atau ALL) untuk bucket ink: Storage API menghormati kebijakan ini,
+-- jadi tes langsung ke storage.objects di atas saja tidak cukup (protect_delete menolak semuanya).
+select is_empty($$
+  select policyname from pg_policies
+  where schemaname = 'storage' and tablename = 'objects' and cmd in ('DELETE', 'ALL', 'UPDATE')
+    and (coalesce(qual, '') ilike '%ink%' or coalesce(with_check, '') ilike '%ink%')
+$$, 'NEGATIF: tidak ada kebijakan UPDATE/DELETE untuk berkas coretan di bucket ink');
 
 select * from finish();
 rollback;

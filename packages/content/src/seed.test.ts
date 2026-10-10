@@ -4,7 +4,7 @@ import { type Item as ScoringItem, scoreItem } from "@coreta/scoring";
 import { describe, expect, it } from "vitest";
 
 import type { Item } from "./schema";
-import { buildSeedSql, seedUuid, sqlString } from "./seed-sql";
+import { buildSeedSql, dropEmptyInserts, seedUuid, sqlString } from "./seed-sql";
 import { formatErrors, validateItem } from "./validate";
 
 const seedDir = new URL("../seed/", import.meta.url);
@@ -199,6 +199,28 @@ describe("buildSeedSql", () => {
     expect(report).toContain("MAT-SMA-BIL-09 yang tidak ada atau belum terbit");
     expect(report).toContain("worksheet tidak-ada tidak ada");
     expect(report).toContain("M0.1 sudah tuntas lewat mastered_stages");
+  });
+
+  it("refuses UTBK-only items for a TKA student and duplicate assignments", () => {
+    type Learning = { students: { student_id: string; assignments: string[] }[] };
+    const broken = structuredClone(sources) as typeof sources & { learning: Learning };
+    const dimas = broken.learning.students.find((student) => student.student_id.endsWith("033"))!;
+    dimas.assignments = ["minggu-ini", "minggu-ini"];
+    const report = buildSeedSql(broken).report;
+    expect(report).toContain("worksheet yang sama ditugaskan dua kali");
+    expect(report).toContain("memuat MAT-SMA-LIT-03 khusus utbk");
+  });
+
+  it("drops insert statements that have no rows", () => {
+    expect(dropEmptyInserts("a;\ninsert into public.x (a) values\n;\nb;\n")).toBe("a;\nb;\n");
+    type Learning = { worksheets: unknown[]; students: unknown[] };
+    const empty = structuredClone(sources) as typeof sources & { learning: Learning };
+    empty.learning.worksheets = [];
+    empty.learning.students = [];
+    const result = buildSeedSql(empty);
+    expect(result.ok).toBe(true);
+    expect(result.sql).not.toMatch(/values\n;/);
+    expect(result.sql).not.toContain("insert into public.worksheets");
   });
 
   it("seeds worksheets, assignments, mastery, and daily activity relative to today", () => {

@@ -4,6 +4,7 @@ const mocks = vi.hoisted(() => ({
   claims: null as Record<string, unknown> | null,
   recordConsent: vi.fn(),
   readConsentToken: vi.fn(),
+  revokeChildSessions: vi.fn(),
 }));
 
 vi.mock("@/lib/supabase/server", () => ({
@@ -17,6 +18,7 @@ vi.mock("@/lib/supabase/server", () => ({
 vi.mock("@/lib/auth/consent-server", () => ({
   recordConsent: mocks.recordConsent,
   readConsentToken: mocks.readConsentToken,
+  revokeChildSessions: mocks.revokeChildSessions,
 }));
 
 import { POST } from "./route";
@@ -49,6 +51,7 @@ beforeEach(() => {
   mocks.claims = null;
   mocks.recordConsent.mockReset().mockResolvedValue({ data: savedRow, error: null });
   mocks.readConsentToken.mockReset();
+  mocks.revokeChildSessions.mockReset().mockResolvedValue(1);
 });
 
 describe("POST /api/consent", () => {
@@ -85,6 +88,16 @@ describe("POST /api/consent", () => {
     expect(mocks.recordConsent).toHaveBeenCalledWith(
       expect.objectContaining({ parentId, granted: false, actorId: parentId, source: "token" }),
     );
+  });
+
+  it("menolak persetujuan data anak mencabut sesi anak; persetujuan riset tidak", async () => {
+    mocks.claims = { sub: parentId, app_metadata: { role: "parent" } };
+    await POST(request({ granted: false }));
+    expect(mocks.revokeChildSessions).toHaveBeenCalledWith(parentId);
+    mocks.revokeChildSessions.mockClear();
+    await POST(request({ granted: false, type: "riset" }));
+    await POST(request({ granted: true }));
+    expect(mocks.revokeChildSessions).not.toHaveBeenCalled();
   });
 
   it("NEGATIF: tanpa sesi dan tanpa token ditolak 401", async () => {

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { recordConsent, readConsentToken } from "@/lib/auth/consent-server";
+import { recordConsent, readConsentToken, revokeChildSessions } from "@/lib/auth/consent-server";
 import { roleFromClaims } from "@/lib/auth/roles";
 import { consentTypes } from "@/lib/consent";
 import { createClient } from "@/lib/supabase/server";
@@ -90,6 +90,15 @@ export async function POST(request: Request) {
     }
     console.error("[consent] gagal mencatat persetujuan", error);
     return fail(500, "Persetujuan belum tersimpan. Coba lagi sebentar lagi.");
+  }
+
+  if (!body.granted && body.type === "data_anak") {
+    try {
+      await revokeChildSessions(parentId);
+    } catch (revokeError) {
+      // Persetujuan sudah tercatat; masuk berikutnya tetap ditolak. Sesi lama habis sendiri.
+      console.error("[consent] sesi anak gagal dicabut", revokeError);
+    }
   }
 
   return Response.json(

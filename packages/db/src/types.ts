@@ -1351,12 +1351,12 @@ export type Database = {
           kind: string | null;
         };
         Insert: {
-          body?: Json | null;
+          body?: never;
           id?: string | null;
           kind?: string | null;
         };
         Update: {
-          body?: Json | null;
+          body?: never;
           id?: string | null;
           kind?: string | null;
         };
@@ -1436,6 +1436,7 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      revoke_user_sessions: { Args: { target_user: string }; Returns: number };
       uuid_generate_v7: { Args: never; Returns: string };
     };
     Enums: {

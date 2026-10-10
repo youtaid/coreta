@@ -43,6 +43,10 @@ export interface LearningContext {
   publishedItemCodes: ReadonlySet<string>;
   /** student id → daily target, from families.json. */
   dailyTargets: ReadonlyMap<string, number>;
+  /** student id → target ujian (tka | utbk | both), from families.json. */
+  studentGoals: ReadonlyMap<string, string>;
+  /** item code → goal_scope tahap kompetensinya (all | tka | utbk). */
+  itemGoalScopes: ReadonlyMap<string, string>;
 }
 
 export function validateLearning(learning: Learning, context: LearningContext): string[] {
@@ -79,8 +83,25 @@ export function validateLearning(learning: Learning, context: LearningContext): 
     studentIds.add(student.student_id);
     if (!context.dailyTargets.has(student.student_id))
       problems.push(`${label} tidak ada di families.json.`);
+    if (new Set(student.assignments).size !== student.assignments.length) {
+      problems.push(`${label}: worksheet yang sama ditugaskan dua kali.`);
+    }
+    const goal = context.studentGoals.get(student.student_id) ?? "both";
     for (const key of student.assignments) {
-      if (!worksheetKeys.has(key)) problems.push(`${label}: worksheet ${key} tidak ada.`);
+      const worksheet = learning.worksheets.find((entry) => entry.key === key);
+      if (!worksheet) {
+        problems.push(`${label}: worksheet ${key} tidak ada.`);
+        continue;
+      }
+      // Siswa TKA tidak mendapat soal dari tahap khusus UTBK (dan sebaliknya).
+      for (const item of worksheet.items) {
+        const scope = context.itemGoalScopes.get(item.code) ?? "all";
+        if (scope !== "all" && goal !== "both" && scope !== goal) {
+          problems.push(
+            `${label} (target ${goal}): worksheet ${key} memuat ${item.code} khusus ${scope}.`,
+          );
+        }
+      }
     }
     for (const stage of student.mastered_stages) {
       if (!context.stageNumbers.has(stage)) problems.push(`${label}: tahap ${stage} tidak ada.`);
