@@ -1,0 +1,62 @@
+{
+  "$comment": "Akun contoh untuk pengembangan lokal saja. Kata sandi sengaja sederhana dan diketahui umum: seed ini tidak boleh dijalankan di proyek produksi.",
+  "password": "coreta-lokal-123",
+  "consent_version": "persetujuan-v1-2026-10",
+  "admins": [
+    {
+      "id": "5eed0000-0000-4000-8000-000000000001",
+      "email": "admin@coreta.test",
+      "full_name": "Admin Coreta"
+    }
+  ],
+  "families": [
+    {
+      "parent": {
+        "id": "5eed0000-0000-4000-8000-000000000011",
+        "email": "orangtua1@coreta.test",
+        "full_name": "Rina Wijaya"
+      },
+      "student": {
+        "profile_id": "5eed0000-0000-4000-8000-000000000021",
+        "id": "5eed0000-0000-4000-8000-000000000031",
+        "email": "siswa1@coreta.test",
+        "full_name": "Raka Wijaya",
+        "grade": 11,
+        "goal": "both",
+        "daily_target": 6
+      }
+    },
+    {
+      "parent": {
+        "id": "5eed0000-0000-4000-8000-000000000012",
+        "email": "orangtua2@coreta.test",
+        "full_name": "Budi Santoso"
+      },
+      "student": {
+        "profile_id": "5eed0000-0000-4000-8000-000000000022",
+        "id": "5eed0000-0000-4000-8000-000000000032",
+        "email": "siswa2@coreta.test",
+        "full_name": "Sekar Santoso",
+        "grade": 12,
+        "goal": "utbk",
+        "daily_target": 8
+      }
+    },
+    {
+      "parent": {
+        "id": "5eed0000-0000-4000-8000-000000000013",
+        "email": "orangtua3@coreta.test",
+        "full_name": "Maya Putri"
+      },
+      "student": {
+        "profile_id": "5eed0000-0000-4000-8000-000000000023",
+        "id": "5eed0000-0000-4000-8000-000000000033",
+        "email": "siswa3@coreta.test",
+        "full_name": "Dimas Putra",
+        "grade": 10,
+        "goal": "tka",
+        "daily_target": 5
+      }
+    }
+  ]
+}

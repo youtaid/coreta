@@ -1,0 +1,14 @@
+{
+  "stimuli": [
+    {
+      "id": "stimulus-batik-01",
+      "kind": "reading",
+      "body": {
+        "title": "Optimalisasi Efisiensi Pewarna Alami UMKM Batik Yogya",
+        "subtitle": "Studi Kasus Efisiensi Sumber Daya Produksi dan Kapasitas Harian",
+        "source": "Kajian Efisiensi Sentra Kerajinan Tradisional DIY (2026)",
+        "text": "Sentra kerajinan batik cap ramah lingkungan di Imogiri, Yogyakarta, menerapkan sistem pewarnaan berbasis fermentasi daun indigo alami (Indigofera tinctoria). Dalam proses produksinya, pengrajin menghasilkan dua produk unggulan: Selendang Indigo (Produk A) dan Kain Panjang Klasik (Produk B).\n\nUntuk menjaga kestabilan mutu warna biru alami, ekstraksi pasta indigo dilakukan terpusat setiap pagi dengan kuota maksimal 150 liter larutan siap pakai per hari kerja. Di samping keterbatasan bahan pewarna, proses fiksasi warna membutuhkan ruang penganginan dan pencelupan terkontrol dengan total waktu operasional bersama maksimal 100 jam mesin per hari.\n\nBerdasarkan pencatatan siklus kerja bulanan:\n• Setiap helai Selendang Indigo (x) membutuhkan 3 liter larutan pewarna alami dan 2 jam proses mesin fiksasi warna.\n• Setiap helai Kain Panjang Klasik (y) membutuhkan 5 liter larutan pewarna alami dan 4 jam proses mesin fiksasi warna.\n\nDari sisi ekonomi, penjualan Selendang Indigo menghasilkan laba bersih Rp45.000 per helai, sedangkan Kain Panjang Klasik memberikan laba bersih Rp80.000 per helai. Mengingat tingginya permintaan menjelang pameran kriya nasional, koperasi pengrajin berencana merumuskan jadwal produksi harian yang memaksimalkan total laba tanpa melanggar batasan ketersediaan bahan larutan maupun kuota waktu mesin fiksasi.\n\nPengrajin juga menyepakati bahwa jumlah produksi kedua jenis kain tidak mungkin bernilai negatif (x ≥ 0 dan y ≥ 0), serta seluruh kain yang diproduksi terjamin langsung terserap oleh mitra galeri."
+      }
+    }
+  ]
+}

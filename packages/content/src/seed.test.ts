@@ -1,0 +1,177 @@
+import { readFileSync } from "node:fs";
+
+import { type Item as ScoringItem, scoreItem } from "@coreta/scoring";
+import { describe, expect, it } from "vitest";
+
+import type { Item } from "./schema";
+import { buildSeedSql, seedUuid, sqlString } from "./seed-sql";
+import { formatErrors, validateItem } from "./validate";
+
+const seedDir = new URL("../seed/", import.meta.url);
+const read = (name: string): unknown => JSON.parse(readFileSync(new URL(name, seedDir), "utf8"));
+const sources = {
+  curriculum: read("curriculum.json"),
+  stimuli: read("stimuli.json"),
+  items: read("items.json"),
+  families: read("families.json"),
+};
+const rawItems = (sources.items as { items: unknown[] }).items;
+const build = buildSeedSql(sources);
+const items = build.items;
+
+const MOCKUP_CODES = [
+  "MAT-SMA-ALJ-01",
+  "MAT-SMA-GEO-02",
+  "MAT-SMA-LIT-03",
+  "MAT-SMA-ALJ-04",
+  "MAT-SMA-MAT-05",
+  "MAT-SMA-LIT-06",
+  "MAT-SMA-DIM-07",
+  "MAT-SMA-STA-08",
+];
+
+function toScoring(item: Item): ScoringItem {
+  const hint = (id: string) => item.distractor_hints[id];
+  switch (item.answer_type) {
+    case "pg":
+      return {
+        type: "pg",
+        key: item.answer_key[0] ?? "",
+        options: item.options.map((o) => ({ id: o.id, hint: hint(o.id) })),
+      };
+    case "pgk":
+      return {
+        type: "pgk",
+        keys: item.answer_key,
+        options: item.options.map((o) => ({ id: o.id, hint: hint(o.id) })),
+      };
+    case "bs":
+      return {
+        type: "bs",
+        rows: item.options.map((o) => ({
+          id: o.id,
+          key: item.answer_key.includes(o.id),
+          hint: hint(o.id),
+        })),
+      };
+    case "isian":
+      return {
+        type: "isian",
+        key: item.answer_key[0] ?? "",
+        equivalents: item.equivalents,
+        tolerance: item.tolerance,
+      };
+  }
+}
+
+describe("seed items (DoD: semua butir seed lolos validateItem)", () => {
+  it("has 40 items", () => {
+    expect(rawItems).toHaveLength(40);
+  });
+
+  it.each(rawItems.map((raw) => [(raw as { code: string }).code, raw]))(
+    "%s lolos validateItem",
+    (_code, raw) => {
+      const result = validateItem(raw);
+      expect(result.ok, result.ok ? "" : formatErrors(result.errors)).toBe(true);
+    },
+  );
+
+  it("publishes exactly the 8 mockup items and keeps the rest as draft", () => {
+    expect(items.filter((i) => i.status === "published").map((i) => i.code)).toEqual(MOCKUP_CODES);
+    expect(items.filter((i) => i.status === "draft")).toHaveLength(32);
+  });
+
+  it("covers every answer type, tier, and layout", () => {
+    expect(new Set(items.map((i) => i.answer_type))).toEqual(new Set(["pg", "pgk", "bs", "isian"]));
+    expect(new Set(items.map((i) => i.tier))).toEqual(new Set(["dasar", "mahir", "ujian"]));
+    expect(new Set(items.map((i) => i.layout_mode))).toEqual(
+      new Set(["standar", "media", "bacaan"]),
+    );
+  });
+});
+
+describe("answer keys agree with @coreta/scoring", () => {
+  it.each(items.map((item) => [item.code, item]))("%s: the key scores 1", (_code, item) => {
+    const scoring = toScoring(item);
+    const answer =
+      scoring.type === "pg"
+        ? { type: "pg" as const, choice: scoring.key }
+        : scoring.type === "pgk"
+          ? { type: "pgk" as const, choices: scoring.keys }
+          : scoring.type === "bs"
+            ? {
+                type: "bs" as const,
+                rows: Object.fromEntries(scoring.rows.map((row) => [row.id, row.key])),
+              }
+            : { type: "isian" as const, text: scoring.key };
+    expect(scoreItem(scoring, answer).score).toBe(1);
+  });
+
+  it.each(items.filter((i) => i.answer_type === "pg").map((item) => [item.code, item]))(
+    "%s: every distractor scores 0 and shows its hint",
+    (_code, item) => {
+      for (const option of item.options.filter((o) => !item.answer_key.includes(o.id))) {
+        const result = scoreItem(toScoring(item), { type: "pg", choice: option.id });
+        expect(result.score).toBe(0);
+        expect(result.hints.map((h) => h.text)).toContain(item.distractor_hints[option.id]);
+      }
+    },
+  );
+
+  it.each(items.filter((i) => i.answer_type === "isian").map((item) => [item.code, item]))(
+    "%s: every listed equivalent scores 1",
+    (_code, item) => {
+      for (const text of item.equivalents ?? []) {
+        expect(scoreItem(toScoring(item), { type: "isian", text }).score, text).toBe(1);
+      }
+    },
+  );
+});
+
+describe("buildSeedSql", () => {
+  it("accepts the seed files", () => {
+    expect(build.ok, build.report).toBe(true);
+    expect(build.report).toContain("40 butir lolos validateItem (8 terbit, 32 draf)");
+  });
+
+  it("matches the committed supabase/seed.sql (run `pnpm --filter @coreta/content seed:sql`)", () => {
+    const committed = readFileSync(new URL("../../../supabase/seed.sql", import.meta.url), "utf8");
+    expect(committed).toBe(build.sql);
+  });
+
+  it("refuses an invalid item and names the problem", () => {
+    const broken = structuredClone(sources) as typeof sources & { items: { items: unknown[] } };
+    (broken.items.items[0] as { explanation: { text: string } }).explanation.text = "";
+    const result = buildSeedSql(broken);
+    expect(result.ok).toBe(false);
+    expect(result.sql).toBeUndefined();
+    expect(result.report).toContain("Pembahasan belum ditulis");
+  });
+
+  it("refuses an unknown competency code", () => {
+    const broken = structuredClone(sources) as typeof sources & { items: { items: unknown[] } };
+    (broken.items.items[0] as { competency_code: string }).competency_code = "M9.9";
+    expect(buildSeedSql(broken).report).toContain("kompetensi M9.9 tidak ada");
+  });
+
+  it("refuses prerequisite cycles", () => {
+    const broken = structuredClone(sources) as typeof sources & {
+      curriculum: { prereqs: [string, string][] };
+    };
+    broken.curriculum.prereqs.push(["M0.1", "M0.3"]);
+    expect(buildSeedSql(broken).report).toContain("Prasyarat membentuk lingkaran");
+  });
+
+  it("uses stable ids that match Postgres md5(text)::uuid", () => {
+    expect(seedUuid("stage", "0")).toMatch(
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
+    );
+    expect(seedUuid("item", "A")).toBe(seedUuid("item", "A"));
+    expect(seedUuid("item", "A")).not.toBe(seedUuid("item", "B"));
+  });
+
+  it("escapes quotes in SQL strings", () => {
+    expect(sqlString("Jum'at")).toBe("'Jum''at'");
+  });
+});

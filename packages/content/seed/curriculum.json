@@ -1,0 +1,290 @@
+{
+  "$comment": "Usulan kurikulum Tahap 0-8 untuk pilot. Nama tahap mengikuti layar jalur belajar; daftar kompetensi menunggu tinjauan Youta.",
+  "stages": [
+    { "number": 0, "name": "Bilangan & Aljabar Dasar", "goal_scope": "all" },
+    { "number": 1, "name": "Persamaan & Pertidaksamaan Linear", "goal_scope": "all" },
+    { "number": 2, "name": "Fungsi", "goal_scope": "all" },
+    { "number": 3, "name": "Persamaan Kuadrat", "goal_scope": "all" },
+    { "number": 4, "name": "Barisan & Deret", "goal_scope": "all" },
+    { "number": 5, "name": "Geometri & Trigonometri", "goal_scope": "all" },
+    { "number": 6, "name": "Statistika", "goal_scope": "all" },
+    { "number": 7, "name": "Peluang & Kombinatorika", "goal_scope": "all" },
+    { "number": 8, "name": "Penalaran Matematika", "goal_scope": "utbk" }
+  ],
+  "competencies": [
+    {
+      "code": "M0.1",
+      "stage": 0,
+      "domain": "Bilangan",
+      "name": "Operasi bilangan real dan pecahan",
+      "exam_tags": ["tka", "utbk"]
+    },
+    {
+      "code": "M0.2",
+      "stage": 0,
+      "domain": "Bilangan",
+      "name": "Eksponen dan bentuk akar",
+      "exam_tags": ["tka", "utbk"]
+    },
+    {
+      "code": "M0.3",
+      "stage": 0,
+      "domain": "Bilangan",
+      "name": "Logaritma",
+      "exam_tags": ["tka", "utbk"]
+    },
+    {
+      "code": "M0.4",
+      "stage": 0,
+      "domain": "Aljabar",
+      "name": "Bentuk aljabar dan pemfaktoran",
+      "exam_tags": ["tka", "utbk"]
+    },
+    {
+      "code": "M0.5",
+      "stage": 0,
+      "domain": "Bilangan",
+      "name": "Persentase dan aritmetika sosial",
+      "exam_tags": ["tka", "utbk"]
+    },
+    {
+      "code": "M1.1",
+      "stage": 1,
+      "domain": "Aljabar",
+      "name": "Persamaan linear satu variabel",
+      "exam_tags": ["tka", "utbk"]
+    },
+    {
+      "code": "M1.2",
+      "stage": 1,
+      "domain": "Aljabar",
+      "name": "Pertidaksamaan linear dan nilai mutlak",
+      "exam_tags": ["tka", "utbk"]
+    },
+    {
+      "code": "M1.3",
+      "stage": 1,
+      "domain": "Aljabar",
+      "name": "Sistem persamaan linear dua variabel",
+      "exam_tags": ["tka", "utbk"]
+    },
+    {
+      "code": "M1.4",
+      "stage": 1,
+      "domain": "Aljabar",
+      "name": "Matriks dan determinan",
+      "exam_tags": ["tka"]
+    },
+    {
+      "code": "M1.5",
+      "stage": 1,
+      "domain": "Aljabar",
+      "name": "Program linear",
+      "exam_tags": ["tka", "utbk"]
+    },
+    {
+      "code": "M2.1",
+      "stage": 2,
+      "domain": "Fungsi",
+      "name": "Konsep fungsi dan notasi",
+      "exam_tags": ["tka", "utbk"]
+    },
+    {
+      "code": "M2.2",
+      "stage": 2,
+      "domain": "Fungsi",
+      "name": "Fungsi linear dan gradien",
+      "exam_tags": ["tka", "utbk"]
+    },
+    {
+      "code": "M2.3",
+      "stage": 2,
+      "domain": "Fungsi",
+      "name": "Komposisi dan invers fungsi",
+      "exam_tags": ["tka", "utbk"]
+    },
+    {
+      "code": "M3.1",
+      "stage": 3,
+      "domain": "Aljabar",
+      "name": "Menentukan akar persamaan kuadrat",
+      "exam_tags": ["tka", "utbk"]
+    },
+    {
+      "code": "M3.2",
+      "stage": 3,
+      "domain": "Aljabar",
+      "name": "Diskriminan & jenis akar",
+      "exam_tags": ["tka", "utbk"]
+    },
+    {
+      "code": "M3.3",
+      "stage": 3,
+      "domain": "Aljabar",
+      "name": "Jumlah & hasil kali akar",
+      "exam_tags": ["tka", "utbk"]
+    },
+    {
+      "code": "M3.4",
+      "stage": 3,
+      "domain": "Aljabar",
+      "name": "Menyusun persamaan kuadrat baru",
+      "exam_tags": ["tka"]
+    },
+    {
+      "code": "M3.5",
+      "stage": 3,
+      "domain": "Fungsi",
+      "name": "Grafik fungsi kuadrat",
+      "exam_tags": ["tka", "utbk"]
+    },
+    {
+      "code": "M4.1",
+      "stage": 4,
+      "domain": "Aljabar",
+      "name": "Barisan dan deret aritmetika",
+      "exam_tags": ["tka", "utbk"]
+    },
+    {
+      "code": "M4.2",
+      "stage": 4,
+      "domain": "Aljabar",
+      "name": "Barisan dan deret geometri",
+      "exam_tags": ["tka", "utbk"]
+    },
+    {
+      "code": "M4.3",
+      "stage": 4,
+      "domain": "Aljabar",
+      "name": "Bunga majemuk dan pertumbuhan",
+      "exam_tags": ["tka"]
+    },
+    {
+      "code": "M5.1",
+      "stage": 5,
+      "domain": "Geometri",
+      "name": "Bangun datar dan teorema Pythagoras",
+      "exam_tags": ["tka", "utbk"]
+    },
+    {
+      "code": "M5.2",
+      "stage": 5,
+      "domain": "Trigonometri",
+      "name": "Perbandingan trigonometri",
+      "exam_tags": ["tka", "utbk"]
+    },
+    {
+      "code": "M5.3",
+      "stage": 5,
+      "domain": "Geometri",
+      "name": "Dimensi tiga: jarak",
+      "exam_tags": ["tka"]
+    },
+    {
+      "code": "M5.4",
+      "stage": 5,
+      "domain": "Trigonometri",
+      "name": "Aturan sinus dan kosinus",
+      "exam_tags": ["tka"]
+    },
+    {
+      "code": "M6.1",
+      "stage": 6,
+      "domain": "Statistika",
+      "name": "Ukuran pemusatan data",
+      "exam_tags": ["tka", "utbk"]
+    },
+    {
+      "code": "M6.2",
+      "stage": 6,
+      "domain": "Statistika",
+      "name": "Ukuran penyebaran data",
+      "exam_tags": ["tka", "utbk"]
+    },
+    {
+      "code": "M6.3",
+      "stage": 6,
+      "domain": "Statistika",
+      "name": "Transformasi data",
+      "exam_tags": ["tka", "utbk"]
+    },
+    {
+      "code": "M7.1",
+      "stage": 7,
+      "domain": "Peluang",
+      "name": "Kaidah pencacahan",
+      "exam_tags": ["tka", "utbk"]
+    },
+    {
+      "code": "M7.2",
+      "stage": 7,
+      "domain": "Peluang",
+      "name": "Permutasi dan kombinasi",
+      "exam_tags": ["tka", "utbk"]
+    },
+    {
+      "code": "M7.3",
+      "stage": 7,
+      "domain": "Peluang",
+      "name": "Peluang kejadian",
+      "exam_tags": ["tka", "utbk"]
+    },
+    {
+      "code": "M8.1",
+      "stage": 8,
+      "domain": "Penalaran",
+      "name": "Logika matematika",
+      "exam_tags": ["utbk"]
+    },
+    {
+      "code": "M8.2",
+      "stage": 8,
+      "domain": "Penalaran",
+      "name": "Pola bilangan dan penalaran induktif",
+      "exam_tags": ["utbk"]
+    },
+    {
+      "code": "M8.3",
+      "stage": 8,
+      "domain": "Penalaran",
+      "name": "Literasi numerasi dan pemodelan",
+      "exam_tags": ["utbk"]
+    }
+  ],
+  "prereqs": [
+    ["M0.2", "M0.1"],
+    ["M0.3", "M0.2"],
+    ["M0.4", "M0.1"],
+    ["M0.5", "M0.1"],
+    ["M1.1", "M0.4"],
+    ["M1.2", "M1.1"],
+    ["M1.3", "M1.1"],
+    ["M1.4", "M1.3"],
+    ["M1.5", "M1.2"],
+    ["M2.1", "M1.1"],
+    ["M2.2", "M2.1"],
+    ["M2.3", "M2.1"],
+    ["M3.1", "M0.4"],
+    ["M3.2", "M3.1"],
+    ["M3.3", "M3.1"],
+    ["M3.4", "M3.3"],
+    ["M3.5", "M3.2"],
+    ["M3.5", "M2.1"],
+    ["M4.1", "M1.1"],
+    ["M4.2", "M0.2"],
+    ["M4.3", "M4.2"],
+    ["M5.1", "M0.2"],
+    ["M5.2", "M5.1"],
+    ["M5.3", "M5.1"],
+    ["M5.4", "M5.2"],
+    ["M6.1", "M0.1"],
+    ["M6.2", "M6.1"],
+    ["M6.3", "M6.2"],
+    ["M7.1", "M0.1"],
+    ["M7.2", "M7.1"],
+    ["M7.3", "M7.2"],
+    ["M8.1", "M1.2"],
+    ["M8.2", "M4.1"],
+    ["M8.3", "M1.5"]
+  ]
+}

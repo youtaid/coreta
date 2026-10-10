@@ -10,6 +10,18 @@ begin;
 create extension if not exists pgtap with schema extensions;
 select plan(64);
 
+-- Mulai dari basis data kosong: data seed pengembangan (supabase/seed.sql) dihapus di dalam
+-- transaksi tes ini dan kembali lagi lewat rollback di akhir berkas.
+delete from auth.users;
+delete from public.worksheet_items;
+delete from public.worksheets;
+delete from public.items;
+delete from public.stimuli;
+delete from public.media_assets;
+delete from public.competency_prereqs;
+delete from public.competencies;
+delete from public.stages;
+
 -- ---------------------------------------------------------------------------------------------
 -- Data uji. Dibuat sebagai superuser, lalu setiap tes berpindah ke peran authenticated.
 -- ---------------------------------------------------------------------------------------------

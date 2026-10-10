@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",
+    "@coreta/db": "workspace:*",
     "@coreta/ink": "workspace:*",
     "@coreta/scoring": "workspace:*",
     "@supabase/ssr": "^0.12.7",
