@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { formatPercent, formatRupiah } from "./format";
+import { formatNumber, formatPercent, formatRupiah } from "./format";
 
 describe("formatRupiah", () => {
   it.each([
@@ -23,5 +23,16 @@ describe("formatPercent", () => {
     [1, "100%"],
   ])("%d → %s", (ratio, expected) => {
     expect(formatPercent(ratio)).toBe(expected);
+  });
+});
+
+describe("formatNumber", () => {
+  it.each([
+    [0.5, "0,5"],
+    [1, "1"],
+    [0, "0"],
+    [0.333, "0,33"],
+  ])("%d → %s", (value, expected) => {
+    expect(formatNumber(value)).toBe(expected);
   });
 });

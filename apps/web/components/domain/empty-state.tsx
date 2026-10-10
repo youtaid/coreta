@@ -2,7 +2,7 @@ import type { LucideIcon } from "lucide-react";
 import { Inbox } from "lucide-react";
 import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface EmptyStateProps {
@@ -33,9 +33,9 @@ export function EmptyState({
       <p className="text-lg font-semibold">{title}</p>
       {description && <p className="max-w-sm text-muted-foreground">{description}</p>}
       {action && (
-        <Button className="mt-2" nativeButton={false} render={<Link href={action.href} />}>
+        <Link href={action.href} className={buttonVariants({ className: "mt-2" })}>
           {action.label}
-        </Button>
+        </Link>
       )}
     </div>
   );

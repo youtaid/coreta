@@ -2,7 +2,7 @@ import { Clock, ListChecks } from "lucide-react";
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardAction,
@@ -80,14 +80,17 @@ export function WorksheetCard({
         )}
       </CardContent>
       <CardFooter>
-        <Button
-          className="w-full"
-          variant={status === "completed" ? "outline" : "default"}
-          nativeButton={false}
-          render={<Link href={href} />}
+        {/* A plain link styled as a button: it navigates, so it should be announced as a link. */}
+        <Link
+          href={href}
+          aria-label={`${meta.cta}: ${title}`}
+          className={buttonVariants({
+            variant: status === "completed" ? "outline" : "default",
+            className: "w-full",
+          })}
         >
           {meta.cta}
-        </Button>
+        </Link>
       </CardFooter>
     </Card>
   );

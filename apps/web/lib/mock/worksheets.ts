@@ -49,6 +49,39 @@ export function groupWorksheets(items: readonly WorksheetSummary[]): WorksheetGr
     .filter((group) => group.items.length > 0);
 }
 
+export const STAGE_PARAM = "tahap";
+
+/** `?tahap=3` → 3. Anything that is not a whole number 0-8 means "no filter". */
+export function parseStageFilter(value: string | string[] | undefined): number | null {
+  if (typeof value !== "string" || !/^\d$/.test(value)) return null;
+  const stage = Number(value);
+  return stage <= 8 ? stage : null;
+}
+
+/**
+ * Stage chips for the list: every stage that has a worksheet, plus the selected one so the
+ * student still sees which filter is on when it matches nothing.
+ */
+export function stageFilterOptions(
+  items: readonly Pick<WorksheetSummary, "stageNumber">[],
+  selected: number | null,
+): number[] {
+  const stages = new Set(items.map((item) => item.stageNumber));
+  if (selected !== null) stages.add(selected);
+  return [...stages].sort((a, b) => a - b);
+}
+
+export function filterByStage<T extends Pick<WorksheetSummary, "stageNumber">>(
+  items: readonly T[],
+  stage: number | null,
+): T[] {
+  return stage === null ? [...items] : items.filter((item) => item.stageNumber === stage);
+}
+
+export function stageFilterHref(stage: number | null): string {
+  return stage === null ? "/belajar/worksheet" : `/belajar/worksheet?${STAGE_PARAM}=${stage}`;
+}
+
 /** Result page for completed worksheets, workspace for everything else. */
 export function worksheetHref(worksheet: Pick<WorksheetSummary, "id" | "status">): string {
   return worksheet.status === "completed"

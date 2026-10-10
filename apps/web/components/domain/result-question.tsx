@@ -3,6 +3,7 @@ import { CheckCircle2, CircleDot, Lightbulb, XCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import type { QuestionOutcome, ResultQuestion as ResultQuestionData } from "@/lib/domain";
+import { formatNumber } from "@/lib/format";
 
 const outcomeMeta: Record<
   QuestionOutcome,
@@ -33,7 +34,7 @@ export function ResultQuestion({
           <p className="font-heading text-lg font-semibold">Soal {number}</p>
           <Badge variant={variant}>
             <Icon aria-hidden />
-            {label} · {points}/{maxPoints}
+            {label} · {formatNumber(points)}/{formatNumber(maxPoints)}
           </Badge>
         </div>
 

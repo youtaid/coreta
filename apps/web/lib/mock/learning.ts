@@ -16,6 +16,7 @@ export const worksheets: WorksheetSummary[] = [
   {
     id: "ws-mock-301",
     title: "Worksheet Minggu 3",
+    stageNumber: 3,
     stageName: "Tahap 3 · Persamaan Kuadrat",
     itemCount: 8,
     answeredCount: 0,
@@ -26,6 +27,7 @@ export const worksheets: WorksheetSummary[] = [
   {
     id: "ws-mock-302",
     title: "Akar & Diskriminan",
+    stageNumber: 3,
     stageName: "Tahap 3 · Persamaan Kuadrat",
     itemCount: 8,
     answeredCount: 5,
@@ -36,6 +38,7 @@ export const worksheets: WorksheetSummary[] = [
   {
     id: "ws-mock-205",
     title: "Ulang: Komposisi Fungsi",
+    stageNumber: 2,
     stageName: "Tahap 2 · Fungsi",
     itemCount: 6,
     answeredCount: 0,
@@ -46,6 +49,7 @@ export const worksheets: WorksheetSummary[] = [
   {
     id: "ws-mock-201",
     title: "Fungsi Linear & Grafik",
+    stageNumber: 2,
     stageName: "Tahap 2 · Fungsi",
     itemCount: 8,
     answeredCount: 8,

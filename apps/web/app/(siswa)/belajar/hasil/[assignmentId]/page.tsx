@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/domain/page-header";
 import { ResultQuestion } from "@/components/domain/result-question";
 import { StatCard } from "@/components/domain/stat-card";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatPercent } from "@/lib/format";
 import { countOutcomes, getWorksheetResult } from "@/lib/mock/worksheets";
@@ -28,16 +28,12 @@ export default async function WorksheetResultPage({
         description="Hasil worksheet. Buka pembahasan untuk melihat cara penyelesaiannya."
         actions={
           <>
-            <Button
-              variant="outline"
-              nativeButton={false}
-              render={<Link href="/belajar/worksheet" />}
-            >
+            <Link href="/belajar/worksheet" className={buttonVariants({ variant: "outline" })}>
               Daftar worksheet
-            </Button>
-            <Button nativeButton={false} render={<Link href="/belajar/progres" />}>
+            </Link>
+            <Link href="/belajar/progres" className={buttonVariants()}>
               Lihat progres
-            </Button>
+            </Link>
           </>
         }
       />

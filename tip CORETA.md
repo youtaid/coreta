@@ -644,7 +644,7 @@ _Semua layar dibangun lebih dulu dengan data tiruan di `lib/mock`. Belum ada Sup
 - **Definition of Done**:
   - Kedua layar tampil dengan data tiruan dan bisa saling dinavigasi
   - Pembahasan terlipat secara bawaan dan terbuka saat diketuk
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [ ] Sedang | [x] Selesai
 
 #### Fase 10 — UI Ruang Kerja: Tata Letak Satu Layar
 
@@ -1916,6 +1916,11 @@ Keputusan yang sudah diambil sebelum coding dimulai (menyimpang atau melengkapi 
 | 8 | Komponen baru `DailyTargetCard` (target harian: angka x/target, bar progres, teks sisa soal, rangkaian hari) dan ditampilkan bersama `PathMap` di `/dev/komponen` | Aturan komponen §7: setiap komponen baru tampil di galeri |
 | 8 | Tombol "Lanjut belajar" adalah `<Link>` biasa bergaya `buttonVariants({ size: "lg" })`, bukan `<Button nativeButton={false} render={<Link/>}>` | Pola Base UI itu menambahkan `role="button"` pada `<a>`, sehingga pembaca layar mengumumkan tautan navigasi sebagai tombol (lihat 9b) |
 | 8 | Cabang kerja menggabungkan `feat/fase-10-ruang-kerja-layout` lebih dulu dan memakai Fase 7 versi cabang itu; Fase 7 paralel dari cabang `ccr-e3fb7679-1uu9fb` dibuang. Yang dipertahankan: `README.md` terformat dan `typecheck` web = `next typegen && tsc --noEmit` | Fase 10–31 sudah dibangun di atas Fase 7 versi itu; Fase 8 harus cocok dengan `AppShell` dan `navigation.ts` yang sama |
+| 9 | Layar `/belajar/worksheet` dan `/belajar/hasil/[assignmentId]` sudah dibangun di cabang `feat/fase-10-ruang-kerja-layout` (grup Minggu ini/Ulang berjarak/Selesai, ringkasan skor, `ResultQuestion` dengan `<details>`); Fase 9 memverifikasi DoD dan menutup celah di bawah, bukan menulis ulang | Kode dan tesnya sudah sesuai scope; tracker belum diisi |
+| 9 | Filter tahap di `/belajar/worksheet?tahap=N` (peta layar §5 "filter tahap"; tautan peta Fase 8): chip "Semua tahap" + tahap yang punya worksheet + tahap terpilih, `aria-current="page"`; nilai selain 0–8 diabaikan; tahap tanpa worksheet menampilkan `EmptyState` dengan tautan "Lihat semua worksheet". Halaman jadi dinamis (`ƒ`) karena membaca `searchParams` | Tanpa filter, tautan `?tahap=` dari peta tahap tidak berpengaruh dan Tahap 0 tidak punya tujuan yang jelas |
+| 9 | `WorksheetSummary` mendapat field wajib `stageNumber` (diisi di `mock/learning.ts`); helper `parseStageFilter`, `stageFilterOptions`, `filterByStage`, `stageFilterHref` di `lib/mock/worksheets.ts` bersama helper yang sudah ada | Memfilter dari angka lebih aman daripada mengurai teks `stageName`; pindahkan helper ke `lib/` saat data dari database (Fase 37) |
+| 9 | Aksi di `WorksheetCard` (dengan `aria-label` "Mulai: <judul>"), `EmptyState`, dan header halaman hasil kini `<Link className={buttonVariants()}>` | Menuntaskan temuan `role="button"` Fase 8 untuk layar Fase 9; label membedakan banyak tombol "Mulai"/"Lihat hasil" di satu halaman |
+| 9 | Poin di lencana hasil memakai `formatNumber` (`lib/format.ts`, `id-ID`): "0,5/1", bukan "0.5/1"; judul keadaan kosong memakai spasi tak-putus di "Tahap N" | Gaya angka Indonesia; mencegah "0" tertinggal sendiri di baris baru pada ponsel |
 
 ### 9b. Temuan & Isu
 
@@ -1937,7 +1942,7 @@ Catat bug, blocker, atau hal yang perlu dievaluasi. Jangan langsung dieksekusi �
 | 1 | `scoringPlaceholder()` masih dipakai sebagai `data-scoring-status` di beranda publik; hapus di Fase 19/20 | Low | Terbuka |
 | 1 | `@types/node` `^20` padahal `engines` meminta Node ≥ 22 | Low | Terbuka |
 | 6 | Commit `0008782` memuat Fase 3–6 sekaligus (aturan: satu fase satu commit) | Low | Dicatat |
-| 8 | Pola `<Button nativeButton={false} render={<Link href=… />}>` (keputusan Fase 6) merender `<a role="button">`; pembaca layar mengumumkan tautan navigasi sebagai tombol. Dipakai di banyak layar (mis. EmptyState, `/belajar/progres`). Fase 8 sudah memakai `<Link className={buttonVariants()}>` | Med | Terbuka (ganti pola di layar lain dalam satu fase perapian) |
+| 8 | Pola `<Button nativeButton={false} render={<Link href=… />}>` (keputusan Fase 6) merender `<a role="button">`; pembaca layar mengumumkan tautan navigasi sebagai tombol. Dipakai di banyak layar (mis. EmptyState, `/belajar/progres`). Fase 8 sudah memakai `<Link className={buttonVariants()}>` | Med | Sebagian: sudah diganti di `/belajar`, `WorksheetCard`, `EmptyState`, dan `/belajar/hasil` (Fase 8–9); layar lain menunggu fase perapian |
 
 **Pertanyaan terbuka sebelum fase terkait:**
 - Sebelum Fase 45 (deploy): spesifikasi VPS (CPU, RAM, disk) dan tagihan bulanan
@@ -1959,7 +1964,7 @@ Catat bug, blocker, atau hal yang perlu dievaluasi. Jangan langsung dieksekusi �
 | Fase 6 — Komponen Domain (Tanpa Logika) | Selesai | ~30 menit | 2026-10-05 | 8 komponen (PageHeader, PathNode, StatCard, CompetencyBar, WorksheetCard, SubscriptionBadge, PriceCard, EmptyState) tampil di `/dev/komponen#domain` dengan data `lib/mock` pada kedua tema; tautan/tombol ≥ 44 px; konsol bersih; tidak ada akses data di `components/domain` (dijaga ESLint); 60 tes web lulus; build hijau |
 | Fase 7 — Layout & Navigasi per Peran | Selesai | ~30 menit | 2026-10-06 | 4 route group dan 24 layar placeholder tersedia; siswa/orang tua memakai bottom nav, admin memakai sidebar adaptif; `?peran=` aktif hanya saat dev; seluruh rute HTTP 200, 64 tes web dan build hijau; visual diverifikasi pada ponsel 375 px, tablet tegak 768 px, dan tablet mendatar 1180 px |
 | Fase 8 — UI Jalur Belajar | Selesai | ~30 menit | 2026-10-09 | `/belajar`: kartu "Sedang dipelajari" (Tahap 3, 40%, worksheet berikutnya), kartu target harian (6/6, 2 hari beruntun), peta 9 tahap (3 tuntas, 1 aktif, 5 terkunci) vertikal bergaris di ponsel dan grid 3×3 di tablet; "Lanjut belajar" → `/belajar/worksheet` (diklik di Chromium pada 1024×768, 768×1024, 390×844); tanpa scroll horizontal, semua target ≥ 44 px, konsol bersih di tema terang dan gelap; 27 tes baru (logika jalur, PathMap, DailyTargetCard, halaman); format, lint, typecheck, 598 tes, build hijau |
-| Fase 9 — UI Daftar Worksheet & Hasil | — | ~30 menit | — | — |
+| Fase 9 — UI Daftar Worksheet & Hasil | Selesai | ~30 menit | 2026-10-10 | Layar dari cabang Fase 10 diverifikasi dan dilengkapi: filter `?tahap=N` (peta Fase 8 → Tahap 3 = 2 kartu; Tahap 0 = keadaan kosong), alur daftar → hasil → buka pembahasan → kembali diuji klik di Chromium; 8 pembahasan terlipat bawaan dan terbuka saat diketuk; hasil tak dikenal = 404; tanpa scroll horizontal, target ≥ 44 px pada 1024×768, 768×1024, 390×844 di tema terang/gelap; aksi kartu/hasil kini tautan (bukan `role="button"`), poin "0,5/1"; 28 tes baru; format, lint, typecheck, 625 tes, build hijau |
 | Fase 10 — UI Ruang Kerja: Tata Letak Satu Layar | Selesai | ~30 menit | 2026-10-07 | Rute `/belajar/kerjakan/[assignmentId]` memakai route group `(workspace)` tanpa shell; tinggi 100dvh dan overflow hidden di 1180×820, 820×1180, dan 390×844 tanpa scroll; 3 mode tata letak (standar, media, bacaan) tampil interaktif; panel bacaan satu-satunya scroll internal; 88 tes unit, typecheck, lint, dan build hijau |
 | Fase 11 — UI Panel Jawaban | Selesai | ~30 menit | 2026-10-07 | Empat tipe jawaban tersedia dengan state lokal dan target sentuh 44 px; galeri dev merender seluruh tipe; 80 tes web, lint, typecheck, dan build hijau. Otomasi screenshot lokal gagal di lingkungan browser, sehingga pemeriksaan visual manual tetap disarankan |
 | Fase 12 — UI Panel Media | Selesai | ~30 menit | 2026-10-07 | MediaPanel mendukung gambar/diagram (zoom + lightbox), tabel terstruktur KaTeX 0.19, audio dengan transkrip lipat, video dengan takarir terintegrasi; 187 tes hijau, lint dan build sukses. |

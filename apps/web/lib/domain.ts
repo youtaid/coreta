@@ -19,6 +19,8 @@ export type WorksheetStatus = "new" | "in_progress" | "review" | "completed";
 export interface WorksheetSummary {
   id: string;
   title: string;
+  /** Tahap 0-8 the worksheet belongs to; drives the stage filter. */
+  stageNumber: number;
   stageName: string;
   itemCount: number;
   answeredCount: number;
