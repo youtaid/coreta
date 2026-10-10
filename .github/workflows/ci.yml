@@ -47,6 +47,10 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
 
+      # Aturan 4 (TIP Fase 33): setiap tabel di skema public wajib mengaktifkan RLS.
+      - name: Check RLS on Supabase migrations
+        run: pnpm --filter @coreta/db check:rls
+
       - name: Test
         run: pnpm test
 

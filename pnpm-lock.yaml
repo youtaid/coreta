@@ -135,7 +135,11 @@ importers:
         specifier: 4.6.5
         version: 4.6.5
 
-  packages/db: {}
+  packages/db:
+    devDependencies:
+      '@types/node':
+        specifier: 20.19.43
+        version: 20.19.43
 
   packages/ink:
     dependencies:
