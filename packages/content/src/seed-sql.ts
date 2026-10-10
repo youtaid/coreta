@@ -424,10 +424,13 @@ function render(
       .join(",\n") + ";",
   );
   line();
-  line("insert into public.consents (parent_id, type, granted) values");
+  line("insert into public.consents (parent_id, type, granted, version) values");
   line(
     families.families
-      .map(({ parent }) => `  (${sqlString(parent.id)}, 'data_anak', true)`)
+      .map(
+        ({ parent }) =>
+          `  (${sqlString(parent.id)}, 'data_anak', true, ${sqlString(families.consent_version)})`,
+      )
       .join(",\n") + ";",
   );
 

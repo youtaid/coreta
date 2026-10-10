@@ -48,10 +48,10 @@ values
   ('00000000-0000-0000-0000-0000000000b1', '00000000-0000-0000-0000-0000000000d1', 'v1'),
   ('00000000-0000-0000-0000-0000000000b2', '00000000-0000-0000-0000-0000000000d2', 'v1');
 
-insert into public.consents (parent_id, type, granted)
+insert into public.consents (parent_id, type, granted, version)
 values
-  ('00000000-0000-0000-0000-0000000000b1', 'data_anak', true),
-  ('00000000-0000-0000-0000-0000000000b2', 'data_anak', true);
+  ('00000000-0000-0000-0000-0000000000b1', 'data_anak', true, 'v1'),
+  ('00000000-0000-0000-0000-0000000000b2', 'data_anak', true, 'v1');
 
 -- Masuk sebagai pengguna tertentu. Dipanggil sebelum setiap kelompok tes.
 create or replace function pg_temp.login_as(user_id uuid) returns void language plpgsql as $$
@@ -198,25 +198,29 @@ reset role;
 select is((select full_name from public.profiles where id = '00000000-0000-0000-0000-0000000000b2'), 'Orang Tua Dua',
   'NEGATIF: orang tua 1 tidak mengubah profil orang tua 2 (0 baris)');
 
--- Persetujuan
+-- Persetujuan. Sejak migrasi 0006 klien hanya MEMBACA consents; memberi dan mencabut persetujuan
+-- berjalan lewat POST /api/consent (service_role) yang mengisi versi teks dan mencatat audit_log.
 select pg_temp.login_as('00000000-0000-0000-0000-0000000000b1');
-select lives_ok($$insert into public.consents (parent_id, type, granted) values ('00000000-0000-0000-0000-0000000000b1', 'riset', true)$$,
-  'orang tua boleh memberi persetujuan riset untuk dirinya');
+select throws_ok($$insert into public.consents (parent_id, type, granted, version) values ('00000000-0000-0000-0000-0000000000b1', 'riset', true, 'v1')$$, '42501', null,
+  'NEGATIF: orang tua tidak menulis persetujuannya langsung dari klien (harus lewat /api/consent)');
 select throws_ok($$insert into public.consents (parent_id, type, granted) values ('00000000-0000-0000-0000-0000000000b2', 'riset', true)$$, '42501', null,
   'NEGATIF: orang tua 1 tidak bisa memberi persetujuan atas nama orang tua 2');
 select throws_ok($$insert into public.consents (parent_id, type, granted, granted_at) values ('00000000-0000-0000-0000-0000000000b1', 'riset', true, '2000-01-01')$$, '42501', null,
   'NEGATIF: granted_at tidak bisa diisi dari klien');
-select lives_ok($$update public.consents set granted = false where parent_id = '00000000-0000-0000-0000-0000000000b1' and type = 'riset'$$,
-  'orang tua boleh mencabut persetujuan');
+select throws_ok($$update public.consents set granted = false where parent_id = '00000000-0000-0000-0000-0000000000b1' and type = 'data_anak'$$, '42501', null,
+  'NEGATIF: orang tua tidak mencabut persetujuan langsung dari klien (harus lewat /api/consent)');
 select throws_ok($$delete from public.consents where parent_id = '00000000-0000-0000-0000-0000000000b1'$$, '42501', null,
   'NEGATIF: persetujuan tidak bisa dihapus dari klien (hanya dicabut)');
 select throws_ok($$insert into public.guardianships (parent_id, student_id) values ('00000000-0000-0000-0000-0000000000b1', '00000000-0000-0000-0000-0000000000d2')$$, '42501', null,
   'NEGATIF: orang tua tidak bisa menghubungkan dirinya ke anak orang lain');
 reset role;
+-- Jalur server: waktu tetap dicap trigger walaupun pengirim mengisi waktu lama.
+insert into public.consents (parent_id, type, granted, version, granted_at)
+values ('00000000-0000-0000-0000-0000000000b1', 'riset', true, 'v1', '2000-01-01');
 select ok(
   (select granted_at > now() - interval '1 minute' from public.consents
    where parent_id = '00000000-0000-0000-0000-0000000000b1' and type = 'riset'),
-  'granted_at diisi server saat persetujuan diubah'
+  'granted_at diisi server saat persetujuan dicatat'
 );
 
 -- ---------------------------------------------------------------------------------------------

@@ -169,7 +169,7 @@ insert into public.guardianships (parent_id, student_id, consent_at, consent_ver
   ('5eed0000-0000-4000-8000-000000000012', '5eed0000-0000-4000-8000-000000000032', now(), 'persetujuan-v1-2026-10'),
   ('5eed0000-0000-4000-8000-000000000013', '5eed0000-0000-4000-8000-000000000033', now(), 'persetujuan-v1-2026-10');
 
-insert into public.consents (parent_id, type, granted) values
-  ('5eed0000-0000-4000-8000-000000000011', 'data_anak', true),
-  ('5eed0000-0000-4000-8000-000000000012', 'data_anak', true),
-  ('5eed0000-0000-4000-8000-000000000013', 'data_anak', true);
+insert into public.consents (parent_id, type, granted, version) values
+  ('5eed0000-0000-4000-8000-000000000011', 'data_anak', true, 'persetujuan-v1-2026-10'),
+  ('5eed0000-0000-4000-8000-000000000012', 'data_anak', true, 'persetujuan-v1-2026-10'),
+  ('5eed0000-0000-4000-8000-000000000013', 'data_anak', true, 'persetujuan-v1-2026-10');

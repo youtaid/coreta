@@ -257,18 +257,21 @@ export type Database = {
           granted_at: string;
           parent_id: string;
           type: string;
+          version: string;
         };
         Insert: {
           granted: boolean;
           granted_at?: string;
           parent_id: string;
           type: string;
+          version: string;
         };
         Update: {
           granted?: boolean;
           granted_at?: string;
           parent_id?: string;
           type?: string;
+          version?: string;
         };
         Relationships: [
           {
@@ -1344,6 +1347,29 @@ export type Database = {
       is_guardian_of_profile: {
         Args: { target_profile: string };
         Returns: boolean;
+      };
+      record_consent: {
+        Args: {
+          actor: string;
+          consent_type: string;
+          is_granted: boolean;
+          source: string;
+          target_parent: string;
+          text_version: string;
+        };
+        Returns: {
+          granted: boolean;
+          granted_at: string;
+          parent_id: string;
+          type: string;
+          version: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "consents";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
       };
       uuid_generate_v7: { Args: never; Returns: string };
     };

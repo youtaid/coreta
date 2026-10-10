@@ -12,6 +12,7 @@ import {
   Library,
   ListChecks,
   LogIn,
+  LogOut,
   Menu,
   RefreshCw,
   Rocket,
@@ -65,6 +66,25 @@ const navigationIcons: Record<NavigationIcon, LucideIcon> = {
 
 function Brand() {
   return <Logo href="/" size="md" priority />;
+}
+
+/** Keluar lewat POST /auth/keluar (bukan tautan GET, agar tidak bisa dipicu dari luar). */
+function SignOutButton({ compact = false }: { compact?: boolean }) {
+  return (
+    <form action="/auth/keluar" method="post">
+      <button
+        type="submit"
+        aria-label={compact ? "Keluar" : undefined}
+        className={cn(
+          "inline-flex min-h-touch items-center gap-2 rounded-lg px-3 text-sm font-medium text-muted-foreground transition-colors outline-none hover:bg-accent hover:text-accent-foreground focus-visible:ring-3 focus-visible:ring-ring",
+          !compact && "w-full",
+        )}
+      >
+        <LogOut className="size-4 shrink-0" aria-hidden />
+        <span className={cn(compact && "sr-only sm:not-sr-only")}>Keluar</span>
+      </button>
+    </form>
+  );
 }
 
 function DevRoleSwitcher({ role, compact = false }: { role: AppRole; compact?: boolean }) {
@@ -170,6 +190,7 @@ function RoleHeader({ role }: { role: "siswa" | "ortu" }) {
         <div className="flex items-center gap-2">
           <DevRoleSwitcher role={role} compact />
           <ThemeToggle />
+          <SignOutButton compact />
         </div>
       </div>
     </header>
@@ -209,6 +230,7 @@ function AdminShell({ children, pathname }: { children: ReactNode; pathname: str
         <div className="space-y-3 border-t pt-4">
           <DevRoleSwitcher role="admin" />
           <ThemeToggle />
+          <SignOutButton />
         </div>
       </aside>
 
@@ -219,6 +241,7 @@ function AdminShell({ children, pathname }: { children: ReactNode; pathname: str
             <div className="flex items-center gap-2">
               <DevRoleSwitcher role="admin" compact />
               <ThemeToggle />
+              <SignOutButton compact />
             </div>
           </div>
           <details ref={menuRef} className="group mt-2">

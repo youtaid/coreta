@@ -143,7 +143,7 @@ coreta/
 │  │  │  ├─ billing/                # PaymentProvider + adapter
 │  │  │  ├─ mock/                   # data tiruan untuk fase UI-only (dihapus setelah terhubung)
 │  │  │  └─ env.ts                  # validasi variabel lingkungan dengan Zod
-│  │  ├─ middleware.ts              # sesi + penjaga peran
+│  │  ├─ proxy.ts                   # sesi + penjaga peran (Next.js 16: pengganti middleware.ts)
 │  │  ├─ sw.ts                      # service worker (Serwist)
 │  │  └─ public/                    # ikon PWA, font, gambar statis
 │  └─ worker/                       # proses Node terpisah untuk pekerjaan latar belakang
@@ -1068,20 +1068,22 @@ _Skema Supabase, RLS, akun, dan menghubungkan layar jalur/worksheet ke data nyat
 
 - **Scope**:
   - Hubungkan `/daftar` dan `/masuk` ke Supabase Auth (email + kata sandi, Google)
-  - `middleware.ts`: menyegarkan sesi dan mengalihkan berdasarkan peran (siswa → `/belajar`, orang tua → `/ortu/laporan`, admin → `/admin/antrean`)
+  - `middleware.ts` (di Next.js 16 bernama `proxy.ts`): menyegarkan sesi dan mengalihkan berdasarkan peran (siswa → `/belajar`, orang tua → `/ortu/laporan`, admin → `/admin/antrean`)
   - `POST /api/consent` mencatat versi teks dan waktu persetujuan; `/persetujuan/[token]` terhubung
 - **Estimasi waktu**: ~30 menit prompting + testing
 - **File yang dibuat/dimodifikasi**:
-  - `apps/web/middleware.ts`
+  - `apps/web/proxy.ts` (Next.js 16 mengganti nama `middleware.ts`) + `apps/web/lib/supabase/proxy.ts`, `apps/web/lib/auth/*`
   - `apps/web/app/(publik)/masuk/page.tsx`
   - `apps/web/app/(publik)/daftar/page.tsx`
   - `apps/web/app/api/consent/route.ts`
+  - `apps/web/app/(publik)/persetujuan/[token]/page.tsx`, `apps/web/app/auth/callback/route.ts`, `apps/web/app/auth/keluar/route.ts`
+  - `supabase/migrations/0006_persetujuan_versi.sql` + `supabase/tests/0006_persetujuan_versi.sql`
 - **Definition of Done**:
   - Orang tua bisa daftar, masuk, dan keluar
   - Pengguna tanpa peran yang sesuai tidak bisa membuka rute peran lain (dites)
   - Persetujuan tercatat di `consents` beserta versinya
 - **Gerbang persetujuan**: Youta menyetujui perubahan auth dan data anak
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [x] Sedang | [ ] Selesai (menunggu persetujuan Youta)
 
 #### Fase 36 — Akun Siswa dari Orang Tua
 
@@ -1193,12 +1195,12 @@ _Siswa mengerjakan, server menilai, coretan tersimpan, offline aman, penguasaan 
 #### Fase 42 — Worker & Pekerjaan mastery.update
 
 - **Scope**:
-  - Migrasi `0006`: aktifkan `pgmq`, buat antrean `mastery`, `ink`, dan antrean gagal (nomor 0005 dipakai perbaikan hak service_role di Fase 34)
+  - Migrasi `0007`: aktifkan `pgmq`, buat antrean `mastery`, `ink`, dan antrean gagal (nomor 0005 dipakai perbaikan hak service_role di Fase 34, 0006 dipakai versi persetujuan di Fase 35)
   - `apps/worker`: baca antrean, coba ulang 3 kali dengan jeda bertahap lalu pindahkan ke antrean gagal, log `pino`
   - Pekerjaan `mastery.update` memakai `packages/scoring` dan memperbarui `mastery` dan `daily_activity`; `/api/attempts` memasukkan pesan ke antrean
 - **Estimasi waktu**: ~30 menit prompting + testing
 - **File yang dibuat/dimodifikasi**:
-  - `supabase/migrations/0006_pgmq.sql`
+  - `supabase/migrations/0007_pgmq.sql`
   - `apps/worker/src/index.ts`
   - `apps/worker/src/queue.ts`
   - `apps/worker/src/jobs/mastery-update.ts`
@@ -1346,7 +1348,7 @@ _Semua panggilan AI lewat satu pintu (`packages/ai`). AI hanya memberi petunjuk,
   - Jadwal dengan `pg_cron` memasukkan pesan ke antrean
 - **Estimasi waktu**: ~30 menit prompting + testing
 - **File yang dibuat/dimodifikasi**:
-  - `supabase/migrations/0006_cron_worksheet.sql`
+  - `supabase/migrations/0008_cron_worksheet.sql`
   - `apps/worker/src/jobs/worksheet-compose.ts`
   - `apps/worker/src/jobs/worksheet-release.ts`
 - **Definition of Done**:
@@ -1594,7 +1596,7 @@ _Menyelesaikan alat admin, mengunci keamanan dan privasi anak, menguji end-to-en
 - **Estimasi waktu**: ~30 menit prompting + testing
 - **File yang dibuat/dimodifikasi**:
   - `apps/web/next.config.ts`
-  - `apps/web/middleware.ts`
+  - `apps/web/proxy.ts` (Next.js 16; dulu `middleware.ts`)
   - `apps/web/lib/rate-limit.ts`
   - `.github/workflows/ci.yml`
 - **Definition of Done**:
@@ -1949,6 +1951,13 @@ Keputusan yang sudah diambil sebelum coding dimulai (menyimpang atau melengkapi 
 | 34 | Tes konten menilai setiap butir seed lewat `@coreta/scoring`: jawaban sesuai kunci = skor 1, setiap pengecoh PG = skor 0 dan memunculkan petunjuknya, setiap jawaban setara isian = skor 1 | Lebih kuat dari `validateItem` saja: kunci, opsi, dan petunjuk terbukti konsisten dengan mesin penilai |
 | 34 | Akun contoh (lokal saja): 1 admin, 3 keluarga (orang tua + siswa: Rina/Raka Wijaya, Budi/Sekar Santoso, Maya Putri/Dimas Putra), kata sandi bersama `coreta-lokal-123`; baris `auth.users` + `auth.identities`, profil dari trigger 0001, `students`, `guardianships` (versi persetujuan `persetujuan-v1-2026-10`), `consents` | Login email + kata sandi dengan GoTrue asli berhasil untuk admin, orang tua, dan siswa; kata sandi salah ditolak. Siswa masuk dengan kode + PIN baru ada di Fase 36 |
 | 34 | `packages/db/src/types.ts` dihasilkan Supabase CLI 2.106 (`postgres-meta` v0.96.6) dari skema lokal; skrip `pnpm --filter @coreta/db gen:types` (`supabase gen types typescript --local --schema public` + Prettier). `@coreta/db` mengekspor `Database`, `Json`, `Tables`, `TablesInsert`, `TablesUpdate`, `Enums`, `CompositeTypes`; ketiga klien Supabase di `apps/web/lib/supabase` bertipe `Database`; tes tingkat tipe (`database-types.test.ts`) menjaga `items_public` tanpa `answer_key`/`explanation`/`distractor_hints` | DoD "apps/web mengimpor tipe dari @coreta/db"; aturan 1 ikut dijaga compiler |
+| 35 | Penjaga peran di `apps/web/proxy.ts` (Next.js 16 mengganti nama `middleware.ts`; berjalan di runtime Node.js). `lib/supabase/proxy.ts` menyegarkan cookie sesi lalu `getClaims()` (memverifikasi JWT, bukan `getSession`); peran dari `app_metadata.role` dengan aturan yang sama dengan trigger 0001 (tanpa peran = orang tua). Keputusan murni di `lib/auth/roles.ts`: `/belajar` dan `/bantuan` → siswa, `/ortu` → orang tua, `/admin` → admin; belum masuk → `/masuk?next=…`; peran lain → halaman awal perannya; sudah masuk di `/masuk`/`/daftar` → halaman awal; `/api` dan `/auth` hanya menyegarkan sesi. Tanpa konfigurasi Supabase, rute peran tertutup (gagal tertutup) | Nama berkas mengikuti Next.js terpasang (dokumen `proxy.md`). Peran di JWT cukup untuk pengalihan; data tetap dijaga RLS dan setiap route handler memeriksa sendiri |
+| 35 | Migrasi `0006_persetujuan_versi.sql`: `consents.version` wajib (baris lama ditandai `tidak-tercatat`, cek tidak kosong); hak INSERT/UPDATE klien dan kebijakan `consents_insert_own`/`consents_update_own` dari 0001 dicabut; fungsi `record_consent()` (hanya `service_role`) menulis `consents` (upsert, `granted_at` tetap dicap trigger) dan `audit_log` (`consent.granted`/`consent.declined`, versi, sumber) dalam satu transaksi dan menolak akun bukan orang tua (`22023`). Tes 0001: dua asersi "orang tua boleh memberi/mencabut dari klien" menjadi NEGATIF; tes baru `0006_persetujuan_versi.sql` (24 asersi) | **Mengubah keputusan Fase 30** (orang tua menulis persetujuan langsung dari klien), perlu persetujuan Youta. Versi harus dari server, bukan isian klien, dan setiap perubahan persetujuan harus punya jejak audit. `consents` menyimpan keputusan terakhir per jenis; riwayatnya di `audit_log` |
+| 35 | `POST /api/consent` `{ token?, type = data_anak \| riset, granted }`: tanpa token memakai sesi dan hanya peran orang tua; dengan token memakai orang tua di dalam token (tanpa perlu masuk). Origin harus sama dengan Host/X-Forwarded-Host (CSRF); galat basis data tidak dikirim ke klien; `Cache-Control: no-store` | Halaman `/persetujuan/[token]` dibuka dari email/pesan (peta layar 5) |
+| 35 | Token tautan persetujuan tanpa tabel: `base64url(JSON {id orang tua, versi, kedaluwarsa 7 hari}).HMAC-SHA256`, kunci diturunkan HKDF dari `SUPABASE_SERVICE_ROLE_KEY` dengan label `consent-token:v1`, dibandingkan `timingSafeEqual`; token ditolak bila versi teks sudah berganti | Tanpa migrasi dan variabel lingkungan baru. Memutar kunci service role membatalkan semua tautan yang beredar |
+| 35 | Teks persetujuan berversi di `lib/consent.ts` (`CONSENT_VERSION = persetujuan-v1-2026-10`, sama dengan seed, dijaga tes); teks yang sama tampil di `/daftar` dan `/persetujuan/[token]`. Setiap kali orang tua masuk (kata sandi, Google, tautan email), yang belum menyetujui versi berlaku diarahkan ke `/persetujuan/[token]` | Mengubah teks wajib menaikkan versi agar orang tua diminta menyetujui ulang |
+| 35 | `/daftar` dan `/masuk` = halaman server tipis + formulir klien `useActionState` + server action. Skema Zod bersama klien/server (`lib/auth/schemas.ts`); kata sandi minimal 8 (`minimum_password_length` 6 → 8); nama, WhatsApp, dan target ujian (TKA/UTBK/keduanya) di `user_metadata` (tidak pernah untuk peran). Bagian "Profil Awal Siswa" (nama + kelas) diganti "Target Ujian Anak": akun anak dibuat di `/ortu/anak` (Fase 36) sesuai peta layar 5. Bila konfirmasi email aktif, email terdaftar dijawab sama seperti pendaftaran baru (tidak bisa ditebak). `/masuk`: satu pesan untuk email/kata sandi salah; `next` hanya jalur internal yang boleh dibuka peran itu (`landingAfterSignIn`); tab siswa sementara memakai email + kata sandi | Server memvalidasi ulang semua isian; tidak ada open redirect |
+| 35 | Google (PKCE) lewat server action `signInWithOAuth` → `/auth/callback` (juga menerima `token_hash` tautan email). Tombol hanya muncul bila `AUTH_GOOGLE_ENABLED=true`; `[auth.external.google]` di `config.toml` mati secara bawaan, `additional_redirect_urls` = `/auth/callback` di 127.0.0.1:3000 dan localhost:3000. Keluar: `POST /auth/keluar` (303 ke `/masuk?keluar=1`), tombol Keluar di header siswa/orang tua dan sidebar admin | Tanpa kredensial Google, tombol mati lebih baik daripada mengarah ke galat. Keluar lewat POST agar tidak bisa dipicu tautan |
 
 ### 9b. Temuan & Isu
 
@@ -1964,7 +1973,7 @@ Catat bug, blocker, atau hal yang perlu dievaluasi. Jangan langsung dieksekusi �
 | 2 | PR #1 (cabang backup) merah di langkah Typecheck: `Cannot find name 'LayoutProps'` pada checkout baru. Sudah diperbaiki (lihat 9a); perlu CI hijau di GitHub untuk menutup Fase 2 | Med | Menunggu CI |
 | 7 | `/` menjadi dinamis (`ƒ`) karena membaca `searchParams` untuk `?peran=`, termasuk di produksi; beranda publik (Fase 19) kehilangan render statis. Pindahkan pengalihan dev ke `proxy.ts` atau buat khusus dev | Med | Terbuka |
 | 7 | Ruang kerja `/belajar/kerjakan/[id]` berada di layout siswa (header sticky + navigasi bawah fixed), bertentangan dengan aturan 9 (satu layar tanpa scroll). Dipindahkan ke route group `(workspace)` tanpa shell di Fase 10 | Med | Selesai di Fase 10 |
-| 7 | Rute siswa, orang tua, dan admin belum dijaga peran (baru Fase 35); jangan deploy ke luar sebelum Fase 35 | Med | Terbuka |
+| 7 | Rute siswa, orang tua, dan admin belum dijaga peran (baru Fase 35); jangan deploy ke luar sebelum Fase 35 | Med | Selesai di Fase 35 (`proxy.ts`; menunggu persetujuan Youta) |
 | 3 | `GET /api/health` publik dan tiap panggilan memakai `auth.admin.listUsers` dengan service role tanpa pembatasan laju; batasi atau ringankan sebelum Fase 45 | Low | Terbuka |
 | 4 | `/tema` aktif di produksi (tidak di-gate seperti `/dev/komponen`) | Low | Terbuka |
 | 1 | `scoringPlaceholder()` masih dipakai sebagai `data-scoring-status` di beranda publik; hapus di Fase 19/20 | Low | Terbuka |
@@ -1984,6 +1993,14 @@ Catat bug, blocker, atau hal yang perlu dievaluasi. Jangan langsung dieksekusi �
 | 34 | Pembungkus npm `supabase` 2.106 (`node_modules/.bin/supabase`) mengirim `gen types` ke jalur platform dan meminta token, walau `--local`; biner Go (`supabase-go`) atau CLI terpasang biasa berjalan normal | Low | Terbuka (pakai CLI global; perbarui CLI) |
 | 34 | Media seed (`media-parabola-01`) tercatat di `media_assets`, tetapi berkasnya belum diunggah; skema konten punya `caption` teks sedangkan tabel punya `caption_path` (keterangan teks tidak tersimpan) | Low | Terbuka (Fase 62: unggah media dan putuskan kolom keterangan) |
 | 34 | `seed.sql` memuat kata sandi contoh yang diketahui umum; hanya untuk `supabase db reset` lokal, jangan pernah dijalankan pada proyek cloud/produksi | Med | Catatan untuk Fase 45 |
+| 35 | Uji e2e menemukan bug: cek CSRF `/api/consent` membandingkan Origin dengan `request.url`, padahal di `next start` isinya `localhost:3000`; semua permintaan sah dari `127.0.0.1:3000` ditolak 403, dan skenario "siswa ditolak 403" lulus karena alasan yang salah. Diperbaiki (bandingkan dengan Host/X-Forwarded-Host) + tes regresi; skenario e2e kini juga memeriksa isi pesan galat | High | Selesai |
+| 35 | Relasi PostgREST `students` → `profiles` ambigu (lewat `profile_id` dan lewat `guardianships`) membuat `/persetujuan/[token]` galat 500; diperbaiki dengan `profiles!students_profile_id_fkey` | Med | Selesai |
+| 35 | Orang tua yang MENOLAK persetujuan tetap bisa membuka `/ortu/*` (hanya diarahkan ke halaman persetujuan setiap kali masuk). Pembuatan akun anak di Fase 36 wajib memeriksa `hasCurrentConsent` di server sebelum membuat siswa | High | Terbuka (Fase 36) |
+| 35 | Google dan `/auth/callback` (kode PKCE dan `token_hash` email) belum diuji ujung-ke-ujung: butuh client id/secret Google dan email konfirmasi (lokal `enable_confirmations = false`). Jalur sesudahnya (`destinationAfterSignIn`) sudah teruji lewat masuk dengan kata sandi | Med | Terbuka (sebelum Fase 45) |
+| 35 | Halaman `/belajar`, `/ortu/*`, `/admin/*` masih menampilkan data tiruan yang sama untuk semua akun; penjaga peran hanya membatasi siapa yang bisa membukanya | Med | Terbuka (Fase 36–37) |
+| 35 | Pemilih peran dev (`?peran=`) kini dialihkan ke `/masuk` bila belum masuk dengan peran itu; pratinjau peran memakai akun seed (`coreta-lokal-123`) | Low | Catatan |
+| 35 | WhatsApp dan target ujian orang tua ada di `user_metadata`, yang bisa diubah pengguna sendiri (`updateUser`). Bila server memakainya (Fase 36 target anak, Fase 61 CRM), salin ke tabel saat dibuat | Low | Terbuka (Fase 36/61) |
+| 35 | Tautan persetujuan bisa dipakai siapa pun yang memegangnya selama 7 hari (seperti tautan verifikasi email); pengiriman tautan lewat email/WhatsApp belum ada. Reset kata sandi mandiri juga belum ada ("Lupa sandi?" meminta menghubungi admin) | Low | Terbuka (Fase 61 / backlog) |
 
 **Pertanyaan terbuka sebelum fase terkait:**
 - Sebelum Fase 45 (deploy): spesifikasi VPS (CPU, RAM, disk) dan tagihan bulanan
@@ -2031,7 +2048,7 @@ Catat bug, blocker, atau hal yang perlu dievaluasi. Jangan langsung dieksekusi �
 | Fase 32 — Migrasi 3: Data Belajar | Sedang | ~30 menit | — | Menunggu persetujuan Youta. `0003_belajar.sql` (8 tabel, bucket privat `ink`, 2 fungsi bantu, 1 trigger) dan `0003_rls_belajar.sql` (122 asersi): siswa tidak bisa menulis `mastery`/`daily_activity`/skor, orang tua hanya membaca data anaknya (draf laporan tidak), siswa hanya mengunggah ke foldernya, id percobaan ganda = satu baris. Semua 253 tes 0001–0003 lulus di harness Postgres 16; 3 uji mutasi (siswa boleh tulis mastery, cek folder unggahan dihapus, orang tua baca draf) masing-masing tertangkap tes. Fase 34: lulus di `supabase test db` (Postgres 17) setelah hak `service_role` (0005) dan penyesuaian tes Storage |
 | Fase 33 — Migrasi 4: Langganan, Layanan & Audit | Sedang | ~30 menit | — | Menunggu persetujuan Youta. `0004_langganan_layanan.sql` (10 tabel, data `plans`, 3 trigger, kunci asing `hints_shown.ai_decision_id`) dan `0004_rls_langganan.sql` (106 asersi): `payment_events` tertutup untuk semua klien termasuk admin, `audit_log` hanya bisa ditambah bahkan oleh service_role dan superuser, webhook ganda = satu baris, orang tua hanya membaca langganan dan fakturnya, `tool_calls` tidak terbaca klien, tidak ada tabel `public` tanpa RLS. Semua 359 tes 0001–0004 lulus di harness Postgres 16; 3 uji mutasi (admin baca payment_events, trigger append-only dihapus, tool_calls dibuka) masing-masing tertangkap. Cek CI RLS statis (22 tes) terbukti menggagalkan migrasi uji berisi tabel tanpa RLS. Format, lint, typecheck, tes (647), build hijau. Fase 34: lulus di `supabase test db` (Postgres 17) setelah hak `service_role` (0005) |
 | Fase 34 — Seed Data & Tipe TypeScript | Selesai | ~30 menit | 2026-10-10 | `supabase db reset` (Supabase CLI 2.106, Postgres 17) memuat seed tanpa galat: 9 tahap, 34 kompetensi, 34 prasyarat, 40 butir (8 terbit, 32 draf), 1 stimulus, 1 media, 7 akun (1 admin, 3 orang tua, 3 siswa) yang bisa login lewat GoTrue asli; siswa seed melihat 8 butir lewat `items_public` dan ditolak membaca `items`. Semua 40 butir lolos `validateItem` dan uji silang `@coreta/scoring`. `types.ts` dari `supabase gen types`; `apps/web` memakai `Database` di ketiga klien Supabase tanpa galat TypeScript. Ditemukan dan diperbaiki: hak `service_role` (migrasi 0005). `supabase test db`: 5 berkas, 365 asersi lulus dengan seed termuat. Format, lint, typecheck, cek RLS, 773 tes, build hijau |
-| Fase 35 — Autentikasi Orang Tua & Penjaga Peran | — | ~30 menit | — | — |
+| Fase 35 — Autentikasi Orang Tua & Penjaga Peran | Sedang | ~30 menit | — | Menunggu persetujuan Youta. `proxy.ts` + `/masuk`, `/daftar`, `/persetujuan/[token]`, `POST /api/consent`, `/auth/callback`, `/auth/keluar`; migrasi `0006_persetujuan_versi.sql` (versi wajib, tulis persetujuan hanya lewat server, `record_consent` + audit). E2E Chromium di `next start` + Supabase lokal asli: 36/36 skenario lulus (orang tua daftar → `/ortu/anak` dengan persetujuan + versi + audit, keluar, masuk kembali ke `next`; siswa, orang tua, admin, dan tamu ditolak dari rute peran lain; kata sandi salah; open redirect; token palsu; orang tua tanpa persetujuan → setujui/tolak lewat token). `supabase test db`: 6 berkas, 389 asersi lulus; 2 uji mutasi (hak tulis klien dikembalikan, peran salah diizinkan) tertangkap. Format, lint, typecheck, cek RLS, 822 tes, build hijau. Google belum diuji (lihat 9b) |
 | Fase 36 — Akun Siswa dari Orang Tua | — | ~30 menit | — | — |
 | Fase 37 — Jalur & Worksheet dari Database | — | ~30 menit | — | — |
 | Fase 38 — API Kirim Jawaban | — | ~30 menit | — | — |
