@@ -226,8 +226,10 @@ select results_eq($$select name from storage.objects where bucket_id = 'ink' ord
 select is_empty($$select 1 from storage.objects where bucket_id = 'media'$$, 'NEGATIF: siswa A tidak melihat bucket lain');
 select is(pg_temp.rows_affected($$update storage.objects set name = '00000000-0000-0000-0000-00000000005b/80000000-0000-0000-0000-0000000000a1.png' where name like '00000000-0000-0000-0000-00000000005a/%'$$),
   0::bigint, 'NEGATIF: siswa tidak bisa memindah atau menimpa berkas coretan');
-select is(pg_temp.rows_affected($$delete from storage.objects where bucket_id = 'ink'$$),
-  0::bigint, 'NEGATIF: siswa tidak bisa menghapus berkas coretan');
+-- Supabase Storage menolak DELETE langsung di storage.objects (trigger protect_delete); lewat
+-- Storage API, penghapusan mengikuti RLS, dan bucket ink tidak punya kebijakan DELETE.
+select throws_ok($$delete from storage.objects where bucket_id = 'ink'$$,
+  null, null, 'NEGATIF: siswa tidak bisa menghapus berkas coretan');
 
 -- ---------------------------------------------------------------------------------------------
 -- Siswa B: hanya datanya
