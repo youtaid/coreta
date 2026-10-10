@@ -43,3 +43,20 @@ export function getServerEnv(): ServerEnv {
   });
   return serverEnv;
 }
+
+let studentPinPepper: string | undefined;
+
+/**
+ * Kunci rahasia untuk menurunkan kata sandi Auth siswa dari PIN (Fase 36). Terpisah dari
+ * getServerEnv() agar bagian lain server tetap berjalan bila fitur ini belum dikonfigurasi.
+ * Lokal: sama dengan student_pin_pepper di packages/content/seed/families.json.
+ */
+export function getStudentPinPepper(): string {
+  if (typeof window !== "undefined") {
+    throw new Error("getStudentPinPepper() hanya boleh dipanggil di server.");
+  }
+  studentPinPepper ??= parseEnv(z.object({ STUDENT_PIN_PEPPER: z.string().min(16) }), {
+    STUDENT_PIN_PEPPER: process.env.STUDENT_PIN_PEPPER,
+  }).STUDENT_PIN_PEPPER;
+  return studentPinPepper;
+}

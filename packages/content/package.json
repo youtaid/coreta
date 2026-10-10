@@ -7,8 +7,20 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "lint": "eslint src",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "build": "tsc -p tsconfig.build.json",
+    "lint": "eslint src scripts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --config ../../vitest.workspace.ts packages/content/",
+    "coverage": "vitest run --config ../../vitest.workspace.ts packages/content/ --coverage --coverage.provider=v8 --coverage.include=packages/content/src/**/*.ts --coverage.exclude=**/*.test.ts --coverage.exclude=**/fixtures.ts --coverage.thresholds.lines=90",
+    "seed:sql": "tsx scripts/import-seed.ts"
+  },
+  "dependencies": {
+    "@coreta/db": "workspace:*",
+    "@coreta/scoring": "workspace:*",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "tsx": "4.23.15"
   }
 }

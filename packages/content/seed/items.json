@@ -1,0 +1,955 @@
+{
+  "$comment": "40 butir contoh. MAT-SMA-*-01..08 berasal dari mockup ruang kerja (published). Butir 09..40 ditulis agent konten dan berstatus draft sampai ditinjau manusia.",
+  "items": [
+    {
+      "code": "MAT-SMA-ALJ-01",
+      "competency_code": "M3.2",
+      "tier": "mahir",
+      "answer_type": "pg",
+      "stem": {
+        "text": "Diketahui fungsi kuadrat f(x) = 2x² − 4x + (k − 1). Jika grafik kurva parabola tersebut memotong sumbu-X di dua titik berlainan, tentukan batasan nilai k yang memenuhi persamaan tersebut!",
+        "formula": "D = b^2 - 4ac > 0 \\implies (-4)^2 - 4(2)(k - 1) > 0"
+      },
+      "options": [
+        { "id": "a", "label": "A", "text": "k < 3" },
+        { "id": "b", "label": "B", "text": "k > 3" },
+        { "id": "c", "label": "C", "text": "k < −3" },
+        { "id": "d", "label": "D", "text": "k ≤ 3" },
+        { "id": "e", "label": "E", "text": "k ≥ 3" }
+      ],
+      "answer_key": ["a"],
+      "distractor_hints": {
+        "b": "Perhatikan tanda pertidaksamaan: −8k > −24 menghasilkan k < 3, bukan k > 3.",
+        "c": "Periksa kembali pembagian dengan bilangan negatif: 24 − 8k > 0 berarti k < 3.",
+        "d": "Syarat grafik memotong sumbu-X di dua titik berbeda adalah D > 0, bukan D ≥ 0.",
+        "e": "Diskriminan harus bernilai positif agar ada dua akar real berlainan, dan itu terjadi saat k < 3."
+      },
+      "explanation": {
+        "text": "Agar memotong sumbu-X di dua titik berbeda, D > 0. D = (−4)² − 4(2)(k − 1) = 16 − 8k + 8 = 24 − 8k. Dari 24 − 8k > 0 diperoleh k < 3."
+      },
+      "layout_mode": "standar",
+      "difficulty": 0.45,
+      "status": "published"
+    },
+    {
+      "code": "MAT-SMA-GEO-02",
+      "competency_code": "M3.5",
+      "tier": "mahir",
+      "answer_type": "pg",
+      "stem": {
+        "text": "Perhatikan grafik fungsi kuadrat pada diagram kartesius di samping. Parabola tersebut memotong sumbu-X di titik (1, 0) dan (3, 0), serta mencapai titik puncak minimum pada koordinat (2, −1). Persamaan kurva parabola yang tepat adalah …"
+      },
+      "options": [
+        { "id": "a", "label": "A", "text": "f(x) = x² − 4x + 3" },
+        { "id": "b", "label": "B", "text": "f(x) = x² − 4x − 3" },
+        { "id": "c", "label": "C", "text": "f(x) = 2x² − 4x + 3" },
+        { "id": "d", "label": "D", "text": "f(x) = x² + 4x + 3" },
+        { "id": "e", "label": "E", "text": "f(x) = (x − 2)² + 1" }
+      ],
+      "answer_key": ["a"],
+      "distractor_hints": {
+        "b": "Grafik memotong sumbu-Y di (0, 3), jadi suku konstantanya +3, bukan −3.",
+        "c": "Substitusikan puncak (2, −1) ke a(x − 1)(x − 3): a(1)(−1) = −1, sehingga a = 1, bukan 2.",
+        "d": "Sumbu simetri berada di x = −b/(2a) = 2, sehingga koefisien b harus negatif (−4).",
+        "e": "Bentuk puncak dengan titik (2, −1) adalah f(x) = (x − 2)² − 1, bukan + 1."
+      },
+      "explanation": {
+        "text": "Parabola memotong sumbu-X di x = 1 dan x = 3, jadi f(x) = a(x − 1)(x − 3). Titik puncak (2, −1) memberi a(1)(−1) = −1, sehingga a = 1. Jadi f(x) = (x − 1)(x − 3) = x² − 4x + 3."
+      },
+      "layout_mode": "media",
+      "media": [
+        {
+          "id": "media-parabola-01",
+          "kind": "diagram",
+          "alt_text": "Grafik fungsi kuadrat membuka ke atas pada bidang kartesius dengan titik puncak di (2, −1) dan memotong sumbu-X di x = 1 dan x = 3.",
+          "pasteable": true
+        }
+      ],
+      "difficulty": 0.4,
+      "status": "published"
+    },
+    {
+      "code": "MAT-SMA-LIT-03",
+      "competency_code": "M8.3",
+      "tier": "ujian",
+      "answer_type": "pg",
+      "stem": {
+        "text": "Berdasarkan stimulus bacaan di atas, jika x menyatakan jumlah Selendang Indigo dan y menyatakan jumlah Kain Panjang Klasik yang diproduksi setiap hari, tentukan model sistem pertidaksamaan linear yang membatasi ketersediaan bahan pewarna dan kuota waktu mesin fiksasi!"
+      },
+      "options": [
+        { "id": "a", "label": "A", "text": "3x + 5y ≤ 150; 2x + 4y ≤ 100; x ≥ 0; y ≥ 0" },
+        { "id": "b", "label": "B", "text": "5x + 3y ≤ 150; 4x + 2y ≤ 100; x ≥ 0; y ≥ 0" },
+        { "id": "c", "label": "C", "text": "3x + 5y ≥ 150; 2x + 4y ≥ 100; x ≥ 0; y ≥ 0" },
+        { "id": "d", "label": "D", "text": "3x + 2y ≤ 100; 5x + 4y ≤ 150; x ≥ 0; y ≥ 0" },
+        { "id": "e", "label": "E", "text": "3x + 5y ≤ 100; 2x + 4y ≤ 150; x ≥ 0; y ≥ 0" }
+      ],
+      "answer_key": ["a"],
+      "distractor_hints": {
+        "b": "Selendang (x) membutuhkan 3 liter pewarna dan 2 jam mesin; koefisien x dan y tertukar.",
+        "c": "Kuota pewarna dan waktu mesin adalah batas maksimal, jadi tandanya ≤, bukan ≥.",
+        "d": "Setiap pertidaksamaan memuat satu sumber daya: liter pewarna (3x + 5y) dan jam mesin (2x + 4y).",
+        "e": "Batas pewarna 150 liter dan waktu mesin 100 jam; ruas kanannya tertukar."
+      },
+      "explanation": {
+        "text": "Pewarna: 3 liter per selendang dan 5 liter per kain, maksimal 150 liter, sehingga 3x + 5y ≤ 150. Waktu mesin: 2 jam dan 4 jam, maksimal 100 jam, sehingga 2x + 4y ≤ 100. Jumlah produksi tidak negatif: x ≥ 0 dan y ≥ 0."
+      },
+      "layout_mode": "bacaan",
+      "stimulus_id": "stimulus-batik-01",
+      "difficulty": 0.55,
+      "status": "published"
+    },
+    {
+      "code": "MAT-SMA-ALJ-04",
+      "competency_code": "M3.5",
+      "tier": "mahir",
+      "answer_type": "pgk",
+      "stem": {
+        "text": "Diberikan fungsi f(x) = x² − 2x + 5. Pilih semua pernyataan berikut yang benar mengenai karakteristik fungsi tersebut!",
+        "formula": "f(x) = (x - 1)^2 + 4"
+      },
+      "options": [
+        { "id": "a", "label": "A", "text": "Titik balik minimum berada di koordinat (1, 4)" },
+        { "id": "b", "label": "B", "text": "Grafik memotong sumbu-Y di titik (0, −5)" },
+        { "id": "c", "label": "C", "text": "Nilai minimum fungsi f(x) adalah 4" },
+        { "id": "d", "label": "D", "text": "Kurva memotong sumbu-X di dua titik berlainan" }
+      ],
+      "answer_key": ["a", "c"],
+      "distractor_hints": {
+        "b": "f(0) = 5, jadi grafik memotong sumbu-Y di (0, 5), bukan di (0, −5).",
+        "d": "Diskriminan D = (−2)² − 4(1)(5) = −16 < 0, sehingga kurva tidak memotong sumbu-X."
+      },
+      "explanation": {
+        "text": "f(x) = (x − 1)² + 4, jadi titik balik minimum (1, 4) dan nilai minimumnya 4. f(0) = 5, sehingga titik potong sumbu-Y adalah (0, 5). D = 4 − 20 = −16 < 0, jadi kurva tidak memotong sumbu-X."
+      },
+      "layout_mode": "standar",
+      "difficulty": 0.45,
+      "status": "published"
+    },
+    {
+      "code": "MAT-SMA-MAT-05",
+      "competency_code": "M1.4",
+      "tier": "dasar",
+      "answer_type": "bs",
+      "stem": {
+        "text": "Tentukan kebenaran dari masing-masing pernyataan terkait sifat dan operasi matriks persegi berikut ini!"
+      },
+      "options": [
+        {
+          "id": "r1",
+          "label": "1",
+          "text": "Jika matriks A berordo 2×2 memiliki invers, maka determinan A ≠ 0."
+        },
+        {
+          "id": "r2",
+          "label": "2",
+          "text": "Untuk setiap dua matriks persegi A dan B, selalu berlaku AB = BA."
+        },
+        {
+          "id": "r3",
+          "label": "3",
+          "text": "Determinan matriks transpos det(Aᵀ) sama dengan det(A)."
+        },
+        {
+          "id": "r4",
+          "label": "4",
+          "text": "Matriks singular adalah matriks yang memiliki nilai determinan bernilai satu."
+        }
+      ],
+      "answer_key": ["r1", "r3"],
+      "distractor_hints": {
+        "r2": "Perkalian matriks umumnya tidak komutatif; AB = BA hanya berlaku untuk pasangan matriks tertentu.",
+        "r4": "Matriks singular memiliki determinan sama dengan nol, bukan satu."
+      },
+      "explanation": {
+        "text": "Matriks punya invers jika dan hanya jika determinannya tidak nol (1 benar). Perkalian matriks umumnya tidak komutatif (2 salah). det(Aᵀ) = det(A) (3 benar). Matriks singular berdeterminan nol (4 salah)."
+      },
+      "layout_mode": "standar",
+      "difficulty": 0.3,
+      "status": "published"
+    },
+    {
+      "code": "MAT-SMA-LIT-06",
+      "competency_code": "M0.5",
+      "tier": "mahir",
+      "answer_type": "isian",
+      "stem": {
+        "text": "Seorang pedagang membeli barang seharga Rp50.000 dan menjualnya kembali dengan keuntungan 20%. Berapakah harga jual barang tersebut (dalam rupiah)?"
+      },
+      "answer_key": ["60000"],
+      "equivalents": ["60.000", "60 ribu", "Rp60.000", "Rp 60.000", "60000 rupiah"],
+      "tolerance": 0,
+      "explanation": {
+        "text": "Keuntungan 20% × Rp50.000 = Rp10.000, sehingga harga jual Rp50.000 + Rp10.000 = Rp60.000."
+      },
+      "layout_mode": "standar",
+      "difficulty": 0.25,
+      "status": "published"
+    },
+    {
+      "code": "MAT-SMA-DIM-07",
+      "competency_code": "M5.3",
+      "tier": "ujian",
+      "answer_type": "pg",
+      "stem": {
+        "text": "Diketahui kubus ABCD.EFGH dengan panjang rusuk 6 cm. Jarak dari titik C ke bidang diagonal BDHF adalah …",
+        "formula": "d = \\frac{1}{2} s \\sqrt{2}"
+      },
+      "options": [
+        { "id": "a", "label": "A", "text": "3 cm" },
+        { "id": "b", "label": "B", "text": "3√2 cm" },
+        { "id": "c", "label": "C", "text": "3√3 cm" },
+        { "id": "d", "label": "D", "text": "6√2 cm" }
+      ],
+      "answer_key": ["b"],
+      "distractor_hints": {
+        "a": "Jarak titik ke bidang diukur sepanjang garis tegak lurus, yaitu dari C ke garis BD, bukan setengah rusuk.",
+        "c": "3√3 cm adalah setengah diagonal ruang; jarak C ke bidang BDHF sama dengan setengah diagonal sisi.",
+        "d": "6√2 cm adalah panjang diagonal sisi AC; jarak C ke bidang BDHF hanya setengahnya."
+      },
+      "explanation": {
+        "text": "Bidang BDHF memuat diagonal alas BD. Jarak C ke bidang itu sama dengan jarak C ke garis BD, yaitu setengah diagonal sisi: ½ × 6√2 = 3√2 cm."
+      },
+      "layout_mode": "standar",
+      "difficulty": 0.6,
+      "status": "published"
+    },
+    {
+      "code": "MAT-SMA-STA-08",
+      "competency_code": "M6.3",
+      "tier": "ujian",
+      "answer_type": "pgk",
+      "stem": {
+        "text": "Sekumpulan data memiliki rata-rata 50 dan simpangan baku 10. Jika setiap nilai data dikalikan 2 lalu dikurangi 5, pilih semua pernyataan yang benar!"
+      },
+      "options": [
+        { "id": "a", "label": "A", "text": "Rata-rata baru menjadi 100" },
+        { "id": "b", "label": "B", "text": "Rata-rata baru menjadi 95" },
+        { "id": "c", "label": "C", "text": "Simpangan baku baru menjadi 15" },
+        { "id": "d", "label": "D", "text": "Simpangan baku baru menjadi 20" }
+      ],
+      "answer_key": ["b", "d"],
+      "distractor_hints": {
+        "a": "Pengurangan 5 juga menggeser rata-rata: 2 × 50 − 5 = 95.",
+        "c": "Perkalian dengan 2 menggandakan simpangan baku menjadi 20; pengurangan 5 tidak mengubahnya."
+      },
+      "explanation": {
+        "text": "Rata-rata ikut setiap operasi: 2 × 50 − 5 = 95. Simpangan baku hanya terpengaruh perkalian: 2 × 10 = 20; pengurangan 5 menggeser semua data sama jauh sehingga sebarannya tetap."
+      },
+      "layout_mode": "standar",
+      "difficulty": 0.6,
+      "status": "published"
+    },
+    {
+      "code": "MAT-SMA-BIL-09",
+      "competency_code": "M0.3",
+      "tier": "dasar",
+      "answer_type": "isian",
+      "stem": {
+        "text": "Tentukan nilai dari ²log 8 + ²log 4.",
+        "formula": "{}^{2}\\log 8 + {}^{2}\\log 4"
+      },
+      "answer_key": ["5"],
+      "tolerance": 0,
+      "explanation": {
+        "text": "²log 8 = 3 karena 2³ = 8, dan ²log 4 = 2 karena 2² = 4. Jumlahnya 3 + 2 = 5."
+      },
+      "layout_mode": "standar",
+      "difficulty": 0.25,
+      "status": "draft"
+    },
+    {
+      "code": "MAT-SMA-BIL-10",
+      "competency_code": "M0.2",
+      "tier": "mahir",
+      "answer_type": "pg",
+      "stem": { "text": "Bentuk sederhana dari √50 − √18 + √8 adalah …" },
+      "options": [
+        { "id": "a", "label": "A", "text": "4√2" },
+        { "id": "b", "label": "B", "text": "√40" },
+        { "id": "c", "label": "C", "text": "10√2" },
+        { "id": "d", "label": "D", "text": "0" }
+      ],
+      "answer_key": ["a"],
+      "distractor_hints": {
+        "b": "Bentuk akar tidak dijumlahkan dengan menjumlahkan bilangan di dalam akar; sederhanakan dulu menjadi kelipatan √2.",
+        "c": "√18 = 3√2 dikurangkan, bukan ditambahkan: 5√2 − 3√2 + 2√2.",
+        "d": "√8 = 2√2 ditambahkan, bukan dikurangkan: 5√2 − 3√2 + 2√2 = 4√2."
+      },
+      "explanation": { "text": "√50 = 5√2, √18 = 3√2, dan √8 = 2√2. Jadi 5√2 − 3√2 + 2√2 = 4√2." },
+      "layout_mode": "standar",
+      "difficulty": 0.4,
+      "status": "draft"
+    },
+    {
+      "code": "MAT-SMA-ALJ-11",
+      "competency_code": "M0.4",
+      "tier": "dasar",
+      "answer_type": "pg",
+      "stem": { "text": "Hasil pemfaktoran x² − 9 adalah …" },
+      "options": [
+        { "id": "a", "label": "A", "text": "(x − 3)(x + 3)" },
+        { "id": "b", "label": "B", "text": "(x − 3)²" },
+        { "id": "c", "label": "C", "text": "(x − 9)(x + 1)" },
+        { "id": "d", "label": "D", "text": "(x + 3)²" }
+      ],
+      "answer_key": ["a"],
+      "distractor_hints": {
+        "b": "(x − 3)² = x² − 6x + 9; ada suku −6x yang tidak muncul di soal.",
+        "c": "(x − 9)(x + 1) = x² − 8x − 9; ada suku −8x yang tidak muncul di soal.",
+        "d": "(x + 3)² = x² + 6x + 9; tandanya pun tidak sesuai."
+      },
+      "explanation": { "text": "x² − 9 adalah selisih dua kuadrat: x² − 3² = (x − 3)(x + 3)." },
+      "layout_mode": "standar",
+      "difficulty": 0.2,
+      "status": "draft"
+    },
+    {
+      "code": "MAT-SMA-ARS-12",
+      "competency_code": "M0.5",
+      "tier": "dasar",
+      "answer_type": "isian",
+      "stem": {
+        "text": "Harga sebuah tas Rp240.000 mendapat diskon 25%. Berapa rupiah yang harus dibayar?"
+      },
+      "answer_key": ["180000"],
+      "equivalents": ["180.000", "Rp180.000", "Rp 180.000"],
+      "tolerance": 0,
+      "explanation": {
+        "text": "Diskon 25% × Rp240.000 = Rp60.000, sehingga yang dibayar Rp240.000 − Rp60.000 = Rp180.000."
+      },
+      "layout_mode": "standar",
+      "difficulty": 0.25,
+      "status": "draft"
+    },
+    {
+      "code": "MAT-SMA-ALJ-13",
+      "competency_code": "M1.1",
+      "tier": "dasar",
+      "answer_type": "isian",
+      "stem": { "text": "Tentukan nilai x yang memenuhi 5x − 7 = 2x + 8." },
+      "answer_key": ["5"],
+      "equivalents": ["x = 5"],
+      "tolerance": 0,
+      "explanation": {
+        "text": "Pindahkan suku x ke ruas kiri dan konstanta ke ruas kanan: 5x − 2x = 8 + 7, sehingga 3x = 15 dan x = 5."
+      },
+      "layout_mode": "standar",
+      "difficulty": 0.2,
+      "status": "draft"
+    },
+    {
+      "code": "MAT-SMA-ALJ-14",
+      "competency_code": "M1.2",
+      "tier": "mahir",
+      "answer_type": "pg",
+      "stem": { "text": "Himpunan penyelesaian dari |x − 2| < 5 adalah …" },
+      "options": [
+        { "id": "a", "label": "A", "text": "−3 < x < 7" },
+        { "id": "b", "label": "B", "text": "x < 7" },
+        { "id": "c", "label": "C", "text": "−7 < x < 3" },
+        { "id": "d", "label": "D", "text": "x < −3 atau x > 7" }
+      ],
+      "answer_key": ["a"],
+      "distractor_hints": {
+        "b": "Nilai mutlak memberi dua batas: selain x − 2 < 5, juga harus x − 2 > −5.",
+        "c": "Tambahkan 2 ke setiap ruas: −5 + 2 = −3 dan 5 + 2 = 7.",
+        "d": "Tanda < pada nilai mutlak menghasilkan selang di antara dua batas, bukan di luar."
+      },
+      "explanation": {
+        "text": "|x − 2| < 5 berarti −5 < x − 2 < 5. Tambahkan 2 ke setiap ruas: −3 < x < 7."
+      },
+      "layout_mode": "standar",
+      "difficulty": 0.45,
+      "status": "draft"
+    },
+    {
+      "code": "MAT-SMA-ALJ-15",
+      "competency_code": "M1.3",
+      "tier": "dasar",
+      "answer_type": "pg",
+      "stem": { "text": "Jika x + y = 10 dan x − y = 4, nilai x × y adalah …" },
+      "options": [
+        { "id": "a", "label": "A", "text": "21" },
+        { "id": "b", "label": "B", "text": "40" },
+        { "id": "c", "label": "C", "text": "7" },
+        { "id": "d", "label": "D", "text": "14" }
+      ],
+      "answer_key": ["a"],
+      "distractor_hints": {
+        "b": "40 adalah 10 × 4, hasil kali ruas kanan kedua persamaan, bukan x × y.",
+        "c": "7 adalah nilai x; soal menanyakan hasil kali x dan y.",
+        "d": "14 adalah 2x; bagi dulu dengan 2 untuk mendapatkan x = 7, lalu cari y."
+      },
+      "explanation": {
+        "text": "Jumlahkan kedua persamaan: 2x = 14, sehingga x = 7 dan y = 10 − 7 = 3. Jadi x × y = 21."
+      },
+      "layout_mode": "standar",
+      "difficulty": 0.25,
+      "status": "draft"
+    },
+    {
+      "code": "MAT-SMA-MAT-16",
+      "competency_code": "M1.4",
+      "tier": "dasar",
+      "answer_type": "isian",
+      "stem": {
+        "text": "Tentukan determinan matriks A berikut.",
+        "formula": "A = \\begin{pmatrix} 3 & 2 \\\\ 1 & 4 \\end{pmatrix}"
+      },
+      "answer_key": ["10"],
+      "tolerance": 0,
+      "explanation": {
+        "text": "Untuk matriks 2×2, det(A) = ad − bc = 3 × 4 − 2 × 1 = 12 − 2 = 10."
+      },
+      "layout_mode": "standar",
+      "difficulty": 0.25,
+      "status": "draft"
+    },
+    {
+      "code": "MAT-SMA-MAT-17",
+      "competency_code": "M1.4",
+      "tier": "mahir",
+      "answer_type": "bs",
+      "stem": {
+        "text": "Diberikan matriks A berikut. Tentukan benar atau salah setiap pernyataan.",
+        "formula": "A = \\begin{pmatrix} 2 & 1 \\\\ 0 & 3 \\end{pmatrix}"
+      },
+      "options": [
+        { "id": "r1", "label": "1", "text": "det(A) = 6" },
+        { "id": "r2", "label": "2", "text": "Matriks A memiliki invers" },
+        { "id": "r3", "label": "3", "text": "Aᵀ = A" },
+        { "id": "r4", "label": "4", "text": "det(2A) = 12" }
+      ],
+      "answer_key": ["r1", "r2"],
+      "distractor_hints": {
+        "r3": "Transpos menukar baris dan kolom: Aᵀ memiliki baris (2, 0) dan (1, 3), berbeda dari A.",
+        "r4": "Untuk matriks 2×2, det(kA) = k² det(A), sehingga det(2A) = 4 × 6 = 24."
+      },
+      "explanation": {
+        "text": "det(A) = 2 × 3 − 1 × 0 = 6 ≠ 0, sehingga A punya invers. Aᵀ berbeda dari A karena elemen di luar diagonal tertukar. det(2A) = 2² × 6 = 24."
+      },
+      "layout_mode": "standar",
+      "difficulty": 0.5,
+      "status": "draft"
+    },
+    {
+      "code": "MAT-SMA-LIN-18",
+      "competency_code": "M1.5",
+      "tier": "ujian",
+      "answer_type": "pg",
+      "stem": {
+        "text": "Nilai maksimum f(x, y) = 3x + 2y pada daerah x + y ≤ 4, x ≥ 0, y ≥ 0 adalah …"
+      },
+      "options": [
+        { "id": "a", "label": "A", "text": "12" },
+        { "id": "b", "label": "B", "text": "8" },
+        { "id": "c", "label": "C", "text": "20" },
+        { "id": "d", "label": "D", "text": "4" }
+      ],
+      "answer_key": ["a"],
+      "distractor_hints": {
+        "b": "8 adalah nilai di titik pojok (0, 4); periksa juga titik pojok (4, 0).",
+        "c": "Titik (4, 4) tidak memenuhi x + y ≤ 4, jadi bukan titik pojok daerah.",
+        "d": "4 adalah batas x + y, bukan nilai fungsi objektif."
+      },
+      "explanation": {
+        "text": "Titik pojok daerah: (0, 0), (4, 0), dan (0, 4). Nilai f: 0, 12, dan 8. Nilai maksimumnya 12 di (4, 0)."
+      },
+      "layout_mode": "standar",
+      "difficulty": 0.5,
+      "status": "draft"
+    },
+    {
+      "code": "MAT-SMA-FUN-19",
+      "competency_code": "M2.2",
+      "tier": "dasar",
+      "answer_type": "isian",
+      "stem": { "text": "Tentukan gradien garis yang melalui titik (2, 5) dan (6, 13)." },
+      "answer_key": ["2"],
+      "tolerance": 0,
+      "explanation": { "text": "m = (y₂ − y₁) / (x₂ − x₁) = (13 − 5) / (6 − 2) = 8 / 4 = 2." },
+      "layout_mode": "standar",
+      "difficulty": 0.25,
+      "status": "draft"
+    },
+    {
+      "code": "MAT-SMA-FUN-20",
+      "competency_code": "M2.3",
+      "tier": "mahir",
+      "answer_type": "pg",
+      "stem": { "text": "Jika f(x) = 2x + 1 dan g(x) = x², maka (f ∘ g)(3) adalah …" },
+      "options": [
+        { "id": "a", "label": "A", "text": "19" },
+        { "id": "b", "label": "B", "text": "49" },
+        { "id": "c", "label": "C", "text": "7" },
+        { "id": "d", "label": "D", "text": "63" }
+      ],
+      "answer_key": ["a"],
+      "distractor_hints": {
+        "b": "49 adalah (g ∘ f)(3) = g(7); pada f ∘ g, fungsi g dikerjakan lebih dulu.",
+        "c": "7 adalah f(3); hasil g(3) = 9 yang harus dimasukkan ke f.",
+        "d": "(f ∘ g)(3) adalah f(g(3)), bukan f(3) × g(3) = 7 × 9."
+      },
+      "explanation": { "text": "(f ∘ g)(3) = f(g(3)). g(3) = 9, lalu f(9) = 2 × 9 + 1 = 19." },
+      "layout_mode": "standar",
+      "difficulty": 0.4,
+      "status": "draft"
+    },
+    {
+      "code": "MAT-SMA-FUN-21",
+      "competency_code": "M2.3",
+      "tier": "ujian",
+      "answer_type": "pg",
+      "stem": { "text": "Invers dari fungsi f(x) = (2x + 3) / 5 adalah …" },
+      "options": [
+        { "id": "a", "label": "A", "text": "f⁻¹(x) = (5x − 3) / 2" },
+        { "id": "b", "label": "B", "text": "f⁻¹(x) = (5x + 3) / 2" },
+        { "id": "c", "label": "C", "text": "f⁻¹(x) = (2x − 3) / 5" },
+        { "id": "d", "label": "D", "text": "f⁻¹(x) = 5 / (2x + 3)" }
+      ],
+      "answer_key": ["a"],
+      "distractor_hints": {
+        "b": "Saat memindahkan 3 ke ruas lain, tandanya berubah: 5y − 3 = 2x.",
+        "c": "Invers diperoleh dengan menyelesaikan y = f(x) untuk x, bukan sekadar mengganti tanda.",
+        "d": "Invers fungsi tidak sama dengan kebalikan 1/f(x)."
+      },
+      "explanation": {
+        "text": "Tulis y = (2x + 3)/5, maka 5y = 2x + 3, sehingga x = (5y − 3)/2. Jadi f⁻¹(x) = (5x − 3)/2."
+      },
+      "layout_mode": "standar",
+      "difficulty": 0.55,
+      "status": "draft"
+    },
+    {
+      "code": "MAT-SMA-KUA-22",
+      "competency_code": "M3.1",
+      "tier": "dasar",
+      "answer_type": "pg",
+      "stem": { "text": "Akar-akar persamaan x² − 5x + 6 = 0 adalah …" },
+      "options": [
+        { "id": "a", "label": "A", "text": "2 dan 3" },
+        { "id": "b", "label": "B", "text": "−2 dan −3" },
+        { "id": "c", "label": "C", "text": "1 dan 6" },
+        { "id": "d", "label": "D", "text": "−1 dan 6" }
+      ],
+      "answer_key": ["a"],
+      "distractor_hints": {
+        "b": "Uji x = −2: 4 + 10 + 6 = 20, bukan 0. Faktornya (x − 2)(x − 3).",
+        "c": "1 + 6 = 7, padahal jumlah kedua akar harus 5.",
+        "d": "Hasil kali kedua akar harus 6 dan jumlahnya 5; −1 × 6 = −6."
+      },
+      "explanation": {
+        "text": "Cari dua bilangan yang jumlahnya 5 dan hasil kalinya 6, yaitu 2 dan 3: x² − 5x + 6 = (x − 2)(x − 3) = 0, sehingga x = 2 atau x = 3."
+      },
+      "layout_mode": "standar",
+      "difficulty": 0.2,
+      "status": "draft"
+    },
+    {
+      "code": "MAT-SMA-KUA-23",
+      "competency_code": "M3.2",
+      "tier": "mahir",
+      "answer_type": "pg",
+      "stem": { "text": "Persamaan x² + 4x + k = 0 mempunyai dua akar real kembar jika k = …" },
+      "options": [
+        { "id": "a", "label": "A", "text": "4" },
+        { "id": "b", "label": "B", "text": "−4" },
+        { "id": "c", "label": "C", "text": "16" },
+        { "id": "d", "label": "D", "text": "2" }
+      ],
+      "answer_key": ["a"],
+      "distractor_hints": {
+        "b": "Akar kembar berarti D = 0: 16 − 4k = 0, sehingga k bernilai positif.",
+        "c": "D = b² − 4ac = 16 − 4k; jangan lupa faktor 4 pada 4ac.",
+        "d": "Selesaikan 16 − 4k = 0 dengan membagi 16 oleh 4, bukan oleh 8."
+      },
+      "explanation": {
+        "text": "Akar kembar terjadi saat D = 0. D = 4² − 4(1)(k) = 16 − 4k = 0, sehingga k = 4."
+      },
+      "layout_mode": "standar",
+      "difficulty": 0.35,
+      "status": "draft"
+    },
+    {
+      "code": "MAT-SMA-KUA-24",
+      "competency_code": "M3.3",
+      "tier": "ujian",
+      "answer_type": "isian",
+      "stem": {
+        "text": "Jika α dan β adalah akar-akar persamaan 2x² − 6x + 1 = 0, tentukan nilai α² + β²."
+      },
+      "answer_key": ["8"],
+      "tolerance": 0,
+      "explanation": {
+        "text": "α + β = 6/2 = 3 dan αβ = 1/2. α² + β² = (α + β)² − 2αβ = 9 − 1 = 8."
+      },
+      "layout_mode": "standar",
+      "difficulty": 0.6,
+      "status": "draft"
+    },
+    {
+      "code": "MAT-SMA-KUA-25",
+      "competency_code": "M3.4",
+      "tier": "ujian",
+      "answer_type": "pg",
+      "stem": {
+        "text": "Persamaan kuadrat baru yang akar-akarnya dua kali akar-akar persamaan x² − 3x + 2 = 0 adalah …"
+      },
+      "options": [
+        { "id": "a", "label": "A", "text": "x² − 6x + 8 = 0" },
+        { "id": "b", "label": "B", "text": "x² − 3x + 4 = 0" },
+        { "id": "c", "label": "C", "text": "2x² − 6x + 4 = 0" },
+        { "id": "d", "label": "D", "text": "x² − 6x + 4 = 0" }
+      ],
+      "answer_key": ["a"],
+      "distractor_hints": {
+        "b": "Jika akar dikali 2, jumlah akar juga dikali 2 (menjadi 6) dan hasil kalinya dikali 4 (menjadi 8).",
+        "c": "Ini hanya mengalikan seluruh persamaan dengan 2; akarnya tetap 1 dan 2.",
+        "d": "Hasil kali akar baru adalah 2 × 4 = 8, bukan 4."
+      },
+      "explanation": {
+        "text": "Akar lama 1 dan 2, jadi akar baru 2 dan 4. Jumlahnya 6 dan hasil kalinya 8, sehingga persamaannya x² − 6x + 8 = 0."
+      },
+      "layout_mode": "standar",
+      "difficulty": 0.6,
+      "status": "draft"
+    },
+    {
+      "code": "MAT-SMA-KUA-26",
+      "competency_code": "M3.5",
+      "tier": "mahir",
+      "answer_type": "pgk",
+      "stem": { "text": "Diberikan f(x) = −x² + 4x + 5. Pilih semua pernyataan yang benar!" },
+      "options": [
+        { "id": "a", "label": "A", "text": "Grafiknya terbuka ke bawah" },
+        { "id": "b", "label": "B", "text": "Sumbu simetrinya x = 2" },
+        { "id": "c", "label": "C", "text": "Nilai maksimumnya 9" },
+        { "id": "d", "label": "D", "text": "Grafiknya memotong sumbu-Y di (0, −5)" }
+      ],
+      "answer_key": ["a", "b", "c"],
+      "distractor_hints": {
+        "d": "f(0) = 5, jadi grafik memotong sumbu-Y di (0, 5)."
+      },
+      "explanation": {
+        "text": "Koefisien x² negatif, jadi grafik terbuka ke bawah. Sumbu simetri x = −4/(2 × (−1)) = 2, dan f(2) = −4 + 8 + 5 = 9 adalah nilai maksimum. f(0) = 5."
+      },
+      "layout_mode": "standar",
+      "difficulty": 0.5,
+      "status": "draft"
+    },
+    {
+      "code": "MAT-SMA-BAR-27",
+      "competency_code": "M4.1",
+      "tier": "dasar",
+      "answer_type": "isian",
+      "stem": { "text": "Tentukan suku ke-10 dari barisan aritmetika 3, 7, 11, 15, …" },
+      "answer_key": ["39"],
+      "tolerance": 0,
+      "explanation": { "text": "a = 3 dan b = 4, sehingga U₁₀ = a + 9b = 3 + 36 = 39." },
+      "layout_mode": "standar",
+      "difficulty": 0.2,
+      "status": "draft"
+    },
+    {
+      "code": "MAT-SMA-BAR-28",
+      "competency_code": "M4.1",
+      "tier": "mahir",
+      "answer_type": "pg",
+      "stem": { "text": "Jumlah 20 suku pertama deret 2 + 5 + 8 + … adalah …" },
+      "options": [
+        { "id": "a", "label": "A", "text": "610" },
+        { "id": "b", "label": "B", "text": "590" },
+        { "id": "c", "label": "C", "text": "1.220" },
+        { "id": "d", "label": "D", "text": "59" }
+      ],
+      "answer_key": ["a"],
+      "distractor_hints": {
+        "b": "Rumusnya Sₙ = n/2 (2a + (n − 1)b); suku pertama dikali 2.",
+        "c": "Jangan lupa membagi n dengan 2: Sₙ = n/2 (…).",
+        "d": "59 adalah suku ke-20 (2 + 19 × 3), bukan jumlahnya."
+      },
+      "explanation": {
+        "text": "a = 2, b = 3, n = 20. S₂₀ = 20/2 × (2 × 2 + 19 × 3) = 10 × 61 = 610."
+      },
+      "layout_mode": "standar",
+      "difficulty": 0.45,
+      "status": "draft"
+    },
+    {
+      "code": "MAT-SMA-BAR-29",
+      "competency_code": "M4.2",
+      "tier": "mahir",
+      "answer_type": "pg",
+      "stem": { "text": "Suku ke-6 dari barisan geometri 3, 6, 12, … adalah …" },
+      "options": [
+        { "id": "a", "label": "A", "text": "96" },
+        { "id": "b", "label": "B", "text": "192" },
+        { "id": "c", "label": "C", "text": "48" },
+        { "id": "d", "label": "D", "text": "18" }
+      ],
+      "answer_key": ["a"],
+      "distractor_hints": {
+        "b": "Uₙ = a·rⁿ⁻¹; untuk n = 6 pangkatnya 5, bukan 6.",
+        "c": "48 adalah suku ke-5; hitung satu suku lagi.",
+        "d": "Barisan ini dikalikan 2 setiap suku, bukan ditambah 3."
+      },
+      "explanation": { "text": "a = 3 dan r = 2, sehingga U₆ = 3 × 2⁵ = 3 × 32 = 96." },
+      "layout_mode": "standar",
+      "difficulty": 0.35,
+      "status": "draft"
+    },
+    {
+      "code": "MAT-SMA-BAR-30",
+      "competency_code": "M4.3",
+      "tier": "ujian",
+      "answer_type": "isian",
+      "stem": {
+        "text": "Modal Rp1.000.000 disimpan dengan bunga majemuk 10% per tahun. Berapa rupiah nilainya setelah 2 tahun?"
+      },
+      "answer_key": ["1210000"],
+      "equivalents": ["1.210.000", "Rp1.210.000", "Rp 1.210.000"],
+      "tolerance": 0,
+      "explanation": {
+        "text": "Nilai akhir = 1.000.000 × (1 + 0,1)² = 1.000.000 × 1,21 = Rp1.210.000."
+      },
+      "layout_mode": "standar",
+      "difficulty": 0.5,
+      "status": "draft"
+    },
+    {
+      "code": "MAT-SMA-GEO-31",
+      "competency_code": "M5.1",
+      "tier": "dasar",
+      "answer_type": "isian",
+      "stem": {
+        "text": "Sebuah segitiga siku-siku memiliki sisi tegak 6 cm dan 8 cm. Tentukan panjang sisi miringnya (dalam cm)."
+      },
+      "answer_key": ["10"],
+      "equivalents": ["10 cm"],
+      "tolerance": 0,
+      "explanation": {
+        "text": "Dengan teorema Pythagoras: c² = 6² + 8² = 36 + 64 = 100, sehingga c = 10 cm."
+      },
+      "layout_mode": "standar",
+      "difficulty": 0.15,
+      "status": "draft"
+    },
+    {
+      "code": "MAT-SMA-TRI-32",
+      "competency_code": "M5.2",
+      "tier": "dasar",
+      "answer_type": "pg",
+      "stem": { "text": "Nilai sin 30° + cos 60° adalah …" },
+      "options": [
+        { "id": "a", "label": "A", "text": "1" },
+        { "id": "b", "label": "B", "text": "½" },
+        { "id": "c", "label": "C", "text": "√3" },
+        { "id": "d", "label": "D", "text": "0" }
+      ],
+      "answer_key": ["a"],
+      "distractor_hints": {
+        "b": "sin 30° dan cos 60° masing-masing bernilai ½; jumlahkan keduanya.",
+        "c": "√3/2 adalah nilai cos 30° dan sin 60°, bukan sin 30° dan cos 60°.",
+        "d": "sin 30° = cos 60° = ½, keduanya positif sehingga jumlahnya tidak nol."
+      },
+      "explanation": { "text": "sin 30° = ½ dan cos 60° = ½, sehingga jumlahnya ½ + ½ = 1." },
+      "layout_mode": "standar",
+      "difficulty": 0.2,
+      "status": "draft"
+    },
+    {
+      "code": "MAT-SMA-TRI-33",
+      "competency_code": "M5.4",
+      "tier": "ujian",
+      "answer_type": "pg",
+      "stem": {
+        "text": "Pada segitiga ABC, AB = 5 cm, AC = 8 cm, dan sudut A = 60°. Panjang BC adalah …"
+      },
+      "options": [
+        { "id": "a", "label": "A", "text": "7 cm" },
+        { "id": "b", "label": "B", "text": "√89 cm" },
+        { "id": "c", "label": "C", "text": "√129 cm" },
+        { "id": "d", "label": "D", "text": "13 cm" }
+      ],
+      "answer_key": ["a"],
+      "distractor_hints": {
+        "b": "Aturan kosinus: kurangi 2 × AB × AC × cos A dari 25 + 64.",
+        "c": "Suku 2 × AB × AC × cos A dikurangkan, bukan ditambahkan.",
+        "d": "Panjang sisi tidak diperoleh dengan menjumlahkan dua sisi lain; gunakan aturan kosinus."
+      },
+      "explanation": {
+        "text": "BC² = AB² + AC² − 2 × AB × AC × cos 60° = 25 + 64 − 2 × 5 × 8 × ½ = 89 − 40 = 49, sehingga BC = 7 cm."
+      },
+      "layout_mode": "standar",
+      "difficulty": 0.6,
+      "status": "draft"
+    },
+    {
+      "code": "MAT-SMA-DIM-34",
+      "competency_code": "M5.3",
+      "tier": "mahir",
+      "answer_type": "pg",
+      "stem": { "text": "Panjang diagonal ruang kubus dengan rusuk 4 cm adalah …" },
+      "options": [
+        { "id": "a", "label": "A", "text": "4√3 cm" },
+        { "id": "b", "label": "B", "text": "4√2 cm" },
+        { "id": "c", "label": "C", "text": "12 cm" },
+        { "id": "d", "label": "D", "text": "8 cm" }
+      ],
+      "answer_key": ["a"],
+      "distractor_hints": {
+        "b": "4√2 cm adalah diagonal sisi; diagonal ruang kubus adalah s√3.",
+        "c": "Diagonal ruang bukan jumlah tiga rusuk; gunakan s√3.",
+        "d": "Hitung √(4² + 4² + 4²) = √48 = 4√3, bukan 8."
+      },
+      "explanation": { "text": "Diagonal ruang kubus = √(s² + s² + s²) = s√3 = 4√3 cm." },
+      "layout_mode": "standar",
+      "difficulty": 0.35,
+      "status": "draft"
+    },
+    {
+      "code": "MAT-SMA-STA-35",
+      "competency_code": "M6.2",
+      "tier": "mahir",
+      "answer_type": "bs",
+      "stem": {
+        "text": "Diberikan data 2, 4, 6, 8, 10. Tentukan benar atau salah setiap pernyataan."
+      },
+      "options": [
+        { "id": "r1", "label": "1", "text": "Jangkauan data adalah 8" },
+        { "id": "r2", "label": "2", "text": "Rata-rata data adalah 6" },
+        { "id": "r3", "label": "3", "text": "Ragam (variansi) data adalah 8" },
+        { "id": "r4", "label": "4", "text": "Simpangan baku data adalah 8" }
+      ],
+      "answer_key": ["r1", "r2", "r3"],
+      "distractor_hints": {
+        "r4": "Simpangan baku adalah akar dari ragam: √8 = 2√2, bukan 8."
+      },
+      "explanation": {
+        "text": "Jangkauan 10 − 2 = 8. Rata-rata 30/5 = 6. Ragam = (16 + 4 + 0 + 4 + 16)/5 = 8. Simpangan baku = √8 = 2√2."
+      },
+      "layout_mode": "standar",
+      "difficulty": 0.5,
+      "status": "draft"
+    },
+    {
+      "code": "MAT-SMA-STA-36",
+      "competency_code": "M6.3",
+      "tier": "ujian",
+      "answer_type": "pg",
+      "stem": {
+        "text": "Sekumpulan data memiliki median 20 dan jangkauan 12. Setiap nilai data dikalikan 3 lalu ditambah 4. Median dan jangkauan data baru berturut-turut adalah …"
+      },
+      "options": [
+        { "id": "a", "label": "A", "text": "64 dan 36" },
+        { "id": "b", "label": "B", "text": "64 dan 40" },
+        { "id": "c", "label": "C", "text": "60 dan 36" },
+        { "id": "d", "label": "D", "text": "24 dan 16" }
+      ],
+      "answer_key": ["a"],
+      "distractor_hints": {
+        "b": "Penambahan konstanta tidak mengubah jangkauan; hanya perkalian yang berpengaruh: 3 × 12 = 36.",
+        "c": "Median ikut bergeser karena penambahan: 3 × 20 + 4 = 64.",
+        "d": "Setiap nilai dikalikan 3 lebih dulu, bukan hanya ditambah 4."
+      },
+      "explanation": {
+        "text": "Median ikut kedua operasi: 3 × 20 + 4 = 64. Jangkauan hanya ikut perkalian: 3 × 12 = 36."
+      },
+      "layout_mode": "standar",
+      "difficulty": 0.55,
+      "status": "draft"
+    },
+    {
+      "code": "MAT-SMA-PEL-37",
+      "competency_code": "M7.2",
+      "tier": "mahir",
+      "answer_type": "pg",
+      "stem": {
+        "text": "Banyak cara memilih 3 orang pengurus (tanpa jabatan) dari 7 calon adalah …"
+      },
+      "options": [
+        { "id": "a", "label": "A", "text": "35" },
+        { "id": "b", "label": "B", "text": "210" },
+        { "id": "c", "label": "C", "text": "21" },
+        { "id": "d", "label": "D", "text": "343" }
+      ],
+      "answer_key": ["a"],
+      "distractor_hints": {
+        "b": "210 adalah permutasi (urutan diperhatikan); tanpa jabatan gunakan kombinasi.",
+        "c": "21 adalah C(7, 2); yang dipilih 3 orang, bukan 2.",
+        "d": "7³ menghitung pilihan dengan pengulangan; setiap orang hanya bisa dipilih sekali."
+      },
+      "explanation": {
+        "text": "Urutan tidak diperhatikan, jadi gunakan kombinasi: C(7, 3) = 7!/(3! × 4!) = 35."
+      },
+      "layout_mode": "standar",
+      "difficulty": 0.4,
+      "status": "draft"
+    },
+    {
+      "code": "MAT-SMA-PEL-38",
+      "competency_code": "M7.3",
+      "tier": "ujian",
+      "answer_type": "pg",
+      "stem": {
+        "text": "Dua dadu dilempar bersamaan. Peluang munculnya jumlah mata dadu 7 adalah …"
+      },
+      "options": [
+        { "id": "a", "label": "A", "text": "1/6" },
+        { "id": "b", "label": "B", "text": "7/36" },
+        { "id": "c", "label": "C", "text": "1/12" },
+        { "id": "d", "label": "D", "text": "1/2" }
+      ],
+      "answer_key": ["a"],
+      "distractor_hints": {
+        "b": "Ada 6 pasangan berjumlah 7: (1,6), (2,5), (3,4), (4,3), (5,2), (6,1), bukan 7.",
+        "c": "Pasangan (1,6) dan (6,1) dihitung berbeda; ada 6 pasangan, bukan 3.",
+        "d": "Peluang = banyak kejadian ÷ 36 titik sampel; 6/36 jauh lebih kecil dari ½."
+      },
+      "explanation": {
+        "text": "Ruang sampel 6 × 6 = 36. Pasangan berjumlah 7 ada 6, sehingga peluangnya 6/36 = 1/6."
+      },
+      "layout_mode": "standar",
+      "difficulty": 0.45,
+      "status": "draft"
+    },
+    {
+      "code": "MAT-SMA-LOG-39",
+      "competency_code": "M8.1",
+      "tier": "mahir",
+      "answer_type": "pg",
+      "stem": { "text": "Ingkaran dari pernyataan \"Semua siswa membawa tablet\" adalah …" },
+      "options": [
+        { "id": "a", "label": "A", "text": "Ada siswa yang tidak membawa tablet" },
+        { "id": "b", "label": "B", "text": "Semua siswa tidak membawa tablet" },
+        { "id": "c", "label": "C", "text": "Tidak ada siswa yang membawa tablet" },
+        { "id": "d", "label": "D", "text": "Ada siswa yang membawa tablet" }
+      ],
+      "answer_key": ["a"],
+      "distractor_hints": {
+        "b": "Ingkaran \"semua\" adalah \"ada … yang tidak\", bukan \"semua … tidak\".",
+        "c": "Pernyataan ini terlalu kuat; cukup satu siswa yang tidak membawa tablet.",
+        "d": "Pernyataan ini tidak bertentangan dengan pernyataan awal, jadi bukan ingkarannya."
+      },
+      "explanation": {
+        "text": "Ingkaran dari \"semua p\" adalah \"ada yang tidak p\". Jadi ingkarannya: ada siswa yang tidak membawa tablet."
+      },
+      "layout_mode": "standar",
+      "difficulty": 0.35,
+      "status": "draft"
+    },
+    {
+      "code": "MAT-SMA-POL-40",
+      "competency_code": "M8.2",
+      "tier": "dasar",
+      "answer_type": "isian",
+      "stem": { "text": "Perhatikan pola bilangan 1, 4, 9, 16, … Tentukan suku ke-12." },
+      "answer_key": ["144"],
+      "tolerance": 0,
+      "explanation": { "text": "Suku ke-n adalah n², sehingga suku ke-12 adalah 12² = 144." },
+      "layout_mode": "standar",
+      "difficulty": 0.25,
+      "status": "draft"
+    }
+  ]
+}
