@@ -1,6 +1,7 @@
 {
-  "$comment": "Akun contoh untuk pengembangan lokal saja. Kata sandi sengaja sederhana dan diketahui umum: seed ini tidak boleh dijalankan di proyek produksi.",
+  "$comment": "Akun contoh untuk pengembangan lokal saja. Kata sandi sengaja sederhana dan diketahui umum: seed ini tidak boleh dijalankan di proyek produksi. Siswa masuk dengan kode + PIN; pepper PIN di sini sama dengan STUDENT_PIN_PEPPER di apps/web/.env.local.",
   "password": "coreta-lokal-123",
+  "student_pin_pepper": "coreta-lokal-pepper-pin-siswa",
   "consent_version": "persetujuan-v1-2026-10",
   "admins": [
     {
@@ -19,7 +20,8 @@
       "student": {
         "profile_id": "5eed0000-0000-4000-8000-000000000021",
         "id": "5eed0000-0000-4000-8000-000000000031",
-        "email": "siswa1@coreta.test",
+        "login_code": "RAKA4826",
+        "pin": "482913",
         "full_name": "Raka Wijaya",
         "grade": 11,
         "goal": "both",
@@ -35,7 +37,8 @@
       "student": {
         "profile_id": "5eed0000-0000-4000-8000-000000000022",
         "id": "5eed0000-0000-4000-8000-000000000032",
-        "email": "siswa2@coreta.test",
+        "login_code": "SEKR3957",
+        "pin": "573804",
         "full_name": "Sekar Santoso",
         "grade": 12,
         "goal": "utbk",
@@ -51,7 +54,8 @@
       "student": {
         "profile_id": "5eed0000-0000-4000-8000-000000000023",
         "id": "5eed0000-0000-4000-8000-000000000033",
-        "email": "siswa3@coreta.test",
+        "login_code": "DMAS7264",
+        "pin": "260795",
         "full_name": "Dimas Putra",
         "grade": 10,
         "goal": "tka",

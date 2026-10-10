@@ -131,6 +131,9 @@ importers:
 
   packages/content:
     dependencies:
+      '@coreta/db':
+        specifier: workspace:*
+        version: link:../db
       '@coreta/scoring':
         specifier: workspace:*
         version: link:../scoring

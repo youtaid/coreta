@@ -1,6 +1,7 @@
 import type { EmailOtpType } from "@supabase/supabase-js";
 import { type NextRequest, NextResponse } from "next/server";
 
+import { roleFromClaims } from "@/lib/auth/roles";
 import { destinationAfterSignIn } from "@/lib/auth/session-server";
 import { createClient } from "@/lib/supabase/server";
 
@@ -38,6 +39,13 @@ export async function GET(request: NextRequest) {
   }
 
   if (!user) return failed;
+
+  // Akun siswa hanya masuk dengan kode + PIN (Fase 36). Bila sesi siswa datang lewat Google atau
+  // tautan email (mis. identitas Google yang tertaut ke email siswa), sesi itu langsung diakhiri.
+  if (roleFromClaims({ app_metadata: user.app_metadata }) === "siswa") {
+    await supabase.auth.signOut({ scope: "local" });
+    return NextResponse.redirect(new URL("/masuk?galat=siswa", request.url));
+  }
 
   const { to } = await destinationAfterSignIn(user, next);
   return NextResponse.redirect(new URL(to, request.url));

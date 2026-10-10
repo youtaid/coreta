@@ -6,6 +6,7 @@ import ConsentPage from "./persetujuan/[token]/page";
 import { ConsentView } from "./persetujuan/[token]/consent-view";
 import RegisterPage from "./daftar/page";
 import LoginPage from "./masuk/page";
+import StudentLoginPage from "./masuk/siswa/page";
 import Home from "./page";
 
 vi.mock("server-only", () => ({}));
@@ -85,6 +86,26 @@ describe("Halaman Publik (Fase 19)", () => {
       );
       delete process.env.AUTH_GOOGLE_ENABLED;
       expect(html).toContain("Masuk dengan Google");
+    });
+  });
+
+  describe("StudentLoginPage (/masuk/siswa)", () => {
+    it("renders the login code and PIN fields without any email or Google option", async () => {
+      process.env.AUTH_GOOGLE_ENABLED = "true";
+      const html = renderToStaticMarkup(
+        await StudentLoginPage({
+          searchParams: Promise.resolve({ next: "/belajar/worksheet" }),
+          params: Promise.resolve({}),
+        }),
+      );
+      delete process.env.AUTH_GOOGLE_ENABLED;
+      expect(html).toContain("Masuk sebagai Siswa");
+      expect(html).toContain('name="code"');
+      expect(html).toContain('name="pin"');
+      expect(html).toContain('inputMode="numeric"');
+      expect(html).toContain('name="next" value="/belajar/worksheet"');
+      expect(html).not.toContain("Google");
+      expect(html).not.toContain('type="email"');
     });
   });
 

@@ -711,6 +711,27 @@ export type Database = {
           },
         ];
       };
+      login_throttle: {
+        Row: {
+          failures: number;
+          key: string;
+          locked_until: string | null;
+          window_started_at: string;
+        };
+        Insert: {
+          failures?: number;
+          key: string;
+          locked_until?: string | null;
+          window_started_at?: string;
+        };
+        Update: {
+          failures?: number;
+          key?: string;
+          locked_until?: string | null;
+          window_started_at?: string;
+        };
+        Relationships: [];
+      };
       mastery: {
         Row: {
           competency_id: string;
@@ -1005,6 +1026,7 @@ export type Database = {
           goal: string;
           grade: number | null;
           id: string;
+          login_code: string | null;
           profile_id: string;
         };
         Insert: {
@@ -1014,6 +1036,7 @@ export type Database = {
           goal?: string;
           grade?: number | null;
           id?: string;
+          login_code?: string | null;
           profile_id: string;
         };
         Update: {
@@ -1023,6 +1046,7 @@ export type Database = {
           goal?: string;
           grade?: number | null;
           id?: string;
+          login_code?: string | null;
           profile_id?: string;
         };
         Relationships: [
@@ -1342,11 +1366,25 @@ export type Database = {
     Functions: {
       auth_role: { Args: never; Returns: string };
       can_read_student_folder: { Args: { folder: string }; Returns: boolean };
+      clear_login_failures: {
+        Args: { throttle_key: string };
+        Returns: undefined;
+      };
       current_student_id: { Args: never; Returns: string };
       is_guardian_of: { Args: { target_student: string }; Returns: boolean };
       is_guardian_of_profile: {
         Args: { target_profile: string };
         Returns: boolean;
+      };
+      login_locked_until: { Args: { throttle_key: string }; Returns: string };
+      note_login_failure: {
+        Args: {
+          lock_seconds: number;
+          max_failures: number;
+          throttle_key: string;
+          window_seconds: number;
+        };
+        Returns: string;
       };
       record_consent: {
         Args: {
@@ -1367,6 +1405,33 @@ export type Database = {
         SetofOptions: {
           from: "*";
           to: "consents";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      register_student: {
+        Args: {
+          code: string;
+          required_consent_version: string;
+          student_daily_target: number;
+          student_goal: string;
+          student_grade: number;
+          student_profile: string;
+          target_parent: string;
+        };
+        Returns: {
+          created_at: string;
+          daily_target: number;
+          device_note: string | null;
+          goal: string;
+          grade: number | null;
+          id: string;
+          login_code: string | null;
+          profile_id: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "students";
           isOneToOne: true;
           isSetofReturn: false;
         };

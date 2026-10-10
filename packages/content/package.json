@@ -15,6 +15,7 @@
     "seed:sql": "tsx scripts/import-seed.ts"
   },
   "dependencies": {
+    "@coreta/db": "workspace:*",
     "@coreta/scoring": "workspace:*",
     "zod": "4.6.5"
   },

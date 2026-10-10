@@ -163,6 +163,28 @@ describe("buildSeedSql", () => {
     expect(buildSeedSql(broken).report).toContain("Prasyarat membentuk lingkaran");
   });
 
+  it("refuses weak student PINs, malformed login codes, and duplicate codes", () => {
+    type Families = { families: { student: { pin: string; login_code: string } }[] };
+    const weak = structuredClone(sources) as typeof sources & { families: Families };
+    weak.families.families[0].student.pin = "123456";
+    expect(buildSeedSql(weak).report).toContain("PIN harus 6 angka");
+
+    const malformed = structuredClone(sources) as typeof sources & { families: Families };
+    malformed.families.families[0].student.login_code = "RAKA-4826";
+    expect(buildSeedSql(malformed).report).toContain("kode masuk tidak sah");
+
+    const duplicate = structuredClone(sources) as typeof sources & { families: Families };
+    duplicate.families.families[1].student.login_code =
+      duplicate.families.families[0].student.login_code;
+    expect(buildSeedSql(duplicate).report).toContain("kode masuk siswa kembar");
+  });
+
+  it("stores student passwords derived from the PIN, never the PIN itself", () => {
+    expect(build.sql).toContain("'RAKA4826'");
+    expect(build.sql).not.toContain("'482913'");
+    expect(build.sql).toContain("@siswa.coreta.invalid");
+  });
+
   it("uses stable ids that match Postgres md5(text)::uuid", () => {
     expect(seedUuid("stage", "0")).toMatch(
       /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,

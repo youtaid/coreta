@@ -1,6 +1,6 @@
 "use client";
 
-import { Eye, EyeOff, Lock, LogIn, Mail, User } from "lucide-react";
+import { Eye, EyeOff, Lock, LogIn, Mail } from "lucide-react";
 import Link from "next/link";
 import { useActionState, useState } from "react";
 
@@ -19,6 +19,7 @@ import { toast } from "@/components/ui/toast";
 import { type FieldErrors, fieldErrors, signInSchema } from "@/lib/auth/schemas";
 
 import { type SignInState, signIn, signInWithGoogle } from "./actions";
+import { StudentLoginForm } from "./siswa/student-login-form";
 
 export interface LoginFormProps {
   next?: string;
@@ -90,123 +91,128 @@ export function LoginForm({ next, googleEnabled, notice }: LoginFormProps) {
               </TabsTrigger>
             </TabsList>
 
-            <form action={formAction} onSubmit={handleSubmit} noValidate className="space-y-4">
-              {next && <input type="hidden" name="next" value={next} />}
+            {role === "siswa" ? (
+              <StudentLoginForm next={next} />
+            ) : (
+              <form action={formAction} onSubmit={handleSubmit} noValidate className="space-y-4">
+                {next && <input type="hidden" name="next" value={next} />}
 
-              <div className="space-y-1.5">
-                <label htmlFor="login-identifier" className="text-xs font-semibold text-foreground">
-                  {role === "ortu" ? "Email Orang Tua" : "Email Siswa"}
-                </label>
-                <div className="relative">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground">
-                    {role === "ortu" ? <Mail className="size-4" /> : <User className="size-4" />}
-                  </div>
-                  <Input
-                    id="login-identifier"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    placeholder={role === "ortu" ? "orangtua@contoh.com" : "siswa@contoh.com"}
-                    value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                      if (clientErrors.email)
-                        setClientErrors((prev) => ({ ...prev, email: undefined }));
-                    }}
-                    aria-invalid={Boolean(errors.email)}
-                    aria-describedby={errors.email ? "identifier-error" : undefined}
-                    className="pl-9 text-xs sm:text-sm"
-                  />
-                </div>
-                {errors.email && (
-                  <p id="identifier-error" className="text-[11px] font-medium text-destructive">
-                    {errors.email}
-                  </p>
-                )}
-                {role === "siswa" && (
-                  <p className="text-[11px] text-muted-foreground">
-                    Gunakan email dan kata sandi yang dibuatkan orang tua Anda.
-                  </p>
-                )}
-              </div>
-
-              <div className="space-y-1.5">
-                <div className="flex items-center justify-between">
-                  <label htmlFor="login-password" className="text-xs font-semibold text-foreground">
-                    Kata Sandi
+                <div className="space-y-1.5">
+                  <label
+                    htmlFor="login-identifier"
+                    className="text-xs font-semibold text-foreground"
+                  >
+                    Email Orang Tua
                   </label>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      toast.add({
-                        type: "info",
-                        title: "Pemulihan Kata Sandi",
-                        description:
-                          "Hubungi admin Coreta untuk mengatur ulang kata sandi. Reset mandiri lewat email segera hadir.",
-                      })
-                    }
-                    className="text-[11px] font-medium text-primary hover:underline cursor-pointer"
-                  >
-                    Lupa sandi?
-                  </button>
-                </div>
-                <div className="relative">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground">
-                    <Lock className="size-4" />
+                  <div className="relative">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground">
+                      <Mail className="size-4" />
+                    </div>
+                    <Input
+                      id="login-identifier"
+                      name="email"
+                      type="email"
+                      autoComplete="email"
+                      placeholder="orangtua@contoh.com"
+                      value={email}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        if (clientErrors.email)
+                          setClientErrors((prev) => ({ ...prev, email: undefined }));
+                      }}
+                      aria-invalid={Boolean(errors.email)}
+                      aria-describedby={errors.email ? "identifier-error" : undefined}
+                      className="pl-9 text-xs sm:text-sm"
+                    />
                   </div>
-                  <Input
-                    id="login-password"
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    autoComplete="current-password"
-                    placeholder="Kata sandi Anda"
-                    value={password}
-                    onChange={(e) => {
-                      setPassword(e.target.value);
-                      if (clientErrors.password)
-                        setClientErrors((prev) => ({ ...prev, password: undefined }));
-                    }}
-                    aria-invalid={Boolean(errors.password)}
-                    aria-describedby={errors.password ? "password-error" : undefined}
-                    className="pl-9 pr-10 text-xs sm:text-sm"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword((prev) => !prev)}
-                    aria-label={showPassword ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"}
-                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground cursor-pointer"
-                  >
-                    {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-                  </button>
+                  {errors.email && (
+                    <p id="identifier-error" className="text-[11px] font-medium text-destructive">
+                      {errors.email}
+                    </p>
+                  )}
                 </div>
-                {errors.password && (
-                  <p id="password-error" className="text-[11px] font-medium text-destructive">
-                    {errors.password}
+
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <label
+                      htmlFor="login-password"
+                      className="text-xs font-semibold text-foreground"
+                    >
+                      Kata Sandi
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        toast.add({
+                          type: "info",
+                          title: "Pemulihan Kata Sandi",
+                          description:
+                            "Hubungi admin Coreta untuk mengatur ulang kata sandi. Reset mandiri lewat email segera hadir.",
+                        })
+                      }
+                      className="text-[11px] font-medium text-primary hover:underline cursor-pointer"
+                    >
+                      Lupa sandi?
+                    </button>
+                  </div>
+                  <div className="relative">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground">
+                      <Lock className="size-4" />
+                    </div>
+                    <Input
+                      id="login-password"
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      autoComplete="current-password"
+                      placeholder="Kata sandi Anda"
+                      value={password}
+                      onChange={(e) => {
+                        setPassword(e.target.value);
+                        if (clientErrors.password)
+                          setClientErrors((prev) => ({ ...prev, password: undefined }));
+                      }}
+                      aria-invalid={Boolean(errors.password)}
+                      aria-describedby={errors.password ? "password-error" : undefined}
+                      className="pl-9 pr-10 text-xs sm:text-sm"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword((prev) => !prev)}
+                      aria-label={showPassword ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"}
+                      className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground cursor-pointer"
+                    >
+                      {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                    </button>
+                  </div>
+                  {errors.password && (
+                    <p id="password-error" className="text-[11px] font-medium text-destructive">
+                      {errors.password}
+                    </p>
+                  )}
+                </div>
+
+                {message && (
+                  <p role="alert" className="text-xs font-medium text-destructive">
+                    {message}
                   </p>
                 )}
-              </div>
 
-              {message && (
-                <p role="alert" className="text-xs font-medium text-destructive">
-                  {message}
-                </p>
-              )}
-
-              <Button
-                type="submit"
-                disabled={isPending}
-                className="w-full min-h-touch font-bold shadow-xs gap-2 mt-2"
-              >
-                {isPending ? (
-                  <span>Memeriksa Akun...</span>
-                ) : (
-                  <>
-                    <LogIn className="size-4" />
-                    <span>Masuk sebagai {role === "ortu" ? "Orang Tua" : "Siswa"}</span>
-                  </>
-                )}
-              </Button>
-            </form>
+                <Button
+                  type="submit"
+                  disabled={isPending}
+                  className="w-full min-h-touch font-bold shadow-xs gap-2 mt-2"
+                >
+                  {isPending ? (
+                    <span>Memeriksa Akun...</span>
+                  ) : (
+                    <>
+                      <LogIn className="size-4" />
+                      <span>Masuk sebagai Orang Tua</span>
+                    </>
+                  )}
+                </Button>
+              </form>
+            )}
 
             {role === "ortu" && googleEnabled && (
               <form action={signInWithGoogle} className="mt-3">

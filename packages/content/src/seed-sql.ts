@@ -4,6 +4,7 @@
 
 import { createHash } from "node:crypto";
 
+import { derivePinPassword, isWeakPin, normalizeLoginCode, studentAuthEmail } from "@coreta/db";
 import { z } from "zod";
 
 import { importItems, formatImportReport } from "./import";
@@ -50,6 +51,7 @@ const PersonSchema = z.strictObject({
 
 export const FamiliesSchema = z.object({
   password: z.string().min(8),
+  student_pin_pepper: z.string().min(16),
   consent_version: z.string().min(1),
   admins: z.array(PersonSchema),
   families: z.array(
@@ -58,7 +60,12 @@ export const FamiliesSchema = z.object({
       student: z.strictObject({
         profile_id: z.uuid(),
         id: z.uuid(),
-        email: z.email(),
+        login_code: z
+          .string()
+          .refine((code) => normalizeLoginCode(code) === code, "kode masuk tidak sah"),
+        pin: z
+          .string()
+          .refine((pin) => !isWeakPin(pin), "PIN harus 6 angka dan tidak mudah ditebak"),
         full_name: z.string().min(1),
         grade: z.number().int().min(1).max(12),
         goal: z.enum(["tka", "utbk", "both"]),
@@ -213,13 +220,16 @@ export function buildSeedSql(sources: SeedSources): SeedBuild {
     ...families.data.admins,
     ...families.data.families.flatMap((family) => [
       family.parent,
-      { id: family.student.profile_id, email: family.student.email },
+      { id: family.student.profile_id, email: studentAuthEmail(family.student.profile_id) },
     ]),
   ];
   const ids = people.map((person) => person.id);
   const emails = people.map((person) => person.email.toLowerCase());
   if (new Set(ids).size !== ids.length) problems.push("families.json: id pengguna kembar.");
   if (new Set(emails).size !== emails.length) problems.push("families.json: email kembar.");
+  const codes = families.data.families.map((family) => family.student.login_code);
+  if (new Set(codes).size !== codes.length)
+    problems.push("families.json: kode masuk siswa kembar.");
 
   if (problems.length > 0) {
     return { ok: false, report: problems.join("\n"), items: imported.items };
@@ -366,18 +376,25 @@ function render(
   line(
     "-- Akun contoh (lokal saja). Profil dibuat trigger on_auth_user_created dari raw_app_meta_data.role.",
   );
-  const users = [
-    ...families.admins.map((admin) => ({ ...admin, role: "admin" })),
-    ...families.families.flatMap((family) => [
-      { ...family.parent, role: "parent" },
-      {
-        id: family.student.profile_id,
-        email: family.student.email,
-        full_name: family.student.full_name,
-        role: "student",
-      },
-    ]),
-  ];
+  const users: { id: string; email: string; full_name: string; role: string; password: string }[] =
+    [
+      ...families.admins.map((admin) => ({ ...admin, role: "admin", password: families.password })),
+      ...families.families.flatMap((family) => [
+        { ...family.parent, role: "parent", password: families.password },
+        {
+          id: family.student.profile_id,
+          email: studentAuthEmail(family.student.profile_id),
+          full_name: family.student.full_name,
+          role: "student",
+          // Siswa masuk dengan kode + PIN: kata sandi Auth diturunkan dari PIN (Fase 36).
+          password: derivePinPassword(
+            families.student_pin_pepper,
+            family.student.profile_id,
+            family.student.pin,
+          ),
+        },
+      ]),
+    ];
   line(
     "insert into auth.users (instance_id, id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, recovery_token, email_change_token_new, email_change) values",
   );
@@ -385,7 +402,7 @@ function render(
     users
       .map(
         (user) =>
-          `  ('00000000-0000-0000-0000-000000000000', ${sqlString(user.id)}, 'authenticated', 'authenticated', ${sqlString(user.email)}, extensions.crypt(${sqlString(families.password)}, extensions.gen_salt('bf')), now(), ${sqlJson({ provider: "email", providers: ["email"], role: user.role })}, ${sqlJson({ full_name: user.full_name })}, now(), now(), '', '', '', '')`,
+          `  ('00000000-0000-0000-0000-000000000000', ${sqlString(user.id)}, 'authenticated', 'authenticated', ${sqlString(user.email)}, extensions.crypt(${sqlString(user.password)}, extensions.gen_salt('bf')), now(), ${sqlJson({ provider: "email", providers: ["email"], role: user.role })}, ${sqlJson({ full_name: user.full_name })}, now(), now(), '', '', '', '')`,
       )
       .join(",\n") + ";",
   );
@@ -402,12 +419,14 @@ function render(
       .join(",\n") + ";",
   );
   line();
-  line("insert into public.students (id, profile_id, grade, goal, daily_target) values");
+  line(
+    "insert into public.students (id, profile_id, grade, goal, daily_target, login_code) values",
+  );
   line(
     families.families
       .map(
         ({ student }) =>
-          `  (${sqlString(student.id)}, ${sqlString(student.profile_id)}, ${student.grade}, ${sqlString(student.goal)}, ${student.daily_target})`,
+          `  (${sqlString(student.id)}, ${sqlString(student.profile_id)}, ${student.grade}, ${sqlString(student.goal)}, ${student.daily_target}, ${sqlString(student.login_code)})`,
       )
       .join(",\n") + ";",
   );

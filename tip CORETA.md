@@ -279,6 +279,8 @@ audit_log       actor_id, action, target, at   (hanya tambah)
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=        # server dan worker saja
+STUDENT_PIN_PEPPER=               # server saja, min 16 karakter; kata sandi siswa dari PIN (Fase 36)
+AUTH_GOOGLE_ENABLED=false         # tampilkan tombol Google (Fase 35)
 AI_PROVIDER=                      # google | openai | anthropic
 AI_MODEL_HINT=
 AI_MODEL_HANDWRITING=
@@ -1094,12 +1096,14 @@ _Skema Supabase, RLS, akun, dan menghubungkan layar jalur/worksheet ke data nyat
 - **File yang dibuat/dimodifikasi**:
   - `apps/web/app/(ortu)/ortu/anak/page.tsx`
   - `apps/web/app/(ortu)/ortu/anak/actions.ts`
-  - `apps/web/app/(publik)/masuk/siswa/page.tsx`
+  - `apps/web/app/(publik)/masuk/siswa/page.tsx` (+ `actions.ts`, `student-login-form.tsx`; juga dipakai tab Siswa di `/masuk`)
+  - `apps/web/app/(ortu)/ortu/anak/child-forms.tsx`, `apps/web/lib/auth/student-server.ts`, `apps/web/lib/auth/student-schemas.ts`, `packages/db/src/student-login.ts`
+  - `supabase/migrations/0007_akun_siswa.sql` + `supabase/tests/0007_akun_siswa.sql`; seed siswa dengan kode + PIN
 - **Definition of Done**:
   - Siswa seed dan siswa baru bisa masuk dengan kode + PIN
   - Tes: orang tua A tidak bisa melihat atau mengubah anak orang tua B
   - Akun siswa tidak punya login sosial
-- **Status**: [x] Belum | [ ] Sedang | [ ] Selesai
+- **Status**: [ ] Belum | [x] Sedang | [ ] Selesai (menunggu persetujuan Youta: menyentuh auth, data anak, dan RLS, serta memperbaiki trigger 0001)
 
 #### Fase 37 — Jalur & Worksheet dari Database
 
@@ -1195,12 +1199,12 @@ _Siswa mengerjakan, server menilai, coretan tersimpan, offline aman, penguasaan 
 #### Fase 42 — Worker & Pekerjaan mastery.update
 
 - **Scope**:
-  - Migrasi `0007`: aktifkan `pgmq`, buat antrean `mastery`, `ink`, dan antrean gagal (nomor 0005 dipakai perbaikan hak service_role di Fase 34, 0006 dipakai versi persetujuan di Fase 35)
+  - Migrasi `0008`: aktifkan `pgmq`, buat antrean `mastery`, `ink`, dan antrean gagal (nomor 0005 dipakai perbaikan hak service_role di Fase 34, 0006 versi persetujuan di Fase 35, 0007 akun siswa di Fase 36)
   - `apps/worker`: baca antrean, coba ulang 3 kali dengan jeda bertahap lalu pindahkan ke antrean gagal, log `pino`
   - Pekerjaan `mastery.update` memakai `packages/scoring` dan memperbarui `mastery` dan `daily_activity`; `/api/attempts` memasukkan pesan ke antrean
 - **Estimasi waktu**: ~30 menit prompting + testing
 - **File yang dibuat/dimodifikasi**:
-  - `supabase/migrations/0007_pgmq.sql`
+  - `supabase/migrations/0008_pgmq.sql`
   - `apps/worker/src/index.ts`
   - `apps/worker/src/queue.ts`
   - `apps/worker/src/jobs/mastery-update.ts`
@@ -1348,7 +1352,7 @@ _Semua panggilan AI lewat satu pintu (`packages/ai`). AI hanya memberi petunjuk,
   - Jadwal dengan `pg_cron` memasukkan pesan ke antrean
 - **Estimasi waktu**: ~30 menit prompting + testing
 - **File yang dibuat/dimodifikasi**:
-  - `supabase/migrations/0008_cron_worksheet.sql`
+  - `supabase/migrations/0009_cron_worksheet.sql`
   - `apps/worker/src/jobs/worksheet-compose.ts`
   - `apps/worker/src/jobs/worksheet-release.ts`
 - **Definition of Done**:
@@ -1958,6 +1962,14 @@ Keputusan yang sudah diambil sebelum coding dimulai (menyimpang atau melengkapi 
 | 35 | Teks persetujuan berversi di `lib/consent.ts` (`CONSENT_VERSION = persetujuan-v1-2026-10`, sama dengan seed, dijaga tes); teks yang sama tampil di `/daftar` dan `/persetujuan/[token]`. Setiap kali orang tua masuk (kata sandi, Google, tautan email), yang belum menyetujui versi berlaku diarahkan ke `/persetujuan/[token]` | Mengubah teks wajib menaikkan versi agar orang tua diminta menyetujui ulang |
 | 35 | `/daftar` dan `/masuk` = halaman server tipis + formulir klien `useActionState` + server action. Skema Zod bersama klien/server (`lib/auth/schemas.ts`); kata sandi minimal 8 (`minimum_password_length` 6 → 8); nama, WhatsApp, dan target ujian (TKA/UTBK/keduanya) di `user_metadata` (tidak pernah untuk peran). Bagian "Profil Awal Siswa" (nama + kelas) diganti "Target Ujian Anak": akun anak dibuat di `/ortu/anak` (Fase 36) sesuai peta layar 5. Bila konfirmasi email aktif, email terdaftar dijawab sama seperti pendaftaran baru (tidak bisa ditebak). `/masuk`: satu pesan untuk email/kata sandi salah; `next` hanya jalur internal yang boleh dibuka peran itu (`landingAfterSignIn`); tab siswa sementara memakai email + kata sandi | Server memvalidasi ulang semua isian; tidak ada open redirect |
 | 35 | Google (PKCE) lewat server action `signInWithOAuth` → `/auth/callback` (juga menerima `token_hash` tautan email). Tombol hanya muncul bila `AUTH_GOOGLE_ENABLED=true`; `[auth.external.google]` di `config.toml` mati secara bawaan, `additional_redirect_urls` = `/auth/callback` di 127.0.0.1:3000 dan localhost:3000. Keluar: `POST /auth/keluar` (303 ke `/masuk?keluar=1`), tombol Keluar di header siswa/orang tua dan sidebar admin | Tanpa kredensial Google, tombol mati lebih baik daripada mengarah ke galat. Keluar lewat POST agar tidak bisa dipicu tautan |
+| 36 | Akun siswa hanya dengan **kode masuk + PIN** (pilihan "email" dari mockup tidak dibuat): pengguna Auth siswa memakai email buatan `siswa.<id>@siswa.coreta.invalid` (domain `.invalid` tidak bisa menerima email, jadi tidak bisa ditautkan ke Google), tanpa email asli anak | Minim data pribadi anak (UU PDP); DoD hanya meminta kode + PIN dan "tanpa login sosial". **Perlu konfirmasi Youta** karena peta layar menyebut "email atau kode masuk + PIN" |
+| 36 | Kode masuk 8 karakter dari 31 huruf/angka (tanpa I, L, O, 0, 1), dibuat server secara acak, unik di `students.login_code` (cek bentuk di basis data), tampil sebagai `K7QM-3XPA`; diketik tanpa peduli huruf besar/kecil, spasi, atau tanda hubung. PIN 6 angka pilihan orang tua; PIN semua sama atau berurutan ditolak. Mockup lama (`RAKA-4821`, PIN 4 angka) diganti | Kode berawalan nama + 4 angka dan PIN 4 angka terlalu mudah ditebak (10⁴ × 10⁴); kode acak 31⁸ ≈ 8,5 × 10¹¹ dan PIN 10⁶ |
+| 36 | Kata sandi Auth siswa = `pin1.` + HMAC-SHA256(`STUDENT_PIN_PEPPER`, `<id pengguna>:<PIN>`), dihitung di server (`packages/db/src/student-login.ts`, dipakai web dan generator seed). Variabel baru `STUDENT_PIN_PEPPER` (server saja, ≥ 16 karakter, dibaca terpisah dari `getServerEnv` agar fitur lain tetap jalan); lokal = `student_pin_pepper` di `families.json` | Kunci anon Supabase bersifat publik: tanpa pepper, siapa pun bisa mencoba sejuta PIN langsung ke Supabase Auth dan melewati pembatas aplikasi (diuji: PIN mentah ke GoTrue ditolak). Memutar pepper membatalkan semua PIN siswa |
+| 36 | Migrasi `0007_akun_siswa.sql`: `students.login_code`; tabel `login_throttle` (RLS, tanpa akses klien) + `note_login_failure`/`login_locked_until`/`clear_login_failures`; `register_student()` (hanya service_role) menulis students + guardianships (versi persetujuan) + audit_log dalam satu transaksi dan menolak bila orang tua bukan orang tua, belum menyetujui versi berlaku, atau profilnya bukan siswa. Tes `0007_akun_siswa.sql` (36 asersi) | Pembuatan akun anak memeriksa persetujuan di basis data, bukan hanya di UI (temuan 9b Fase 35) |
+| 36 | **Perbaikan trigger peran 0001** di 0007: `on_auth_user_role_changed` menyamakan `profiles.role` dengan `app_metadata.role` setiap kali peran di `app_metadata` berubah (user_metadata tetap diabaikan, peran tak dikenal = orang tua) | Supabase Auth `admin.createUser` membuat baris dulu lalu mengisi app_metadata dengan UPDATE, sehingga trigger INSERT 0001 memberi peran orang tua ke siswa/admin buatan server (seed lolos karena menulis SQL langsung). Peran di JWT dan di profil kini selalu sama |
+| 36 | Masuk siswa (`/masuk/siswa` dan tab Siswa di `/masuk`): server mencari kode (service_role), menurunkan kata sandi, lalu `signInWithPassword` dengan klien cookie. Pesan sama untuk kode tak dikenal dan PIN salah. Penguncian: 5 PIN salah per kode dalam 15 menit → kode terkunci 15 menit (PIN benar pun ditolak); batas kasar 30 gagal per IP. Orang tua mengganti PIN membuka kunci. `/auth/callback` menolak dan mengakhiri sesi siswa (Google/tautan email) | Anak tidak perlu email; tebakan PIN dibatasi di server |
+| 36 | `/ortu/anak` membaca anak dengan sesi orang tua (RLS). Buat akun dan ganti PIN lewat service_role di server action, dengan id orang tua SELALU dari sesi; ganti PIN memeriksa hubungan wali secara eksplisit. Ubah target harian/ujian memakai sesi orang tua sehingga RLS `students_update_guardian` memutuskan (anak orang lain = 0 baris = "Anak tidak ditemukan"). Kode masuk tampil setelah dibuat dan di kartu anak. Formulir dari `components/domain/create-student-form.tsx` (mockup) dipindah ke `app/(ortu)/ortu/anak/child-forms.tsx` dan berkas lamanya dihapus | Orang tua A tidak bisa melihat atau mengubah anak orang tua B, baik lewat RLS maupun lewat jalur service_role |
+| 36 | Siswa seed kini masuk dengan kode + PIN (Raka `RAKA-4826`/`482913`, Sekar `SEKR-3957`/`573804`, Dimas `DMAS-7264`/`260795`), email Auth-nya `siswa.<id>@siswa.coreta.invalid`; masuk siswa dengan email + `coreta-lokal-123` (9a Fase 34) tidak berlaku lagi | DoD "siswa seed bisa masuk dengan kode + PIN" |
 
 ### 9b. Temuan & Isu
 
@@ -1995,12 +2007,18 @@ Catat bug, blocker, atau hal yang perlu dievaluasi. Jangan langsung dieksekusi �
 | 34 | `seed.sql` memuat kata sandi contoh yang diketahui umum; hanya untuk `supabase db reset` lokal, jangan pernah dijalankan pada proyek cloud/produksi | Med | Catatan untuk Fase 45 |
 | 35 | Uji e2e menemukan bug: cek CSRF `/api/consent` membandingkan Origin dengan `request.url`, padahal di `next start` isinya `localhost:3000`; semua permintaan sah dari `127.0.0.1:3000` ditolak 403, dan skenario "siswa ditolak 403" lulus karena alasan yang salah. Diperbaiki (bandingkan dengan Host/X-Forwarded-Host) + tes regresi; skenario e2e kini juga memeriksa isi pesan galat | High | Selesai |
 | 35 | Relasi PostgREST `students` → `profiles` ambigu (lewat `profile_id` dan lewat `guardianships`) membuat `/persetujuan/[token]` galat 500; diperbaiki dengan `profiles!students_profile_id_fkey` | Med | Selesai |
-| 35 | Orang tua yang MENOLAK persetujuan tetap bisa membuka `/ortu/*` (hanya diarahkan ke halaman persetujuan setiap kali masuk). Pembuatan akun anak di Fase 36 wajib memeriksa `hasCurrentConsent` di server sebelum membuat siswa | High | Terbuka (Fase 36) |
+| 35 | Orang tua yang MENOLAK persetujuan tetap bisa membuka `/ortu/*` (hanya diarahkan ke halaman persetujuan setiap kali masuk). Pembuatan akun anak di Fase 36 wajib memeriksa `hasCurrentConsent` di server sebelum membuat siswa | High | Selesai di Fase 36 (cek di server action dan di `register_student`; `/ortu/anak` menampilkan peringatan dan menonaktifkan formulir) |
 | 35 | Google dan `/auth/callback` (kode PKCE dan `token_hash` email) belum diuji ujung-ke-ujung: butuh client id/secret Google dan email konfirmasi (lokal `enable_confirmations = false`). Jalur sesudahnya (`destinationAfterSignIn`) sudah teruji lewat masuk dengan kata sandi | Med | Terbuka (sebelum Fase 45) |
 | 35 | Halaman `/belajar`, `/ortu/*`, `/admin/*` masih menampilkan data tiruan yang sama untuk semua akun; penjaga peran hanya membatasi siapa yang bisa membukanya | Med | Terbuka (Fase 36–37) |
 | 35 | Pemilih peran dev (`?peran=`) kini dialihkan ke `/masuk` bila belum masuk dengan peran itu; pratinjau peran memakai akun seed (`coreta-lokal-123`) | Low | Catatan |
 | 35 | WhatsApp dan target ujian orang tua ada di `user_metadata`, yang bisa diubah pengguna sendiri (`updateUser`). Bila server memakainya (Fase 36 target anak, Fase 61 CRM), salin ke tabel saat dibuat | Low | Terbuka (Fase 36/61) |
 | 35 | Tautan persetujuan bisa dipakai siapa pun yang memegangnya selama 7 hari (seperti tautan verifikasi email); pengiriman tautan lewat email/WhatsApp belum ada. Reset kata sandi mandiri juga belum ada ("Lupa sandi?" meminta menghubungi admin) | Low | Terbuka (Fase 61 / backlog) |
+| 36 | Trigger `handle_new_user` (0001) memberi peran orang tua ke akun siswa/admin yang dibuat lewat `admin.createUser`, karena peran diisi sesudah INSERT. Ditemukan saat e2e; diperbaiki di 0007 (trigger sinkron peran) dan dites | High | Selesai |
+| 36 | Setelah server menolak isian (mis. PIN lemah), React 19 mengosongkan formulir: nama anak hilang, dan kode masuk anak hilang setelah PIN salah. Diperbaiki: isian bukan rahasia dikirim balik dan formulir dipasang ulang; PIN tidak pernah dikirim balik | Med | Selesai |
+| 36 | Batas per IP membaca `x-real-ip`/`x-forwarded-for`, yang bisa dipalsukan bila proxy di depan aplikasi tidak menimpanya. Batas per kode tetap berlaku | Med | Terbuka (Fase 45/64: proxy VPS menimpa header) |
+| 36 | `STUDENT_PIN_PEPPER` wajib diisi di produksi dengan nilai berbeda dari lokal; memutarnya membatalkan semua PIN siswa (orang tua harus mengganti PIN) | Med | Catatan untuk Fase 45 |
+| 36 | Belum ada "ganti kode masuk" (hanya ganti PIN), dan `login_throttle` menyimpan baris untuk kode tak dikenal tanpa pembersihan berkala | Low | Terbuka (backlog / pekerjaan worker) |
+| 36 | Pilihan masuk siswa dengan email tidak dibuat (lihat 9a); bila Youta menginginkannya, perlu jalur kata sandi biasa dan penolakan login sosial yang sama | Low | Menunggu keputusan Youta |
 
 **Pertanyaan terbuka sebelum fase terkait:**
 - Sebelum Fase 45 (deploy): spesifikasi VPS (CPU, RAM, disk) dan tagihan bulanan
@@ -2049,7 +2067,7 @@ Catat bug, blocker, atau hal yang perlu dievaluasi. Jangan langsung dieksekusi �
 | Fase 33 — Migrasi 4: Langganan, Layanan & Audit | Sedang | ~30 menit | — | Menunggu persetujuan Youta. `0004_langganan_layanan.sql` (10 tabel, data `plans`, 3 trigger, kunci asing `hints_shown.ai_decision_id`) dan `0004_rls_langganan.sql` (106 asersi): `payment_events` tertutup untuk semua klien termasuk admin, `audit_log` hanya bisa ditambah bahkan oleh service_role dan superuser, webhook ganda = satu baris, orang tua hanya membaca langganan dan fakturnya, `tool_calls` tidak terbaca klien, tidak ada tabel `public` tanpa RLS. Semua 359 tes 0001–0004 lulus di harness Postgres 16; 3 uji mutasi (admin baca payment_events, trigger append-only dihapus, tool_calls dibuka) masing-masing tertangkap. Cek CI RLS statis (22 tes) terbukti menggagalkan migrasi uji berisi tabel tanpa RLS. Format, lint, typecheck, tes (647), build hijau. Fase 34: lulus di `supabase test db` (Postgres 17) setelah hak `service_role` (0005) |
 | Fase 34 — Seed Data & Tipe TypeScript | Selesai | ~30 menit | 2026-10-10 | `supabase db reset` (Supabase CLI 2.106, Postgres 17) memuat seed tanpa galat: 9 tahap, 34 kompetensi, 34 prasyarat, 40 butir (8 terbit, 32 draf), 1 stimulus, 1 media, 7 akun (1 admin, 3 orang tua, 3 siswa) yang bisa login lewat GoTrue asli; siswa seed melihat 8 butir lewat `items_public` dan ditolak membaca `items`. Semua 40 butir lolos `validateItem` dan uji silang `@coreta/scoring`. `types.ts` dari `supabase gen types`; `apps/web` memakai `Database` di ketiga klien Supabase tanpa galat TypeScript. Ditemukan dan diperbaiki: hak `service_role` (migrasi 0005). `supabase test db`: 5 berkas, 365 asersi lulus dengan seed termuat. Format, lint, typecheck, cek RLS, 773 tes, build hijau |
 | Fase 35 — Autentikasi Orang Tua & Penjaga Peran | Sedang | ~30 menit | — | Menunggu persetujuan Youta. `proxy.ts` + `/masuk`, `/daftar`, `/persetujuan/[token]`, `POST /api/consent`, `/auth/callback`, `/auth/keluar`; migrasi `0006_persetujuan_versi.sql` (versi wajib, tulis persetujuan hanya lewat server, `record_consent` + audit). E2E Chromium di `next start` + Supabase lokal asli: 36/36 skenario lulus (orang tua daftar → `/ortu/anak` dengan persetujuan + versi + audit, keluar, masuk kembali ke `next`; siswa, orang tua, admin, dan tamu ditolak dari rute peran lain; kata sandi salah; open redirect; token palsu; orang tua tanpa persetujuan → setujui/tolak lewat token). `supabase test db`: 6 berkas, 389 asersi lulus; 2 uji mutasi (hak tulis klien dikembalikan, peran salah diizinkan) tertangkap. Format, lint, typecheck, cek RLS, 822 tes, build hijau. Google belum diuji (lihat 9b) |
-| Fase 36 — Akun Siswa dari Orang Tua | — | ~30 menit | — | — |
+| Fase 36 — Akun Siswa dari Orang Tua | Sedang | ~30 menit | — | Menunggu persetujuan Youta. `/ortu/anak` membuat akun siswa (kode masuk acak + PIN 6 angka) lewat service_role, mengubah target harian/ujian lewat RLS, dan mengganti PIN; `/masuk/siswa` + tab Siswa memakai kode + PIN dengan penguncian. Migrasi `0007_akun_siswa.sql` (kode masuk, `login_throttle`, `register_student`, perbaikan trigger peran 0001). E2E Chromium di `next start` + Supabase lokal asli: 27/27 skenario lulus (3 siswa seed dan siswa baru masuk dengan kode + PIN; PIN mentah ke Supabase Auth ditolak; orang tua 2 tidak melihat dan gagal mengubah target/PIN anak orang tua 1 walau memalsukan id; penguncian 5 kali; orang tua tanpa persetujuan ditolak server), e2e Fase 35 tetap 36/36. `supabase test db`: 7 berkas, 425 asersi. 2 uji mutasi tertangkap (cek persetujuan di `register_student` oleh pgTAP; cek hubungan wali saat ganti PIN oleh e2e dan tes unit). Format, lint, typecheck, cek RLS, 859 tes, build hijau |
 | Fase 37 — Jalur & Worksheet dari Database | — | ~30 menit | — | — |
 | Fase 38 — API Kirim Jawaban | — | ~30 menit | — | — |
 | Fase 39 — Unggah Coretan | — | ~30 menit | — | — |

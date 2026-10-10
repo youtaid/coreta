@@ -11,6 +11,10 @@ const notices: Record<string, LoginFormProps["notice"]> = {
     tone: "error",
     text: "Tautan masuk tidak valid atau sudah kedaluwarsa. Silakan masuk lagi.",
   },
+  siswa: {
+    tone: "error",
+    text: "Akun siswa hanya bisa masuk dengan kode masuk dan PIN, bukan Google atau email.",
+  },
   google: {
     tone: "error",
     text: "Masuk dengan Google belum berhasil. Coba lagi atau gunakan email.",
